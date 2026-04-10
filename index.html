@@ -30,8 +30,13 @@
   .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
   .logo-svg-wrap img{height:55px;width:auto;display:block;}
-  /* Les deux logos sont cachés par défaut, on les affiche avec JS */
-  .logo-dark, .logo-light { display: none !important; }
+  
+  /* CORRECTION DES LOGOS - UN SEUL VISIBLE PAR THEME */
+  .logo-dark { display: block; }
+  .logo-light { display: none; }
+  :root[data-theme="light"] .logo-dark { display: none; }
+  :root[data-theme="light"] .logo-light { display: block; }
+  
   .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
   .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
   .nav-btn:hover{color:var(--text);background:var(--bg3);}
@@ -671,83 +676,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ========== CONFIGURATION JSONBin.io ==========
-// Créez un compte gratuit sur https://jsonbin.io et remplacez ces valeurs par les vôtres
-const JSONBIN_BIN_ID = "69d97019aaba882197e6a291"; // À remplacer après création du bin
-const JSONBIN_API_KEY = "$2a$10$hB7CJg7seD.yv52AUx54uutpPwi4nBG31ld1XxG4aTcW/IJ0muNC."; // Clé API à remplacer
-
-// Structure des données sur JSONBin
-let likesGlobal = {};
-
-// Identifiant unique pour l'utilisateur
-let userId = localStorage.getItem('latinvader_user_id');
-if(!userId) {
-  userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  localStorage.setItem('latinvader_user_id', userId);
-}
-
-// ========== FONCTIONS POUR JSONBin.io ==========
-async function loadLikesFromCloud() {
-  try {
-    const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': JSONBIN_API_KEY }
-    });
-    const data = await response.json();
-    if(data.record) {
-      likesGlobal = data.record;
-    } else {
-      likesGlobal = {};
-    }
-  } catch(e) {
-    console.log('Erreur chargement likes, utilisation du localStorage', e);
-    loadLikesFromLocal();
-  }
-  saveLikesToLocal();
-}
-
-async function saveLikesToCloud() {
-  try {
-    await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_API_KEY
-      },
-      body: JSON.stringify(likesGlobal)
-    });
-  } catch(e) {
-    console.log('Erreur sauvegarde likes', e);
-  }
-}
-
-function loadLikesFromLocal() {
-  const saved = localStorage.getItem('latinvader_likes_backup');
-  if(saved) {
-    likesGlobal = JSON.parse(saved);
-  } else {
-    likesGlobal = {};
-  }
-}
-
-function saveLikesToLocal() {
-  localStorage.setItem('latinvader_likes_backup', JSON.stringify(likesGlobal));
-}
-
-// ========== GESTION DES LOGOS ==========
-function updateLogo() {
-  const theme = document.documentElement.getAttribute('data-theme');
-  const logoDark = document.querySelector('.logo-dark');
-  const logoLight = document.querySelector('.logo-light');
-  
-  if(theme === 'dark') {
-    if(logoDark) logoDark.style.display = 'block';
-    if(logoLight) logoLight.style.display = 'none';
-  } else {
-    if(logoDark) logoDark.style.display = 'none';
-    if(logoLight) logoLight.style.display = 'block';
-  }
-}
-
 // ========== STORAGE KEYS ==========
 const STORAGE_KEYS = {
   VIDEOS: 'latinvader_videos',
@@ -762,7 +690,8 @@ const STORAGE_KEYS = {
   MAILBOX: 'latinvader_mailbox',
   DROPBOX: 'latinvader_dropbox',
   BADGE_COLORS: 'latinvader_badge_colors',
-  RADAR_AMBIANCES: 'latinvader_radar_ambiances'
+  RADAR_AMBIANCES: 'latinvader_radar_ambiances',
+  LIKES_DATA: 'latinvader_likes_data'
 };
 
 let isAdmin = false;
@@ -773,7 +702,12 @@ let currentStars = 3;
 let badgeColors = {};
 let currentMediaType = 'video';
 
-// Ambiances radar
+let userId = localStorage.getItem('latinvader_user_id');
+if(!userId) {
+  userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem('latinvader_user_id', userId);
+}
+
 let radarAmbiances = [
   {id:'hype', label:'HYPE', color:'#d4472a'},
   {id:'chill', label:'CHILL', color:'#3d8bcd'},
@@ -807,6 +741,8 @@ let conceptsFilter = 'tout';
 let radarSpots = [];
 let radarSeq = 1;
 
+let likesData = {};
+
 function loadData() {
   const savedVideos = localStorage.getItem(STORAGE_KEYS.VIDEOS);
   if(savedVideos) {
@@ -821,6 +757,17 @@ function loadData() {
       {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304},
     ];
     vidSeq = 6;
+  }
+  
+  const savedLikes = localStorage.getItem(STORAGE_KEYS.LIKES_DATA);
+  if(savedLikes) {
+    likesData = JSON.parse(savedLikes);
+  } else {
+    videos.forEach(v => {
+      if(!likesData[v.id]) {
+        likesData[v.id] = { likes: 0, users: {} };
+      }
+    });
   }
   
   const savedVideoCats = localStorage.getItem(STORAGE_KEYS.VIDEO_CATS);
@@ -922,6 +869,7 @@ function saveMailbox() { localStorage.setItem(STORAGE_KEYS.MAILBOX, JSON.stringi
 function saveDropbox() { localStorage.setItem(STORAGE_KEYS.DROPBOX, JSON.stringify(dropMessages)); }
 function saveBadgeColors() { localStorage.setItem(STORAGE_KEYS.BADGE_COLORS, JSON.stringify(badgeColors)); }
 function saveRadarAmbiances() { localStorage.setItem(STORAGE_KEYS.RADAR_AMBIANCES, JSON.stringify(radarAmbiances)); }
+function saveLikesData() { localStorage.setItem(STORAGE_KEYS.LIKES_DATA, JSON.stringify(likesData)); }
 
 let currentSettingsPage = 'instant';
 
@@ -1030,7 +978,6 @@ function toggleTheme(){
   const d=h.getAttribute('data-theme')==='dark';
   h.setAttribute('data-theme',d?'light':'dark');
   document.getElementById('theme-btn').textContent=d?'☀️':'🌙';
-  updateLogo();
 }
 
 function openAdminModal(){
@@ -1109,14 +1056,6 @@ function setMediaType(type) {
   document.getElementById('vm-file').value = '';
 }
 
-function getLikeCount(postId) {
-  return likesGlobal[postId] ? likesGlobal[postId].likes || 0 : 0;
-}
-
-function hasUserLiked(postId) {
-  return likesGlobal[postId] && likesGlobal[postId].users && likesGlobal[postId].users[userId];
-}
-
 function renderInstant(){
   buildFilterBar('instant-filters',instantCats,'filterInstant',instantFilter,'instant','instant');
   const filtered = instantFilter==='tout' ? [...videos] : videos.filter(v=>v.cat===instantFilter);
@@ -1126,8 +1065,8 @@ function renderInstant(){
     const mediaDisplay = v.mediaType === 'image' && v.src ? 
       `<img src="${v.src}" style="width:100%;height:100%;object-fit:cover;">` :
       (v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">${v.mediaType === 'image' ? '🖼️' : '▶'}</div><div style="font-size:12px">Aucun média</div></div>`);
-    const hasLiked = hasUserLiked(v.id);
-    const likeCount = getLikeCount(v.id);
+    const hasLiked = likesData[v.id] && likesData[v.id].users && likesData[v.id].users[userId];
+    const likeCount = likesData[v.id] ? likesData[v.id].likes : 0;
     return `
     <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
          ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
@@ -1160,28 +1099,26 @@ function getCatLabel(id,arr){const c=arr.find(x=>(typeof x==='object'?x.id:x)===
 function formatNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
 function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;});}
 
-async function toggleLike(id){
-  if(!likesGlobal[id]) {
-    likesGlobal[id] = { likes: 0, users: {} };
+function toggleLike(id){
+  if(!likesData[id]) {
+    likesData[id] = { likes: 0, users: {} };
   }
   
-  if(likesGlobal[id].users[userId]) {
-    delete likesGlobal[id].users[userId];
-    likesGlobal[id].likes--;
+  if(likesData[id].users[userId]) {
+    delete likesData[id].users[userId];
+    likesData[id].likes--;
   } else {
-    likesGlobal[id].users[userId] = true;
-    likesGlobal[id].likes++;
+    likesData[id].users[userId] = true;
+    likesData[id].likes++;
   }
-  
-  saveLikesToLocal();
-  await saveLikesToCloud();
+  saveLikesData();
   
   const likeSpan = document.getElementById(`like-count-${id}`);
-  if(likeSpan) likeSpan.textContent = likesGlobal[id].likes;
+  if(likeSpan) likeSpan.textContent = likesData[id].likes;
   
   const likeBtn = document.querySelector(`.video-card[data-id="${id}"] .like-btn`);
   if(likeBtn) {
-    if(likesGlobal[id].users[userId]) {
+    if(likesData[id].users[userId]) {
       likeBtn.classList.add('liked');
       likeBtn.innerHTML = '❤️';
     } else {
@@ -1266,20 +1203,21 @@ function saveVideo(){
   } else {
     const newId = vidSeq++;
     videos.push({id:newId,...d,views:0});
-    if(!likesGlobal[newId]) {
-      likesGlobal[newId] = { likes: 0, users: {} };
+    if(!likesData[newId]) {
+      likesData[newId] = { likes: 0, users: {} };
     }
   }
   saveVideos();
-  saveLikesToLocal();
-  saveLikesToCloud();
+  saveLikesData();
   closeModal('video-modal');renderInstant();showToast(editingId?'✅ Post modifié !':'✅ Post ajouté !');editingId=null;
 }
 
 function editVideo(id){openVideoModal(id);}
-function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);delete likesGlobal[id];saveVideos();saveLikesToLocal();saveLikesToCloud();renderInstant();showToast('🗑️ Supprimé');}
+function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);delete likesData[id];saveVideos();saveLikesData();renderInstant();showToast('🗑️ Supprimé');}
 
-// ========== AUTRES FONCTIONS (raccourcies pour la longueur) ==========
+// Le reste des fonctions (stories, concepts, emploi, radar) sont identiques à la version précédente
+// Pour la longueur du message, je les garde identiques
+
 function renderStories(){
   buildFilterBar('stories-filters',storyCats.map(c=>({id:c,label:c})),'filterStories',storiesFilter,'stories','stories');
   const filtered=storiesFilter==='tout'?[...stories]:stories.filter(s=>s.cat===storiesFilter);
@@ -1377,7 +1315,6 @@ function saveStory(){
 function editStory(id){openStoryModal(id);}
 function deleteStory(id){if(!confirm('Supprimer ?'))return;stories=stories.filter(s=>s.id!==id);saveStories();renderStories();showToast('🗑️ Supprimé');}
 
-// Concepts, Emploi, Radar (fonctions similaires conservées mais raccourcies)
 function renderConcepts(){
   buildFilterBar('concepts-filters',conceptCats.map(c=>({id:c,label:c})),'filterConcepts',conceptsFilter,'concepts','concepts');
   const filtered=conceptsFilter==='tout'?concepts:concepts.filter(c=>c.cat===conceptsFilter);
@@ -1701,10 +1638,7 @@ function showToast(msg){
   clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000);
 }
 
-// Initialisation
 loadData();
-updateLogo();
-loadLikesFromCloud();
 renderAll();
 </script>
 </body>
