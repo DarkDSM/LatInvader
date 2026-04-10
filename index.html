@@ -379,7 +379,7 @@
       <div class="form-title">📩 Dépose ta candidature</div>
       <div class="form-sub">On te recontacte quand une entreprise cherche dans ton domaine.</div>
       <div class="form-group"><label class="form-label">Prénom RP</label><input type="text" class="form-input" id="cand-name" placeholder="Ex: Marcus Reyes"></div>
-      <div class="form-group"><label class="form-label">Numéro RP</label><input type="text" class="form-input" id="cand-num" placeholder="Ex: #4821"></div>
+      <div class="form-group"><label class="form-label">Numéro RP</label><input type="text" class="form-input" id="cand-num" placeholder="(555)222-2222"></div>
       <div class="form-group"><label class="form-label">Domaine</label>
         <select class="form-select" id="cand-domain">
           <option value="">Sélectionner...</option>
@@ -690,7 +690,7 @@ function loadData() {
   
   const savedVideoCats = localStorage.getItem(STORAGE_KEYS.VIDEO_CATS);
   if(savedVideoCats) instantCats = JSON.parse(savedVideoCats);
-  else instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS STYLE'}];
+  else instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'CALOR"S'}];
   
   const savedStories = localStorage.getItem(STORAGE_KEYS.STORIES);
   if(savedStories) {
