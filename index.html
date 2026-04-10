@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LatInvader — On met l'accent sur l'actu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ===== THEME ===== */
+  :root[data-theme="dark"] {
+    --bg: #100e09;
+    --bg2: #1a1610;
+    --bg3: #221e15;
+    --card: #1e1a12;
+    --card2: #252015;
+    --border: #2e2820;
+    --text: #e8dfc8;
+    --text2: #9a8f78;
+    --text3: #5c5444;
+    --gold: #c9a84c;
+    --gold2: #e8c96e;
+    --accent: #d4472a;
+    --accent2: #e05a3a;
+    --green: #4caf7d;
+    --purple: #9b59b6;
+    --blue: #3d8bcd;
+    --nav-active-bg: #c9a84c;
+    --nav-active-text: #100e09;
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f0e8;
+    --bg2: #ede6d6;
+    --bg3: #e4dac6;
+    --card: #ffffff;
+    --card2: #f8f3e8;
+    --border: #d4c9b0;
+    --text: #1a1610;
+    --text2: #5c5444;
+    --text3: #9a8f78;
+    --gold: #b8922e;
+    --gold2: #d4a83e;
+    --accent: #c43520;
+    --accent2: #d4462e;
+    --green: #2e8a5c;
+    --purple: #7d3ea0;
+    --blue: #2a6fa0;
+    --nav-active-bg: #c9a84c;
+    --nav-active-text: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-inner {
+    max-width: 1400px; margin: 0 auto;
+    padding: 0 24px;
+    display: flex; align-items: center; gap: 24px;
+    height: 56px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; flex-shrink: 0;
+  }
+  .logo-box {
+    background: var(--gold);
+    color: var(--bg);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+    border-radius: 4px;
+  }
+  .logo-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text2);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 4px;
+    margin-left: auto;
+  }
+  .nav-btn {
+    background: none; border: none;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    padding: 6px 14px; border-radius: 20px;
+    display: flex; align-items: center; gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); background: var(--bg3); }
+  .nav-btn.active {
+    background: var(--nav-active-bg);
+    color: var(--nav-active-text);
+    font-weight: 600;
+  }
+  .nav-btn .nav-icon { font-size: 14px; }
+  .nav-right { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+
+  /* Theme toggle */
+  .theme-btn {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2); cursor: pointer;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all 0.2s;
+  }
+  .theme-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* Admin btn */
+  .admin-btn {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2); cursor: pointer;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; transition: all 0.2s; position: relative;
+  }
+  .admin-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .admin-btn.logged { border-color: var(--green); color: var(--green); }
+  .admin-dot {
+    position: absolute; top: -2px; right: -2px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green); display: none;
+  }
+  .admin-btn.logged .admin-dot { display: block; }
+
+  /* ===== PAGES ===== */
+  .page { display: none; max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+  .page.active { display: block; }
+
+  .page-header { margin-bottom: 28px; }
+  .page-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px; font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 6px;
+  }
+  .page-sub { color: var(--text2); font-size: 14px; }
+
+  /* ===== FILTER TABS ===== */
+  .filter-bar {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 28px; align-items: center;
+  }
+  .filter-btn {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2); cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px; font-weight: 600;
+    padding: 6px 16px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover { color: var(--text); border-color: var(--text3); }
+  .filter-btn.active {
+    background: var(--gold); color: var(--bg);
+    border-color: var(--gold); font-weight: 700;
+  }
+  .add-cat-btn {
+    background: none; border: 1px dashed var(--border);
+    color: var(--text3); cursor: pointer;
+    font-size: 12px; padding: 6px 14px; border-radius: 20px;
+    transition: all 0.2s; display: none;
+  }
+  .add-cat-btn:hover { color: var(--gold); border-color: var(--gold); }
+  body.admin-mode .add-cat-btn { display: flex; align-items: center; gap: 4px; }
+
+  /* ===== VIDEO GRID ===== */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .video-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .video-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+  .video-thumb {
+    width: 100%; aspect-ratio: 16/10;
+    background: var(--bg3);
+    position: relative; overflow: hidden;
+  }
+  .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .video-thumb-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--bg3) 0%, var(--card2) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; color: var(--text3);
+  }
+  .video-badge {
+    position: absolute; top: 10px; left: 10px;
+    font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-red { background: var(--accent); color: #fff; }
+  .badge-purple { background: var(--purple); color: #fff; }
+  .badge-green { background: var(--green); color: #fff; }
+  .badge-blue { background: var(--blue); color: #fff; }
+  .badge-gold { background: var(--gold); color: var(--bg); }
+  .video-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    padding: 20px 12px 12px;
+    display: none;
+  }
+  .video-card:hover .video-overlay { display: block; }
+  .video-overlay-title { font-size: 13px; font-weight: 600; color: #fff; }
+  .video-info { padding: 12px; }
+  .video-info-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+  .video-info-sub { font-size: 12px; color: var(--text2); }
+
+  /* Admin add card */
+  .add-video-card {
+    background: var(--card); border: 2px dashed var(--border);
+    border-radius: 10px; cursor: pointer;
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px;
+    aspect-ratio: unset; min-height: 180px;
+    color: var(--text3); transition: all 0.2s;
+  }
+  .add-video-card:hover { border-color: var(--gold); color: var(--gold); }
+  .add-video-card span { font-size: 12px; }
+  body.admin-mode .add-video-card { display: flex; }
+
+  /* ===== STORIES / STORYTELLING ===== */
+  .story-featured {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden; margin-bottom: 16px;
+    cursor: pointer; transition: border-color 0.2s;
+  }
+  .story-featured:hover { border-color: var(--gold); }
+  .story-featured-img {
+    width: 100%; height: 280px;
+    background: linear-gradient(135deg, #1a1a2e, #2d2d2d);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 64px; position: relative; overflow: hidden;
+  }
+  .story-featured-img img { width: 100%; height: 100%; object-fit: cover; }
+  .story-featured-body { padding: 20px 24px; }
+  .story-cat { font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; }
+  .story-featured-title {
+    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .story-featured-sub { color: var(--text2); font-size: 14px; margin-bottom: 12px; }
+  .story-time { color: var(--text3); font-size: 12px; display: flex; align-items: center; gap: 6px; }
+
+  .stories-list { display: flex; flex-direction: column; gap: 12px; }
+  .story-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+    display: flex; gap: 16px; cursor: pointer;
+    transition: border-color 0.2s; align-items: flex-start;
+  }
+  .story-item:hover { border-color: var(--gold); }
+  .story-item-img {
+    width: 80px; height: 60px; border-radius: 6px;
+    background: var(--bg3); flex-shrink: 0; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .story-item-img img { width: 100%; height: 100%; object-fit: cover; }
+  .story-item-cat {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; color: var(--accent2);
+    background: rgba(212,71,42,0.15); padding: 2px 6px; border-radius: 4px;
+    display: inline-block; margin-bottom: 6px;
+  }
+  .story-item-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .story-item-time { color: var(--text3); font-size: 12px; }
+
+  /* ===== HUB EMPLOI ===== */
+  .emploi-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+  .tab-btn {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2); cursor: pointer; padding: 8px 20px;
+    border-radius: 8px; font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600; transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+
+  .emploi-section { display: none; }
+  .emploi-section.active { display: block; }
+
+  .emploi-cats {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .emploi-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
+  }
+  .emploi-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+    display: flex; gap: 14px; align-items: flex-start;
+    transition: border-color 0.2s; cursor: pointer;
+  }
+  .emploi-card:hover { border-color: var(--gold); }
+  .emploi-icon {
+    width: 44px; height: 44px; border-radius: 8px;
+    background: var(--bg3); display: flex; align-items: center;
+    justify-content: center; font-size: 20px; flex-shrink: 0;
+  }
+  .emploi-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .emploi-company { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+  .emploi-desc { font-size: 12px; color: var(--text3); }
+  .emploi-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
+    margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+  .badge-legal { background: rgba(76,175,125,0.2); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
+  .badge-service { background: rgba(61,139,205,0.2); color: var(--blue); border: 1px solid rgba(61,139,205,0.3); }
+  .badge-passion { background: rgba(155,89,182,0.2); color: var(--purple); border: 1px solid rgba(155,89,182,0.3); }
+  .badge-illégal { background: rgba(212,71,42,0.2); color: var(--accent); border: 1px solid rgba(212,71,42,0.3); }
+
+  /* Candidate form */
+  .form-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 28px; max-width: 560px;
+  }
+  .form-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .form-sub { color: var(--text2); font-size: 13px; margin-bottom: 24px; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%; background: var(--bg2); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px; padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif; font-size: 13px;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+  .form-select { appearance: none; cursor: pointer; }
+  .form-textarea { resize: vertical; min-height: 90px; }
+  .btn-submit {
+    background: var(--gold); color: var(--bg); border: none;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+    padding: 12px 24px; border-radius: 8px; cursor: pointer;
+    width: 100%; letter-spacing: 0.5px; transition: opacity 0.2s;
+  }
+  .btn-submit:hover { opacity: 0.85; }
+
+  /* ===== CONCEPTS ===== */
+  .concepts-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .concept-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .concept-card:hover { transform: translateY(-3px); border-color: var(--gold); }
+  .concept-img {
+    width: 100%; height: 180px; background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; position: relative; overflow: hidden;
+  }
+  .concept-img img { width: 100%; height: 100%; object-fit: cover; }
+  .concept-badge { position: absolute; top: 10px; left: 10px; }
+  .concept-body { padding: 14px; }
+  .concept-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .concept-meta { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+  .stars { color: var(--gold); font-size: 13px; margin-bottom: 6px; }
+  .concept-desc { font-size: 12px; color: var(--text3); }
+
+  /* ===== DROP BOX ===== */
+  .dropbox-grid {
+    display: grid; grid-template-columns: 1fr 380px; gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 900px) { .dropbox-grid { grid-template-columns: 1fr; } }
+  .dropbox-sidebar { display: flex; flex-direction: column; gap: 16px; }
+  .info-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .info-card-title {
+    font-size: 15px; font-weight: 700; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .info-list { list-style: disc; padding-left: 20px; }
+  .info-list li { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+
+  /* ===== RADAR ===== */
+  .radar-section { margin-bottom: 32px; }
+  .radar-section-title {
+    font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--text2); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .radar-live-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+  .radar-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 12px;
+  }
+  .radar-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 12px; position: relative;
+  }
+  .radar-card-left { flex: 1; }
+  .radar-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .radar-location { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+  .radar-desc { font-size: 12px; color: var(--text3); }
+  .radar-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .crowd-meter { display: flex; gap: 3px; }
+  .crowd-bar { width: 6px; height: 20px; border-radius: 3px; background: var(--bg3); transition: background 0.3s; }
+  .crowd-bar.filled { background: var(--gold); }
+  .crowd-bar.hype { background: var(--accent); }
+  .crowd-label { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 4px; }
+  .radar-badge {
+    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .radar-hype { background: rgba(212,71,42,0.15); color: var(--accent); border: 1px solid rgba(212,71,42,0.3); }
+  .radar-chill { background: rgba(61,139,205,0.15); color: var(--blue); border: 1px solid rgba(61,139,205,0.3); }
+  .radar-business { background: rgba(76,175,125,0.15); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
+  .radar-danger { background: rgba(212,71,42,0.2); color: var(--accent2); border: 1px solid rgba(212,71,42,0.4); }
+
+  /* Admin edit btn on cards */
+  .edit-btn {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--gold); color: var(--bg); border: none;
+    font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
+    cursor: pointer; display: none;
+  }
+  body.admin-mode .edit-btn { display: block; }
+
+  /* Admin radar edit */
+  .radar-edit-controls { display: none; gap: 8px; margin-top: 8px; }
+  body.admin-mode .radar-edit-controls { display: flex; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+    z-index: 200; display: none; align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 32px; width: 360px;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+    margin-bottom: 6px; text-align: center;
+  }
+  .modal-sub { color: var(--text2); font-size: 13px; text-align: center; margin-bottom: 24px; }
+  .modal-avatar { font-size: 48px; text-align: center; margin-bottom: 16px; }
+  .modal-error { color: var(--accent); font-size: 12px; text-align: center; margin-top: 8px; display: none; }
+
+  /* Add item modal content */
+  #add-modal .modal { width: 440px; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--bg2); border-top: 1px solid var(--border);
+    padding: 20px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-inner { max-width: 1400px; margin: 0 auto; width: 100%;
+    display: flex; justify-content: space-between; align-items: center; }
+  .footer-left { display: flex; align-items: center; gap: 10px; }
+  .footer-logo-box {
+    width: 28px; height: 28px; background: var(--gold); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--bg);
+  }
+  .footer-text { font-size: 12px; color: var(--text3); }
+  .footer-right { font-size: 12px; color: var(--text3); }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--card); border: 1px solid var(--green);
+    color: var(--text); border-radius: 8px; padding: 12px 20px;
+    font-size: 13px; z-index: 300; display: none;
+    animation: fadeInUp 0.3s ease;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Admin bar */
+  .admin-bar {
+    background: rgba(76,175,125,0.1); border-bottom: 1px solid rgba(76,175,125,0.3);
+    padding: 6px 24px; display: none; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--green);
+  }
+  body.admin-mode .admin-bar { display: flex; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .video-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ADMIN BAR -->
+<div class="admin-bar">
+  <span>🛡️</span>
+  <span><strong>Mode Admin actif</strong> — Tu peux modifier le contenu du site en temps réel</span>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#">
+      <div class="logo-box">LatInvader</div>
+      <span class="logo-sub">On met l'accent sur l'actu</span>
+    </a>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant">
+        <span class="nav-icon">🎬</span> L'Instant
+      </button>
+      <button class="nav-btn" onclick="showPage('stories')" id="nav-stories">
+        <span class="nav-icon">✍️</span> Storytelling
+      </button>
+      <button class="nav-btn" onclick="showPage('emploi')" id="nav-emploi">
+        <span class="nav-icon">💼</span> Hub Emploi
+      </button>
+      <button class="nav-btn" onclick="showPage('concepts')" id="nav-concepts">
+        <span class="nav-icon">💡</span> Concepts
+      </button>
+      <button class="nav-btn" onclick="showPage('dropbox')" id="nav-dropbox">
+        <span class="nav-icon">📬</span> Drop Box
+      </button>
+      <button class="nav-btn" onclick="showPage('radar')" id="nav-radar">
+        <span class="nav-icon">📡</span> Le Radar
+      </button>
+    </div>
+    <div class="nav-right">
+      <button class="theme-btn" onclick="toggleTheme()" title="Changer le thème" id="theme-btn">🌙</button>
+      <button class="admin-btn" onclick="openAdminModal()" id="admin-btn" title="Se connecter">
+        🧍
+        <div class="admin-dot"></div>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ PAGE: L'INSTANT ============ -->
+<div class="page active" id="page-instant">
+  <div class="page-header">
+    <div class="page-title">🎬 L'Instant</div>
+    <div class="page-sub">Un instant de vie capturé pour l'éternité.</div>
+  </div>
+  <div class="filter-bar" id="instant-filters">
+    <button class="filter-btn active" onclick="filterInstant('tout', this)">TOUT</button>
+    <button class="filter-btn" onclick="filterInstant('60 secondes d\'actu', this)">60 SECONDES D'ACTU</button>
+    <button class="filter-btn" onclick="filterInstant('micro-trottoir', this)">MICRO-TROTTOIR</button>
+    <button class="filter-btn" onclick="filterInstant('colors style', this)">COLORS STYLE</button>
+    <button class="add-cat-btn" onclick="addCategory('instant')">+ Catégorie</button>
+  </div>
+  <div class="video-grid" id="instant-grid">
+    <!-- Sample GTA RP cards -->
+    <div class="video-card" data-cat="60 secondes d'actu">
+      <div class="video-thumb">
+        <div class="video-thumb-placeholder">🏙️</div>
+        <div class="video-badge badge-red">60 SECONDES D'ACTU</div>
+        <div class="video-overlay"><div class="video-overlay-title">Un monde de chien pour l'ouverture de la nouvelle boutique de vêtement</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-info-title">Un monde de chien pour l'ouverture...</div>
+        <div class="video-info-sub">Notre reporter sur place pour...</div>
+      </div>
+    </div>
+    <div class="video-card" data-cat="60 secondes d'actu">
+      <div class="video-thumb">
+        <div class="video-thumb-placeholder">🏦</div>
+        <div class="video-badge badge-red">60 SECONDES D'ACTU</div>
+        <div class="video-overlay"><div class="video-overlay-title">Braquage au Fleeca Bank : 60 secondes chrono</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-info-title">Braquage au Fleeca Bank : 60s</div>
+        <div class="video-info-sub">Résumé ultra-rapide du braquage...</div>
+      </div>
+    </div>
+    <div class="video-card" data-cat="micro-trottoir">
+      <div class="video-thumb">
+        <div class="video-thumb-placeholder">🎤</div>
+        <div class="video-badge badge-blue">MICRO-TROTTOIR</div>
+        <div class="video-overlay"><div class="video-overlay-title">C'est quoi ton salaire à LS ?</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-info-title">C'est quoi ton salaire à LS ?</div>
+        <div class="video-info-sub">On a posé la question qui fâche...</div>
+      </div>
+    </div>
+    <div class="video-card" data-cat="colors style">
+      <div class="video-thumb">
+        <div class="video-thumb-placeholder">🎶</div>
+        <div class="video-badge badge-purple">COLORS STYLE</div>
+        <div class="video-overlay"><div class="video-overlay-title">Lil Smokey — Interview Colors</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-info-title">Lil Smokey — Interview Colors</div>
+        <div class="video-info-sub">Le rappeur de Strawberry se confie...</div>
+      </div>
+    </div>
+    <div class="video-card" data-cat="60 secondes d'actu">
+      <div class="video-thumb">
+        <div class="video-thumb-placeholder">🚗</div>
+        <div class="video-badge badge-red">60 SECONDES D'ACTU</div>
+        <div class="video-overlay"><div class="video-overlay-title">Course-poursuite sur l'autoroute : 60s</div></div>
+      </div>
+      <div class="video-info">
+        <div class="video-info-title">Course-poursuite sur l'autoroute</div>
+        <div class="video-info-sub">La LSPD en action ce matin à 6h...</div>
+      </div>
+    </div>
+    <div class="video-card add-video-card" onclick="openAddModal('instant')">
+      <div style="font-size:28px">➕</div>
+      <span>Ajouter une vidéo</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: STORYTELLING ============ -->
+<div class="page" id="page-stories">
+  <div class="page-header">
+    <div class="page-title">✍️ Storytelling</div>
+    <div class="page-sub">On dit tout haut ce que vous pensez tout bas.</div>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCat(this)">TOUT</button>
+    <button class="filter-btn" onclick="filterCat(this)">POTINS</button>
+    <button class="filter-btn" onclick="filterCat(this)">BREAKING</button>
+    <button class="filter-btn" onclick="filterCat(this)">FAITS DIVERS</button>
+    <button class="add-cat-btn" onclick="addCategory('stories')">+ Catégorie</button>
+  </div>
+  <!-- Featured -->
+  <div class="story-featured">
+    <div class="story-featured-img">🔫</div>
+    <div class="story-featured-body">
+      <div class="story-cat">⚡ BREAKING</div>
+      <div class="story-featured-title">BREAKING : Fusillade au Unicorn, 3 blessés</div>
+      <div class="story-featured-sub">Les secours sont sur place, la police boucle le quartier</div>
+      <div class="story-time">🕐 Il y a 16 heures</div>
+    </div>
+  </div>
+  <div class="stories-list">
+    <div class="story-item">
+      <div class="story-item-img">🎩</div>
+      <div>
+        <div class="story-item-cat">POTINS</div>
+        <div class="story-item-title">Qui est la mystérieuse femme du maire ?</div>
+        <div class="story-item-time">🕐 Il y a 16 heures</div>
+      </div>
+    </div>
+    <div class="story-item">
+      <div class="story-item-img">🚔</div>
+      <div>
+        <div class="story-item-cat">FAITS DIVERS</div>
+        <div class="story-item-title">Un dealer arrêté en plein deal à Strawberry</div>
+        <div class="story-item-time">🕐 Il y a 2 heures</div>
+      </div>
+    </div>
+    <div class="story-item">
+      <div class="story-item-img">💰</div>
+      <div>
+        <div class="story-item-cat">POTINS</div>
+        <div class="story-item-title">Le Diamond Casino racheté ? Les rumeurs s'intensifient</div>
+        <div class="story-item-time">🕐 Il y a 1 jour</div>
+      </div>
+    </div>
+    <div class="story-item add-video-card" style="min-height:70px;border-radius:10px;" onclick="openAddModal('story')">
+      <div style="font-size:22px">➕</div>
+      <span>Ajouter un article</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: HUB EMPLOI ============ -->
+<div class="page" id="page-emploi">
+  <div class="page-header">
+    <div class="page-title">💼 Hub Emploi</div>
+    <div class="page-sub">Le cabinet de recrutement n°1 de Los Santos. Trouve ton job ou dépose ta candidature.</div>
+  </div>
+  <div class="emploi-tabs">
+    <button class="tab-btn active" onclick="switchEmploi('recrute', this)">On Recrute</button>
+    <button class="tab-btn" onclick="switchEmploi('cherche', this)">Je Cherche</button>
+  </div>
+
+  <!-- ON RECRUTE -->
+  <div class="emploi-section active" id="emploi-recrute">
+    <div class="emploi-cats filter-bar">
+      <button class="filter-btn active" onclick="filterEmploy('tout', this)">TOUT</button>
+      <button class="filter-btn" onclick="filterEmploy('service public', this)">SERVICE PUBLIC</button>
+      <button class="filter-btn" onclick="filterEmploy('boîte de nuit', this)">BOÎTE DE NUIT</button>
+      <button class="filter-btn" onclick="filterEmploy('mécano', this)">MÉCANO</button>
+      <button class="filter-btn" onclick="filterEmploy('restaurant', this)">RESTAURANT</button>
+      <button class="filter-btn" onclick="filterEmploy('media', this)">MÉDIA</button>
+      <button class="add-cat-btn" onclick="addCategory('emploi')">+ Catégorie</button>
+    </div>
+    <div class="emploi-grid" id="emploi-grid">
+      <div class="emploi-card" data-cat="service public">
+        <div class="emploi-icon">🚑</div>
+        <div>
+          <div class="emploi-title">Ambulancier <span class="emploi-badge badge-legal">LÉGAL</span></div>
+          <div class="emploi-company">Los Santos Medical Center</div>
+          <div class="emploi-desc">On cherche des ambulanciers motivés pour les urgences de nuit.</div>
+        </div>
+        <button class="edit-btn" onclick="editItem(this)">✏️</button>
+      </div>
+      <div class="emploi-card" data-cat="boîte de nuit">
+        <div class="emploi-icon">🎧</div>
+        <div>
+          <div class="emploi-title">Barman / DJ <span class="emploi-badge badge-passion">PASSION</span></div>
+          <div class="emploi-company">Bahama Mamas</div>
+          <div class="emploi-desc">Le club le plus hype de LS recrute pour les soirées du week-end.</div>
+        </div>
+        <button class="edit-btn" onclick="editItem(this)">✏️</button>
+      </div>
+      <div class="emploi-card" data-cat="mécano">
+        <div class="emploi-icon">🔧</div>
+        <div>
+          <div class="emploi-title">Mécanicien <span class="emploi-badge badge-service">SERVICE</span></div>
+          <div class="emploi-company">LS Customs</div>
+          <div class="emploi-desc">Tu sais tourner une clé ? On a besoin de toi.</div>
+        </div>
+        <button class="edit-btn" onclick="editItem(this)">✏️</button>
+      </div>
+      <div class="emploi-card" data-cat="media">
+        <div class="emploi-icon">📹</div>
+        <div>
+          <div class="emploi-title">Caméraman <span class="emploi-badge badge-legal">LÉGAL</span></div>
+          <div class="emploi-company">Weazel News</div>
+          <div class="emploi-desc">Oui, même la concurrence recrute.</div>
+        </div>
+        <button class="edit-btn" onclick="editItem(this)">✏️</button>
+      </div>
+      <div class="emploi-card" data-cat="restaurant">
+        <div class="emploi-icon">🍔</div>
+        <div>
+          <div class="emploi-title">Serveur <span class="emploi-badge badge-service">SERVICE</span></div>
+          <div class="emploi-company">Burger Shot — Vespucci</div>
+          <div class="emploi-desc">Le rush du midi, ça te connaît ? Rejoins l'équipe.</div>
+        </div>
+        <button class="edit-btn" onclick="editItem(this)">✏️</button>
+      </div>
+      <div class="emploi-card add-video-card" style="min-height:90px;border-radius:10px;" onclick="openAddModal('emploi')">
+        <div style="font-size:22px">➕</div>
+        <span>Ajouter une offre</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- JE CHERCHE -->
+  <div class="emploi-section" id="emploi-cherche">
+    <div class="form-card">
+      <div class="form-title">📩 Dépose ta candidature</div>
+      <div class="form-sub">On te recontacte quand une entreprise cherche dans ton domaine.</div>
+      <div class="form-group">
+        <label class="form-label">Ton prénom RP</label>
+        <input type="text" class="form-input" placeholder="Ex: Marcus Reyes">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Numéro RP</label>
+        <input type="text" class="form-input" placeholder="Ex: #4821">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Domaine recherché</label>
+        <select class="form-select">
+          <option value="">Sélectionner un domaine...</option>
+          <option>Service public (LSMC, LSPD, LSFD...)</option>
+          <option>Boîte de nuit / Entertainment</option>
+          <option>Mécanique / Customs</option>
+          <option>Restauration</option>
+          <option>Média / Journalisme</option>
+          <option>Immobilier</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Précisions (optionnel)</label>
+        <textarea class="form-textarea" placeholder="Expérience, disponibilités, envies..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitForm()">📨 Envoyer ma candidature</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: CONCEPTS ============ -->
+<div class="page" id="page-concepts">
+  <div class="page-header">
+    <div class="page-title">💡 Concepts Originaux</div>
+    <div class="page-sub">Fast & Food, Outfits, Le Switch — nos formats uniques qu'on retrouve nulle part ailleurs.</div>
+  </div>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCat(this)">TOUT</button>
+    <button class="filter-btn" onclick="filterCat(this)">🍔 FAST & FOOD</button>
+    <button class="filter-btn" onclick="filterCat(this)">👗 OUTFITS</button>
+    <button class="filter-btn" onclick="filterCat(this)">🔀 LE SWITCH</button>
+    <button class="add-cat-btn" onclick="addCategory('concepts')">+ Catégorie</button>
+  </div>
+  <div class="concepts-grid">
+    <div class="concept-card">
+      <div class="concept-img">
+        🍔
+        <div class="concept-badge"><span class="video-badge badge-gold">FAST & FOOD</span></div>
+      </div>
+      <div class="concept-body">
+        <div class="concept-title">Le Mega Burger du Burger Shot</div>
+        <div class="concept-meta">Burger Shot — Vespucci</div>
+        <div class="stars">⭐⭐☆☆☆</div>
+        <div class="concept-desc">C'est gras, c'est cheap, mais ça cale. Le classique de LS.</div>
+      </div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-img">
+        👗
+        <div class="concept-badge"><span class="video-badge badge-blue">OUTFITS</span></div>
+      </div>
+      <div class="concept-body">
+        <div class="concept-title">L'outfit à 50k$ de Marcus</div>
+        <div class="concept-meta">Ponsonbys — Rockford Hills</div>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <div class="concept-desc">Marcus nous a montré sa tenue complète Ponsonbys. Le drip est réel.</div>
+      </div>
+    </div>
+    <div class="concept-card">
+      <div class="concept-img">
+        🔀
+        <div class="concept-badge"><span class="video-badge badge-purple">LE SWITCH</span></div>
+      </div>
+      <div class="concept-body">
+        <div class="concept-title">24h dans la peau d'un dépanneur</div>
+        <div class="concept-meta">LS Roads — Davis</div>
+        <div class="stars">⭐⭐⭐☆☆</div>
+        <div class="concept-desc">On a suivi un dépanneur pendant 24h. Entre les PV et les accidents, c'est un métier de fou.</div>
+      </div>
+    </div>
+    <div class="concept-card add-video-card" style="min-height:200px;border-radius:10px;" onclick="openAddModal('concept')">
+      <div style="font-size:28px">➕</div>
+      <span>Ajouter un concept</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: DROP BOX ============ -->
+<div class="page" id="page-dropbox">
+  <div class="page-header">
+    <div class="page-title">📬 Drop Box</div>
+    <div class="page-sub">Tu as une info, une vidéo, une preuve ? Balance tout ici, c'est 100% anonyme.</div>
+  </div>
+  <div class="dropbox-grid">
+    <div class="form-card" style="max-width:100%">
+      <div class="form-group">
+        <label class="form-label">Titre (optionnel)</label>
+        <input type="text" class="form-input" placeholder="Donne un titre à ton info...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ton info</label>
+        <textarea class="form-textarea" style="min-height:140px" placeholder="Décris ce que tu as vu, entendu, ou ce que tu veux signaler..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Catégorie</label>
+        <select class="form-select">
+          <option>Bavure policière / Abus de pouvoir</option>
+          <option>Activité illégale</option>
+          <option>Scoop / Info exclusive</option>
+          <option>Course-poursuite / Événement</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Fichiers (photos, vidéos)</label>
+        <div style="border:1px dashed var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text3);cursor:pointer;font-size:13px;" onclick="this.querySelector('input').click()">
+          📎 Ajouter des fichiers (photos, vidéos)
+          <input type="file" style="display:none" multiple>
+        </div>
+      </div>
+      <button class="btn-submit" onclick="submitForm()">📨 Envoyer anonymement</button>
+    </div>
+    <div class="dropbox-sidebar">
+      <div class="info-card">
+        <div class="info-card-title">🛡️ 100% Anonyme</div>
+        <p style="font-size:13px;color:var(--text2)">Ton identité est protégée. On ne stocke aucune information personnelle. Seule la rédaction de LatInvader a accès aux envois.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">🎯 Ce qu'on recherche</div>
+        <ul class="info-list">
+          <li>Bavures policières ou abus de pouvoir</li>
+          <li>Activités illégales flagrantes</li>
+          <li>Scoops et infos exclusives</li>
+          <li>Vidéos de courses-poursuites ou événements</li>
+          <li>Potins sur des personnalités de la ville</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PAGE: LE RADAR ============ -->
+<div class="page" id="page-radar">
+  <div class="page-header">
+    <div class="page-title">📡 Le Radar</div>
+    <div class="page-sub">Où ça bouge ce soir à Los Santos ? Les spots les plus hype en temps réel.</div>
+  </div>
+
+  <div class="radar-section">
+    <div class="radar-section-title">
+      <div class="radar-live-dot"></div>
+      SPOTS HYPE — MAINTENANT
+    </div>
+    <div class="radar-grid" id="radar-hype-grid">
+      <div class="radar-card" data-crowd="5" data-status="hype">
+        <div class="radar-card-left">
+          <div class="radar-name">Vanilla Unicorn <span class="radar-badge radar-hype">HYPE</span></div>
+          <div class="radar-location">📍 Strawberry</div>
+          <div class="radar-desc" id="desc-unicorn">La soirée bat son plein, DJ set live ce soir.</div>
+          <div class="radar-edit-controls">
+            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowd(this)">
+              <option value="1">Vide</option><option value="2">Calme</option>
+              <option value="3">Animé</option><option value="4">Blindé</option>
+              <option value="5" selected>Ouf</option>
+            </select>
+            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-unicorn')">
+          </div>
+        </div>
+        <div class="radar-right">
+          <div class="crowd-meter" id="meter-unicorn">
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar hype filled"></div>
+          </div>
+          <div class="crowd-label">👥 Crowd</div>
+        </div>
+      </div>
+      <div class="radar-card" data-crowd="4" data-status="hype">
+        <div class="radar-card-left">
+          <div class="radar-name">Bahama Mamas <span class="radar-badge radar-hype">HYPE</span></div>
+          <div class="radar-location">📍 Downtown LS</div>
+          <div class="radar-desc" id="desc-bahama">Soirée open bar + contest DJ. Ça va être chaud.</div>
+          <div class="radar-edit-controls">
+            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-bahama')">
+              <option value="1">Vide</option><option value="2">Calme</option>
+              <option value="3">Animé</option><option value="4" selected>Blindé</option>
+              <option value="5">Ouf</option>
+            </select>
+            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-bahama')">
+          </div>
+        </div>
+        <div class="radar-right">
+          <div class="crowd-meter" id="meter-bahama">
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar hype filled"></div>
+            <div class="crowd-bar"></div>
+          </div>
+          <div class="crowd-label">👥 Crowd</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="radar-section">
+    <div class="radar-section-title">AUTRES SPOTS</div>
+    <div class="radar-grid">
+      <div class="radar-card">
+        <div class="radar-card-left">
+          <div class="radar-name">Del Perro Pier <span class="radar-badge radar-chill">CHILL</span></div>
+          <div class="radar-location">📍 Del Perro Beach</div>
+          <div class="radar-desc" id="desc-delperro">Chill au bord de l'eau, quelques groupes tranquilles.</div>
+          <div class="radar-edit-controls">
+            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-delperro')">
+              <option value="1">Vide</option><option value="2">Calme</option>
+              <option value="3" selected>Animé</option><option value="4">Blindé</option><option value="5">Ouf</option>
+            </select>
+            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-delperro')">
+          </div>
+        </div>
+        <div class="radar-right">
+          <div class="crowd-meter" id="meter-delperro">
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar"></div><div class="crowd-bar"></div>
+          </div>
+          <div class="crowd-label">👥 Crowd</div>
+        </div>
+      </div>
+      <div class="radar-card">
+        <div class="radar-card-left">
+          <div class="radar-name">Diamond Casino & Resort <span class="radar-badge radar-business">BUSINESS</span></div>
+          <div class="radar-location">📍 Vinewood</div>
+          <div class="radar-desc" id="desc-diamond">Les gros joueurs sont là ce soir. Ambiance feutrée.</div>
+          <div class="radar-edit-controls">
+            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-diamond')">
+              <option value="1">Vide</option><option value="2">Calme</option>
+              <option value="3">Animé</option><option value="4" selected>Blindé</option><option value="5">Ouf</option>
+            </select>
+            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-diamond')">
+          </div>
+        </div>
+        <div class="radar-right">
+          <div class="crowd-meter" id="meter-diamond">
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar"></div>
+          </div>
+          <div class="crowd-label">👥 Crowd</div>
+        </div>
+      </div>
+      <div class="radar-card">
+        <div class="radar-card-left">
+          <div class="radar-name">Grove Street <span class="radar-badge radar-danger">DANGER</span></div>
+          <div class="radar-location">📍 Davis</div>
+          <div class="radar-desc" id="desc-grove">Tensions ce soir, restez prudents dans le coin.</div>
+          <div class="radar-edit-controls">
+            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-grove')">
+              <option value="1">Vide</option><option value="2" selected>Calme</option>
+              <option value="3">Animé</option><option value="4">Blindé</option><option value="5">Ouf</option>
+            </select>
+            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-grove')">
+          </div>
+        </div>
+        <div class="radar-right">
+          <div class="crowd-meter" id="meter-grove">
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar filled"></div>
+            <div class="crowd-bar"></div><div class="crowd-bar"></div><div class="crowd-bar"></div>
+          </div>
+          <div class="crowd-label">👥 Crowd</div>
+        </div>
+      </div>
+      <div class="radar-card add-video-card" style="min-height:90px;border-radius:10px;" onclick="openAddModal('radar')">
+        <div style="font-size:22px">➕</div>
+        <span>Ajouter un spot</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div class="footer-logo-box">L</div>
+      <span class="footer-text">© LatInvader — On met l'accent sur l'actualité</span>
+    </div>
+    <div class="footer-right">Le média n°1 de Los Santos</div>
+  </div>
+</footer>
+
+<!-- ===== MODAL: ADMIN LOGIN ===== -->
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal">
+    <div class="modal-avatar">🧍</div>
+    <div class="modal-title" id="admin-modal-title">Connexion Admin</div>
+    <div class="modal-sub" id="admin-modal-sub">Entre ton mot de passe pour accéder au mode édition.</div>
+    <div class="form-group">
+      <label class="form-label">Mot de passe</label>
+      <input type="password" class="form-input" id="admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()">
+    </div>
+    <button class="btn-submit" onclick="loginAdmin()">Se connecter</button>
+    <div class="modal-error" id="admin-error">Mot de passe incorrect.</div>
+    <div style="margin-top:12px;text-align:center">
+      <button style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;" onclick="closeModal('admin-modal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD ITEM ===== -->
+<div class="modal-overlay" id="add-modal">
+  <div class="modal" style="width:440px">
+    <div class="modal-title" id="add-modal-title">Ajouter un élément</div>
+    <div style="margin-bottom:20px"></div>
+    <div class="form-group">
+      <label class="form-label">Titre</label>
+      <input type="text" class="form-input" id="add-title" placeholder="Titre...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Sous-titre / Description</label>
+      <input type="text" class="form-input" id="add-sub" placeholder="Description courte...">
+    </div>
+    <div class="form-group" id="add-cat-group">
+      <label class="form-label">Catégorie</label>
+      <input type="text" class="form-input" id="add-cat" placeholder="Ex: Micro-trottoir">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-submit" onclick="confirmAdd()">✅ Ajouter</button>
+      <button style="flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;cursor:pointer;" onclick="closeModal('add-modal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Action effectuée avec succès !</div>
+
+<script>
+  // ===== STATE =====
+  let isAdmin = false;
+  const ADMIN_PASS = "latinvader2025"; // Change ici
+  let currentAddContext = '';
+
+  // ===== NAVIGATION =====
+  function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.getElementById('nav-' + page).classList.add('active');
+  }
+
+  // ===== THEME =====
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
+  }
+
+  // ===== ADMIN =====
+  function openAdminModal() {
+    if (isAdmin) { logoutAdmin(); return; }
+    document.getElementById('admin-password').value = '';
+    document.getElementById('admin-error').style.display = 'none';
+    document.getElementById('admin-modal').classList.add('open');
+    setTimeout(() => document.getElementById('admin-password').focus(), 100);
+  }
+  function loginAdmin() {
+    const pass = document.getElementById('admin-password').value;
+    if (pass === ADMIN_PASS) {
+      isAdmin = true;
+      document.body.classList.add('admin-mode');
+      document.getElementById('admin-btn').classList.add('logged');
+      closeModal('admin-modal');
+      showToast('🛡️ Mode admin activé !');
+    } else {
+      document.getElementById('admin-error').style.display = 'block';
+      document.getElementById('admin-password').value = '';
+      document.getElementById('admin-password').focus();
+    }
+  }
+  function logoutAdmin() {
+    isAdmin = false;
+    document.body.classList.remove('admin-mode');
+    document.getElementById('admin-btn').classList.remove('logged');
+    showToast('👋 Déconnecté du mode admin');
+  }
+
+  // ===== MODALS =====
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  });
+
+  // ===== FILTERS =====
+  function filterCat(btn) {
+    btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function filterInstant(cat, btn) {
+    btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#instant-grid .video-card[data-cat]').forEach(card => {
+      if (cat === 'tout' || card.dataset.cat === cat) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+  function filterEmploy(cat, btn) {
+    btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#emploi-grid .emploi-card[data-cat]').forEach(card => {
+      if (cat === 'tout' || card.dataset.cat === cat) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // ===== TAB SWITCH =====
+  function switchEmploi(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.emploi-section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('emploi-' + tab).classList.add('active');
+  }
+
+  // ===== ADD CATEGORY =====
+  function addCategory(context) {
+    if (!isAdmin) return;
+    const name = prompt('Nom de la nouvelle catégorie :');
+    if (!name) return;
+    // Find the right filter bar
+    const pages = { instant: 'instant-filters', stories: 'page-stories', emploi: 'emploi-cats', concepts: 'page-concepts' };
+    let filterBar;
+    if (context === 'instant') filterBar = document.getElementById('instant-filters');
+    else if (context === 'stories') filterBar = document.querySelector('#page-stories .filter-bar');
+    else if (context === 'emploi') filterBar = document.querySelector('#emploi-recrute .filter-bar');
+    else if (context === 'concepts') filterBar = document.querySelector('#page-concepts .filter-bar');
+    if (!filterBar) return;
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = name.toUpperCase();
+    btn.onclick = function() { filterCat(this); };
+    filterBar.insertBefore(btn, filterBar.querySelector('.add-cat-btn'));
+    showToast('✅ Catégorie "' + name + '" ajoutée !');
+  }
+
+  // ===== ADD ITEM MODAL =====
+  function openAddModal(ctx) {
+    if (!isAdmin) { showToast('🔒 Connecte-toi en admin d\'abord !'); return; }
+    currentAddContext = ctx;
+    const titles = {
+      instant: 'Ajouter une vidéo',
+      story: 'Ajouter un article',
+      emploi: 'Ajouter une offre d\'emploi',
+      concept: 'Ajouter un concept',
+      radar: 'Ajouter un spot'
+    };
+    document.getElementById('add-modal-title').textContent = titles[ctx] || 'Ajouter';
+    document.getElementById('add-title').value = '';
+    document.getElementById('add-sub').value = '';
+    document.getElementById('add-cat').value = '';
+    document.getElementById('add-modal').classList.add('open');
+  }
+  function confirmAdd() {
+    const title = document.getElementById('add-title').value.trim();
+    if (!title) { alert('Donne un titre !'); return; }
+    showToast('✅ Élément ajouté avec succès !');
+    closeModal('add-modal');
+  }
+
+  // ===== EDIT ITEM =====
+  function editItem(btn) {
+    const card = btn.closest('.emploi-card');
+    const titleEl = card.querySelector('.emploi-title');
+    const newTitle = prompt('Modifier le titre :', titleEl.firstChild.textContent.trim());
+    if (newTitle) { titleEl.firstChild.textContent = newTitle + ' '; showToast('✅ Modifié !'); }
+  }
+
+  // ===== RADAR UPDATES =====
+  function updateCrowdEl(select, meterId) {
+    const val = parseInt(select.value);
+    const meter = document.getElementById(meterId);
+    if (!meter) return;
+    meter.querySelectorAll('.crowd-bar').forEach((bar, i) => {
+      bar.classList.toggle('filled', i < val);
+    });
+  }
+  function updateDesc(input, descId) {
+    if (input.value.trim()) {
+      document.getElementById(descId).textContent = input.value.trim();
+      input.value = '';
+      showToast('✅ Description mise à jour !');
+    }
+  }
+
+  // ===== TOAST =====
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; }, 3000);
+  }
+
+  // ===== FORM SUBMIT =====
+  function submitForm() {
+    showToast('📨 Envoyé avec succès !');
+  }
+</script>
+</body>
+</html>
