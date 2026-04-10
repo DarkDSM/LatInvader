@@ -31,11 +31,8 @@
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
   .logo-svg-wrap img{height:55px;width:auto;display:block;}
   
-  /* SOLUTION POUR LOGO - UN SEUL VISIBLE PAR THEME */
-  .logo-dark { display: block; }
-  .logo-light { display: none; }
-  :root[data-theme="light"] .logo-dark { display: none; }
-  :root[data-theme="light"] .logo-light { display: block; }
+  /* LOGO UNIQUE - pas de distinction clair/sombre */
+  .logo-img { display: block; }
   
   .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
   .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
@@ -326,8 +323,7 @@
 <nav>
   <div class="nav-inner">
     <div class="logo-svg-wrap">
-      <img src="latinvader.jpg" alt="LatInvader" class="logo-dark" style="height:55px; width:auto;">
-      <img src="latinvaderwhite.jpg" alt="LatInvader" class="logo-light" style="height:55px; width:auto;">
+      <img src="latinvadertrans.jpg" alt="LatInvader" class="logo-img" style="height:55px; width:auto;">
     </div>
     <div class="nav-links">
       <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant">🔴 L'Instant</button>
@@ -532,6 +528,9 @@
       <div class="upload-zone" onclick="document.getElementById('vm-file').click()">📹 Uploader un fichier<input type="file" id="vm-file" accept="video/*,image/*" onchange="handleMediaFile(event)"></div>
       <div id="vm-preview" class="upload-preview" style="display:none"></div>
     </div>
+    <!-- Nouveaux champs pour définir les vues et likes de départ -->
+    <div class="form-group"><label class="form-label">Nombre de vues (départ)</label><input type="number" class="form-input" id="vm-views" value="0" min="0"></div>
+    <div class="form-group"><label class="form-label">Nombre de likes (départ)</label><input type="number" class="form-input" id="vm-likes" value="0" min="0"></div>
     <div class="modal-btns"><button class="btn-submit" onclick="saveVideo()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('video-modal')">Annuler</button></div>
   </div>
 </div>
@@ -993,6 +992,9 @@ function openVideoModal(id=null){
   document.getElementById('vm-cat').innerHTML=instantCats.map(c=>`<option value="${c.id}"${v&&v.cat===c.id?' selected':''}>${c.label}</option>`).join('');
   document.getElementById('vm-preview').style.display='none';
   document.getElementById('vm-file').value='';delete document.getElementById('vm-file').dataset.url;
+  // Remplir les champs vues et likes
+  document.getElementById('vm-views').value=v?v.views:0;
+  document.getElementById('vm-likes').value=v?v.likes:0;
   if(v && v.mediaType) {
     currentMediaType = v.mediaType;
     document.querySelectorAll('.media-type-btn').forEach(btn => {
@@ -1020,12 +1022,14 @@ function saveVideo(){
   const t=document.getElementById('vm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
   const fi=document.getElementById('vm-file');
   const src=fi.dataset.url||(editingId?videos.find(v=>v.id===editingId)?.src:null);
-  const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src,mediaType:currentMediaType};
+  const views = parseInt(document.getElementById('vm-views').value) || 0;
+  const likes = parseInt(document.getElementById('vm-likes').value) || 0;
+  const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src,mediaType:currentMediaType,views:views,likes:likes};
   if(editingId){
     const i=videos.findIndex(v=>v.id===editingId);
     videos[i]={...videos[i],...d};
   } else {
-    videos.push({id:vidSeq++,...d,views:0,likes:0});
+    videos.push({id:vidSeq++,...d});
   }
   saveAll();
   closeModal('video-modal');renderInstant();showToast(editingId?'✅ Post modifié !':'✅ Post ajouté !');editingId=null;
