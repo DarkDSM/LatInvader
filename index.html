@@ -30,6 +30,7 @@
   .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
   .logo-svg-wrap img{height:55px;width:auto;display:block;}
+  .logo-dark{display:block;}
   .logo-light{display:none;}
   :root[data-theme="light"] .logo-dark{display:none;}
   :root[data-theme="light"] .logo-light{display:block;}
@@ -618,7 +619,6 @@
     <div class="form-group"><label class="form-label">Ambiance</label>
       <select class="form-select" id="rm-status"></select>
     </div>
-    <!-- L'affluence n'est plus modifiable ici, uniquement via le slider sur la carte en mode admin -->
     <div class="modal-btns"><button class="btn-submit" onclick="saveRadar()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('radar-modal')">Annuler</button></div>
   </div>
 </div>
@@ -687,7 +687,9 @@ const STORAGE_KEYS = {
   MAILBOX: 'latinvader_mailbox',
   DROPBOX: 'latinvader_dropbox',
   BADGE_COLORS: 'latinvader_badge_colors',
-  RADAR_AMBIANCES: 'latinvader_radar_ambiances'
+  RADAR_AMBIANCES: 'latinvader_radar_ambiances',
+  LIKES: 'latinvader_likes',
+  USER_LIKES: 'latinvader_user_likes'
 };
 
 let isAdmin = false;
@@ -697,6 +699,13 @@ let pendingCatCtx = '';
 let currentStars = 3;
 let badgeColors = {};
 let currentMediaType = 'video';
+
+// Générer un identifiant unique pour l'utilisateur (basé sur localStorage + session)
+let userId = localStorage.getItem('latinvader_user_id');
+if(!userId) {
+  userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem('latinvader_user_id', userId);
+}
 
 // Ambiances radar
 let radarAmbiances = [
@@ -732,6 +741,9 @@ let conceptsFilter = 'tout';
 let radarSpots = [];
 let radarSeq = 1;
 
+// Stockage des likes par utilisateur
+let userLikes = {};
+
 function loadData() {
   const savedVideos = localStorage.getItem(STORAGE_KEYS.VIDEOS);
   if(savedVideos) {
@@ -739,13 +751,19 @@ function loadData() {
     vidSeq = Math.max(...videos.map(v=>v.id), 0) + 1;
   } else {
     videos = [
-      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142,likes:38,liked:false},
-      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89,likes:21,liked:false},
-      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211,likes:54,liked:false},
-      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75,likes:19,liked:false},
-      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304,likes:67,liked:false},
+      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142,likes:38},
+      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89,likes:21},
+      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211,likes:54},
+      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75,likes:19},
+      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304,likes:67},
     ];
     vidSeq = 6;
+  }
+  
+  // Charger les likes utilisateurs
+  const savedUserLikes = localStorage.getItem(STORAGE_KEYS.USER_LIKES);
+  if(savedUserLikes) {
+    userLikes = JSON.parse(savedUserLikes);
   }
   
   const savedVideoCats = localStorage.getItem(STORAGE_KEYS.VIDEO_CATS);
@@ -847,6 +865,7 @@ function saveMailbox() { localStorage.setItem(STORAGE_KEYS.MAILBOX, JSON.stringi
 function saveDropbox() { localStorage.setItem(STORAGE_KEYS.DROPBOX, JSON.stringify(dropMessages)); }
 function saveBadgeColors() { localStorage.setItem(STORAGE_KEYS.BADGE_COLORS, JSON.stringify(badgeColors)); }
 function saveRadarAmbiances() { localStorage.setItem(STORAGE_KEYS.RADAR_AMBIANCES, JSON.stringify(radarAmbiances)); }
+function saveUserLikes() { localStorage.setItem(STORAGE_KEYS.USER_LIKES, JSON.stringify(userLikes)); }
 
 let currentSettingsPage = 'instant';
 
@@ -1042,6 +1061,7 @@ function renderInstant(){
     const mediaDisplay = v.mediaType === 'image' && v.src ? 
       `<img src="${v.src}" style="width:100%;height:100%;object-fit:cover;">` :
       (v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">${v.mediaType === 'image' ? '🖼️' : '▶'}</div><div style="font-size:12px">Aucun média</div></div>`);
+    const hasLiked = userLikes[userId] && userLikes[userId][v.id];
     return `
     <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
          ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
@@ -1060,7 +1080,7 @@ function renderInstant(){
       </div>
       <div class="video-stats">
         <div class="stat-item">
-          <button class="like-btn${v.liked?' liked':''}" onclick="toggleLike(${v.id})" title="J'aime">${v.liked?'❤️':'🤍'}</button>
+          <button class="like-btn${hasLiked?' liked':''}" onclick="toggleLike(${v.id})" title="J'aime">${hasLiked?'❤️':'🤍'}</button>
           <span>${v.likes}</span>
         </div>
         <div class="stat-item"><span class="view-icon">👁</span><span>${formatNum(v.views)}</span></div>
@@ -1076,9 +1096,18 @@ function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(
 
 function toggleLike(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
-  v.liked=!v.liked;
-  v.likes+=v.liked?1:-1;
+  if(!userLikes[userId]) userLikes[userId] = {};
+  if(userLikes[userId][id]) {
+    // Déjà liké, on enlève le like
+    delete userLikes[userId][id];
+    v.likes--;
+  } else {
+    // Pas liké, on ajoute
+    userLikes[userId][id] = true;
+    v.likes++;
+  }
   saveVideos();
+  saveUserLikes();
   renderInstant();
 }
 
@@ -1151,7 +1180,7 @@ function saveVideo(){
   const src=fi.dataset.url||(editingId?videos.find(v=>v.id===editingId)?.src:null);
   const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src,mediaType:currentMediaType};
   if(editingId){const i=videos.findIndex(v=>v.id===editingId);videos[i]={...videos[i],...d};}
-  else{videos.push({id:vidSeq++,...d,views:0,likes:0,liked:false});}
+  else{videos.push({id:vidSeq++,...d,views:0,likes:0});}
   saveVideos();
   closeModal('video-modal');renderInstant();showToast(editingId?'✅ Post modifié !':'✅ Post ajouté !');editingId=null;
 }
@@ -1478,7 +1507,17 @@ function updateRadarCrowd(id,val){
   saveRadar();
   document.getElementById('rcval-'+id).textContent=val;
   const m=document.getElementById('rmeter-'+id);
-  if(m)m.querySelectorAll('.crowd-bar').forEach((b,i)=>{b.className='crowd-bar'+(i<s.crowd?(s.status==='hype'?' hype filled':' filled'):'');});
+  if(m){
+    m.querySelectorAll('.crowd-bar').forEach((b,i)=>{
+      if(i < s.crowd) {
+        b.classList.add('filled');
+        if(s.status==='hype') b.classList.add('hype');
+      } else {
+        b.classList.remove('filled');
+        b.classList.remove('hype');
+      }
+    });
+  }
 }
 function openRadarModal(id=null){
   editingId=id;const s=id?radarSpots.find(x=>x.id===id):null;
