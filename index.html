@@ -7,383 +7,155 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  /* ===== THEME ===== */
   :root[data-theme="dark"] {
-    --bg: #100e09;
-    --bg2: #1a1610;
-    --bg3: #221e15;
-    --card: #1e1a12;
-    --card2: #252015;
-    --border: #2e2820;
-    --text: #e8dfc8;
-    --text2: #9a8f78;
-    --text3: #5c5444;
-    --gold: #c9a84c;
-    --gold2: #e8c96e;
-    --accent: #d4472a;
-    --accent2: #e05a3a;
-    --green: #4caf7d;
-    --purple: #9b59b6;
-    --blue: #3d8bcd;
-    --nav-active-bg: #c9a84c;
-    --nav-active-text: #100e09;
+    --bg: #100e09; --bg2: #1a1610; --bg3: #221e15; --card: #1e1a12; --card2: #252015;
+    --border: #2e2820; --text: #e8dfc8; --text2: #9a8f78; --text3: #5c5444;
+    --gold: #c9a84c; --gold2: #e8c96e; --accent: #d4472a; --accent2: #e05a3a;
+    --green: #4caf7d; --purple: #9b59b6; --blue: #3d8bcd;
+    --nav-active-bg: #c9a84c; --nav-active-text: #100e09;
   }
   :root[data-theme="light"] {
-    --bg: #f5f0e8;
-    --bg2: #ede6d6;
-    --bg3: #e4dac6;
-    --card: #ffffff;
-    --card2: #f8f3e8;
-    --border: #d4c9b0;
-    --text: #1a1610;
-    --text2: #5c5444;
-    --text3: #9a8f78;
-    --gold: #b8922e;
-    --gold2: #d4a83e;
-    --accent: #c43520;
-    --accent2: #d4462e;
-    --green: #2e8a5c;
-    --purple: #7d3ea0;
-    --blue: #2a6fa0;
-    --nav-active-bg: #c9a84c;
-    --nav-active-text: #ffffff;
+    --bg: #f5f0e8; --bg2: #ede6d6; --bg3: #e4dac6; --card: #ffffff; --card2: #f8f3e8;
+    --border: #d4c9b0; --text: #1a1610; --text2: #5c5444; --text3: #9a8f78;
+    --gold: #b8922e; --gold2: #d4a83e; --accent: #c43520; --accent2: #d4462e;
+    --green: #2e8a5c; --purple: #7d3ea0; --blue: #2a6fa0;
+    --nav-active-bg: #c9a84c; --nav-active-text: #ffffff;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    transition: background 0.3s, color 0.3s;
-  }
-
-  /* ===== NAV ===== */
-  nav {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .nav-inner {
-    max-width: 1400px; margin: 0 auto;
-    padding: 0 24px;
-    display: flex; align-items: center; gap: 24px;
-    height: 56px;
-  }
-  .logo {
-    display: flex; align-items: center; gap: 10px;
-    text-decoration: none; flex-shrink: 0;
-  }
-  .logo-box {
-    background: var(--gold);
-    color: var(--bg);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    padding: 4px 10px;
-    letter-spacing: 1px;
-    border-radius: 4px;
-  }
-  .logo-sub {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 400;
-    color: var(--text2);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  .nav-links {
-    display: flex; align-items: center; gap: 4px;
-    margin-left: auto;
-  }
-  .nav-btn {
-    background: none; border: none;
-    color: var(--text2);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 500;
-    cursor: pointer;
-    padding: 6px 14px; border-radius: 20px;
-    display: flex; align-items: center; gap: 6px;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
+  /* NAV */
+  nav { background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+  .nav-inner { max-width: 1400px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 16px; height: 56px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; cursor: pointer; }
+  .logo-img { height: 38px; width: auto; object-fit: contain; display: block; }
+  .logo-img-placeholder { background: var(--gold); color: var(--bg); font-family: 'Bebas Neue', sans-serif; font-size: 22px; padding: 4px 10px; letter-spacing: 1px; border-radius: 4px; }
+  .logo-upload-hint { font-size: 10px; color: var(--text3); display: none; }
+  body.admin-mode .logo-upload-hint { display: block; }
+  .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+  .nav-btn { background: none; border: none; color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap; }
   .nav-btn:hover { color: var(--text); background: var(--bg3); }
-  .nav-btn.active {
-    background: var(--nav-active-bg);
-    color: var(--nav-active-text);
-    font-weight: 600;
-  }
-  .nav-btn .nav-icon { font-size: 14px; }
+  .nav-btn.active { background: var(--nav-active-bg); color: var(--nav-active-text); font-weight: 600; }
   .nav-right { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
-
-  /* Theme toggle */
-  .theme-btn {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text2); cursor: pointer;
-    width: 34px; height: 34px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; transition: all 0.2s;
-  }
+  .theme-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s; }
   .theme-btn:hover { color: var(--gold); border-color: var(--gold); }
-
-  /* Admin btn */
-  .admin-btn {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text2); cursor: pointer;
-    width: 34px; height: 34px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; transition: all 0.2s; position: relative;
-  }
+  .admin-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s; position: relative; }
   .admin-btn:hover { border-color: var(--gold); color: var(--gold); }
   .admin-btn.logged { border-color: var(--green); color: var(--green); }
-  .admin-dot {
-    position: absolute; top: -2px; right: -2px;
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--green); display: none;
-  }
+  .admin-dot { position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: none; }
   .admin-btn.logged .admin-dot { display: block; }
 
-  /* ===== PAGES ===== */
+  /* PAGES */
   .page { display: none; max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
   .page.active { display: block; }
-
   .page-header { margin-bottom: 28px; }
-  .page-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 26px; font-weight: 800;
-    display: flex; align-items: center; gap: 10px;
-    margin-bottom: 6px;
-  }
+  .page-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
   .page-sub { color: var(--text2); font-size: 14px; }
 
-  /* ===== FILTER TABS ===== */
-  .filter-bar {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    margin-bottom: 28px; align-items: center;
-  }
-  .filter-btn {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text2); cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 600;
-    padding: 6px 16px; border-radius: 20px;
-    text-transform: uppercase; letter-spacing: 0.5px;
-    transition: all 0.2s;
-  }
+  /* FILTER BAR */
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; align-items: center; }
+  .filter-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s; }
   .filter-btn:hover { color: var(--text); border-color: var(--text3); }
-  .filter-btn.active {
-    background: var(--gold); color: var(--bg);
-    border-color: var(--gold); font-weight: 700;
-  }
-  .add-cat-btn {
-    background: none; border: 1px dashed var(--border);
-    color: var(--text3); cursor: pointer;
-    font-size: 12px; padding: 6px 14px; border-radius: 20px;
-    transition: all 0.2s; display: none;
-  }
+  .filter-btn.active { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
+  .add-cat-btn { background: none; border: 1px dashed var(--border); color: var(--text3); cursor: pointer; font-size: 12px; padding: 6px 14px; border-radius: 20px; transition: all 0.2s; display: none; align-items: center; gap: 4px; }
   .add-cat-btn:hover { color: var(--gold); border-color: var(--gold); }
-  body.admin-mode .add-cat-btn { display: flex; align-items: center; gap: 4px; }
+  body.admin-mode .add-cat-btn { display: flex; }
 
-  /* ===== VIDEO GRID ===== */
-  .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-  }
-  .video-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
-    position: relative;
-  }
+  /* VIDEO / INSTANT GRID */
+  .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .video-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; }
   .video-card:hover { transform: translateY(-3px); border-color: var(--gold); }
-  .video-thumb {
-    width: 100%; aspect-ratio: 16/10;
-    background: var(--bg3);
-    position: relative; overflow: hidden;
-  }
-  .video-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .video-thumb-placeholder {
-    width: 100%; height: 100%;
-    background: linear-gradient(135deg, var(--bg3) 0%, var(--card2) 100%);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px; color: var(--text3);
-  }
-  .video-badge {
-    position: absolute; top: 10px; left: 10px;
-    font-size: 10px; font-weight: 700;
-    padding: 3px 8px; border-radius: 4px;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
+  .video-thumb { width: 100%; aspect-ratio: 16/10; background: var(--bg3); position: relative; overflow: hidden; }
+  .video-thumb video { width: 100%; height: 100%; object-fit: cover; }
+  .video-thumb-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--bg3) 0%, var(--card2) 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: var(--text3); }
+  .play-icon { font-size: 40px; opacity: 0.6; }
+  .video-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; z-index: 2; }
   .badge-red { background: var(--accent); color: #fff; }
   .badge-purple { background: var(--purple); color: #fff; }
   .badge-green { background: var(--green); color: #fff; }
   .badge-blue { background: var(--blue); color: #fff; }
   .badge-gold { background: var(--gold); color: var(--bg); }
-  .video-overlay {
-    position: absolute; bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    padding: 20px 12px 12px;
-    display: none;
-  }
-  .video-card:hover .video-overlay { display: block; }
-  .video-overlay-title { font-size: 13px; font-weight: 600; color: #fff; }
   .video-info { padding: 12px; }
   .video-info-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
   .video-info-sub { font-size: 12px; color: var(--text2); }
+  .video-play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); opacity: 0; transition: opacity 0.2s; z-index: 1; }
+  .video-card:hover .video-play-btn { opacity: 1; }
+  .video-play-btn span { width: 52px; height: 52px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .admin-actions { position: absolute; top: 8px; right: 8px; display: none; gap: 4px; z-index: 10; }
+  body.admin-mode .admin-actions { display: flex; }
+  .action-btn { background: var(--bg); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 4px 8px; font-size: 11px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
+  .action-btn:hover { background: var(--gold); color: var(--bg); border-color: var(--gold); }
+  .action-btn.del:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-  /* Admin add card */
-  .add-video-card {
-    background: var(--card); border: 2px dashed var(--border);
-    border-radius: 10px; cursor: pointer;
-    display: none; align-items: center; justify-content: center;
-    flex-direction: column; gap: 8px;
-    aspect-ratio: unset; min-height: 180px;
-    color: var(--text3); transition: all 0.2s;
-  }
-  .add-video-card:hover { border-color: var(--gold); color: var(--gold); }
-  .add-video-card span { font-size: 12px; }
-  body.admin-mode .add-video-card { display: flex; }
+  /* ADD CARD */
+  .add-card { background: var(--card); border: 2px dashed var(--border); border-radius: 10px; cursor: pointer; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 8px; min-height: 180px; color: var(--text3); transition: all 0.2s; }
+  .add-card:hover { border-color: var(--gold); color: var(--gold); }
+  .add-card span { font-size: 12px; }
+  body.admin-mode .add-card { display: flex; }
 
-  /* ===== STORIES / STORYTELLING ===== */
-  .story-featured {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; overflow: hidden; margin-bottom: 16px;
-    cursor: pointer; transition: border-color 0.2s;
-  }
+  /* STORYTELLING */
+  .story-featured { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s; position: relative; }
   .story-featured:hover { border-color: var(--gold); }
-  .story-featured-img {
-    width: 100%; height: 280px;
-    background: linear-gradient(135deg, #1a1a2e, #2d2d2d);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 64px; position: relative; overflow: hidden;
-  }
+  .story-featured-img { width: 100%; height: 280px; background: linear-gradient(135deg, #1a1a2e, #2d2d2d); display: flex; align-items: center; justify-content: center; font-size: 64px; position: relative; overflow: hidden; }
   .story-featured-img img { width: 100%; height: 100%; object-fit: cover; }
   .story-featured-body { padding: 20px 24px; }
-  .story-cat { font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; }
-  .story-featured-title {
-    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700;
-    margin-bottom: 8px;
-  }
+  .story-cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; }
+  .story-featured-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
   .story-featured-sub { color: var(--text2); font-size: 14px; margin-bottom: 12px; }
   .story-time { color: var(--text3); font-size: 12px; display: flex; align-items: center; gap: 6px; }
-
   .stories-list { display: flex; flex-direction: column; gap: 12px; }
-  .story-item {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; padding: 16px;
-    display: flex; gap: 16px; cursor: pointer;
-    transition: border-color 0.2s; align-items: flex-start;
-  }
+  .story-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; gap: 16px; cursor: pointer; transition: border-color 0.2s; align-items: flex-start; position: relative; }
   .story-item:hover { border-color: var(--gold); }
-  .story-item-img {
-    width: 80px; height: 60px; border-radius: 6px;
-    background: var(--bg3); flex-shrink: 0; overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-  }
+  .story-item-img { width: 80px; height: 60px; border-radius: 6px; background: var(--bg3); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 24px; }
   .story-item-img img { width: 100%; height: 100%; object-fit: cover; }
-  .story-item-cat {
-    font-size: 10px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.5px; color: var(--accent2);
-    background: rgba(212,71,42,0.15); padding: 2px 6px; border-radius: 4px;
-    display: inline-block; margin-bottom: 6px;
-  }
+  .story-item-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent2); background: rgba(212,71,42,0.15); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
   .story-item-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
   .story-item-time { color: var(--text3); font-size: 12px; }
 
-  /* ===== HUB EMPLOI ===== */
+  /* HUB EMPLOI */
   .emploi-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-  .tab-btn {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text2); cursor: pointer; padding: 8px 20px;
-    border-radius: 8px; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 600; transition: all 0.2s;
-  }
+  .tab-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; padding: 8px 20px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; transition: all 0.2s; }
   .tab-btn:hover { color: var(--text); }
   .tab-btn.active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
-
   .emploi-section { display: none; }
   .emploi-section.active { display: block; }
-
-  .emploi-cats {
-    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
-  }
-  .emploi-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 12px;
-  }
-  .emploi-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; padding: 16px;
-    display: flex; gap: 14px; align-items: flex-start;
-    transition: border-color 0.2s; cursor: pointer;
-  }
+  .emploi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+  .emploi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; gap: 14px; align-items: flex-start; transition: border-color 0.2s; position: relative; }
   .emploi-card:hover { border-color: var(--gold); }
-  .emploi-icon {
-    width: 44px; height: 44px; border-radius: 8px;
-    background: var(--bg3); display: flex; align-items: center;
-    justify-content: center; font-size: 20px; flex-shrink: 0;
-  }
+  .emploi-card.inactive { opacity: 0.45; filter: grayscale(0.8); }
+  .emploi-icon { width: 44px; height: 44px; border-radius: 8px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; overflow: hidden; }
+  .emploi-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
   .emploi-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
   .emploi-company { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
   .emploi-desc { font-size: 12px; color: var(--text3); }
-  .emploi-badge {
-    display: inline-block; font-size: 10px; font-weight: 700;
-    text-transform: uppercase; padding: 2px 8px; border-radius: 4px;
-    margin-bottom: 6px; letter-spacing: 0.5px;
-  }
+  .emploi-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; letter-spacing: 0.5px; }
   .badge-legal { background: rgba(76,175,125,0.2); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
   .badge-service { background: rgba(61,139,205,0.2); color: var(--blue); border: 1px solid rgba(61,139,205,0.3); }
   .badge-passion { background: rgba(155,89,182,0.2); color: var(--purple); border: 1px solid rgba(155,89,182,0.3); }
-  .badge-illégal { background: rgba(212,71,42,0.2); color: var(--accent); border: 1px solid rgba(212,71,42,0.3); }
+  .badge-illegal { background: rgba(212,71,42,0.2); color: var(--accent); border: 1px solid rgba(212,71,42,0.3); }
+  .badge-closed { background: rgba(100,100,100,0.2); color: #888; border: 1px solid rgba(100,100,100,0.3); }
 
-  /* Candidate form */
-  .form-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 28px; max-width: 560px;
-  }
+  /* FORM */
+  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; max-width: 560px; }
   .form-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; }
   .form-sub { color: var(--text2); font-size: 13px; margin-bottom: 24px; }
   .form-group { margin-bottom: 16px; }
   .form-label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-input, .form-select, .form-textarea {
-    width: 100%; background: var(--bg2); border: 1px solid var(--border);
-    color: var(--text); border-radius: 8px; padding: 10px 14px;
-    font-family: 'DM Sans', sans-serif; font-size: 13px;
-    transition: border-color 0.2s; outline: none;
-  }
+  .form-input, .form-select, .form-textarea { width: 100%; background: var(--bg2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; transition: border-color 0.2s; outline: none; }
   .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
   .form-select { appearance: none; cursor: pointer; }
   .form-textarea { resize: vertical; min-height: 90px; }
-  .btn-submit {
-    background: var(--gold); color: var(--bg); border: none;
-    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
-    padding: 12px 24px; border-radius: 8px; cursor: pointer;
-    width: 100%; letter-spacing: 0.5px; transition: opacity 0.2s;
-  }
+  .btn-submit { background: var(--gold); color: var(--bg); border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 12px 24px; border-radius: 8px; cursor: pointer; width: 100%; letter-spacing: 0.5px; transition: opacity 0.2s; }
   .btn-submit:hover { opacity: 0.85; }
+  .btn-danger { background: var(--accent); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 8px; cursor: pointer; letter-spacing: 0.5px; transition: opacity 0.2s; }
+  .btn-danger:hover { opacity: 0.85; }
+  .btn-secondary { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
 
-  /* ===== CONCEPTS ===== */
-  .concepts-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 16px;
-  }
-  .concept-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; overflow: hidden; cursor: pointer;
-    transition: transform 0.2s, border-color 0.2s;
-  }
+  /* CONCEPTS */
+  .concepts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .concept-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; position: relative; }
   .concept-card:hover { transform: translateY(-3px); border-color: var(--gold); }
-  .concept-img {
-    width: 100%; height: 180px; background: var(--bg3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 40px; position: relative; overflow: hidden;
-  }
+  .concept-img { width: 100%; height: 180px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; overflow: hidden; }
   .concept-img img { width: 100%; height: 100%; object-fit: cover; }
   .concept-badge { position: absolute; top: 10px; left: 10px; }
   .concept-body { padding: 14px; }
@@ -392,49 +164,22 @@
   .stars { color: var(--gold); font-size: 13px; margin-bottom: 6px; }
   .concept-desc { font-size: 12px; color: var(--text3); }
 
-  /* ===== DROP BOX ===== */
-  .dropbox-grid {
-    display: grid; grid-template-columns: 1fr 380px; gap: 24px;
-    align-items: start;
-  }
+  /* DROP BOX */
+  .dropbox-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
   @media (max-width: 900px) { .dropbox-grid { grid-template-columns: 1fr; } }
   .dropbox-sidebar { display: flex; flex-direction: column; gap: 16px; }
-  .info-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px;
-  }
-  .info-card-title {
-    font-size: 15px; font-weight: 700; margin-bottom: 10px;
-    display: flex; align-items: center; gap: 8px;
-  }
+  .info-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .info-card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
   .info-list { list-style: disc; padding-left: 20px; }
   .info-list li { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
 
-  /* ===== RADAR ===== */
+  /* RADAR */
   .radar-section { margin-bottom: 32px; }
-  .radar-section-title {
-    font-size: 12px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 2px; color: var(--text2); margin-bottom: 14px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .radar-live-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent); animation: pulse 1.5s infinite;
-  }
-  @keyframes pulse {
-    0%,100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.3); }
-  }
-  .radar-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 12px;
-  }
-  .radar-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 10px; padding: 16px;
-    display: flex; justify-content: space-between; align-items: flex-start;
-    gap: 12px; position: relative;
-  }
+  .radar-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .radar-live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
+  .radar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .radar-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; position: relative; }
   .radar-card-left { flex: 1; }
   .radar-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
   .radar-location { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
@@ -445,291 +190,186 @@
   .crowd-bar.filled { background: var(--gold); }
   .crowd-bar.hype { background: var(--accent); }
   .crowd-label { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 4px; }
-  .radar-badge {
-    font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
-    text-transform: uppercase; letter-spacing: 0.5px;
-  }
+  .radar-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
   .radar-hype { background: rgba(212,71,42,0.15); color: var(--accent); border: 1px solid rgba(212,71,42,0.3); }
   .radar-chill { background: rgba(61,139,205,0.15); color: var(--blue); border: 1px solid rgba(61,139,205,0.3); }
   .radar-business { background: rgba(76,175,125,0.15); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
   .radar-danger { background: rgba(212,71,42,0.2); color: var(--accent2); border: 1px solid rgba(212,71,42,0.4); }
 
-  /* Admin edit btn on cards */
-  .edit-btn {
-    position: absolute; top: 10px; right: 10px;
-    background: var(--gold); color: var(--bg); border: none;
-    font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px;
-    cursor: pointer; display: none;
-  }
-  body.admin-mode .edit-btn { display: block; }
+  /* ADMIN RADAR CONTROLS */
+  .radar-admin-controls { margin-top: 10px; display: none; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--border); }
+  body.admin-mode .radar-admin-controls { display: flex; }
+  .radar-crowd-edit { display: flex; gap: 6px; align-items: center; }
+  .crowd-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: var(--bg3); border-radius: 2px; outline: none; }
+  .crowd-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); cursor: pointer; }
+  .crowd-value { font-size: 11px; color: var(--gold); font-weight: 700; min-width: 14px; text-align: center; }
 
-  /* Admin radar edit */
-  .radar-edit-controls { display: none; gap: 8px; margin-top: 8px; }
-  body.admin-mode .radar-edit-controls { display: flex; }
+  /* VIDEO MODAL */
+  .video-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 500; display: none; align-items: center; justify-content: center; }
+  .video-modal-overlay.open { display: flex; }
+  .video-modal { width: 90vw; max-width: 900px; background: var(--bg2); border-radius: 12px; overflow: hidden; position: relative; }
+  .video-modal video { width: 100%; max-height: 70vh; display: block; background: #000; }
+  .video-modal-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
+  .video-modal-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+  .video-modal-close { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
 
-  /* ===== MODAL ===== */
-  .modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
-    z-index: 200; display: none; align-items: center; justify-content: center;
-  }
+  /* GENERIC MODAL */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
   .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 32px; width: 360px;
-    animation: slideUp 0.25s ease;
-  }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .modal-title {
-    font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
-    margin-bottom: 6px; text-align: center;
-  }
+  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 32px; width: 420px; max-width: 96vw; max-height: 90vh; overflow-y: auto; animation: slideUp 0.25s ease; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .modal-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 6px; text-align: center; }
   .modal-sub { color: var(--text2); font-size: 13px; text-align: center; margin-bottom: 24px; }
   .modal-avatar { font-size: 48px; text-align: center; margin-bottom: 16px; }
   .modal-error { color: var(--accent); font-size: 12px; text-align: center; margin-top: 8px; display: none; }
+  .modal-btns { display: flex; gap: 8px; margin-top: 4px; }
+  .modal-btns button { flex: 1; }
 
-  /* Add item modal content */
-  #add-modal .modal { width: 440px; }
+  /* MAIL INBOX */
+  .mail-list { display: flex; flex-direction: column; gap: 10px; }
+  .mail-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; cursor: pointer; transition: border-color 0.2s; }
+  .mail-item:hover { border-color: var(--gold); }
+  .mail-item.unread { border-left: 3px solid var(--gold); }
+  .mail-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .mail-from { font-size: 14px; font-weight: 700; }
+  .mail-time { font-size: 11px; color: var(--text3); }
+  .mail-domain { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+  .mail-preview { font-size: 12px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mail-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); margin-top: 4px; }
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
 
-  /* ===== FOOTER ===== */
-  footer {
-    background: var(--bg2); border-top: 1px solid var(--border);
-    padding: 20px 24px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .footer-inner { max-width: 1400px; margin: 0 auto; width: 100%;
-    display: flex; justify-content: space-between; align-items: center; }
-  .footer-left { display: flex; align-items: center; gap: 10px; }
-  .footer-logo-box {
-    width: 28px; height: 28px; background: var(--gold); border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--bg);
-  }
-  .footer-text { font-size: 12px; color: var(--text3); }
-  .footer-right { font-size: 12px; color: var(--text3); }
+  /* UPLOAD ZONE */
+  .upload-zone { border: 2px dashed var(--border); border-radius: 8px; padding: 20px; text-align: center; color: var(--text3); cursor: pointer; transition: all 0.2s; font-size: 13px; }
+  .upload-zone:hover { border-color: var(--gold); color: var(--gold); }
+  .upload-zone input { display: none; }
+  .upload-preview { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text2); margin-top: 6px; }
+  .upload-preview img { width: 48px; height: 36px; object-fit: cover; border-radius: 4px; }
+  .upload-preview video { width: 80px; height: 48px; object-fit: cover; border-radius: 4px; }
 
-  /* ===== TOAST ===== */
-  .toast {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--card); border: 1px solid var(--green);
-    color: var(--text); border-radius: 8px; padding: 12px 20px;
-    font-size: 13px; z-index: 300; display: none;
-    animation: fadeInUp 0.3s ease;
-  }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  /* STAR RATING */
+  .star-input { display: flex; gap: 4px; }
+  .star-input span { font-size: 22px; cursor: pointer; color: var(--bg3); transition: color 0.1s; }
+  .star-input span.lit { color: var(--gold); }
 
-  /* Admin bar */
-  .admin-bar {
-    background: rgba(76,175,125,0.1); border-bottom: 1px solid rgba(76,175,125,0.3);
-    padding: 6px 24px; display: none; align-items: center; gap: 8px;
-    font-size: 12px; color: var(--green);
-  }
+  /* ADMIN BAR */
+  .admin-bar { background: rgba(76,175,125,0.1); border-bottom: 1px solid rgba(76,175,125,0.3); padding: 6px 24px; display: none; align-items: center; gap: 8px; font-size: 12px; color: var(--green); }
   body.admin-mode .admin-bar { display: flex; }
 
-  /* Responsive */
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--card); border: 1px solid var(--green); color: var(--text); border-radius: 8px; padding: 12px 20px; font-size: 13px; z-index: 600; display: none; animation: fadeInUp 0.3s ease; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 20px 24px; }
+  .footer-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .footer-text { font-size: 12px; color: var(--text3); }
+
   @media (max-width: 768px) {
     .nav-links { display: none; }
     .video-grid { grid-template-columns: 1fr 1fr; }
   }
+
+  .section-admin-bar { display: none; justify-content: flex-end; margin-bottom: 16px; }
+  body.admin-mode .section-admin-bar { display: flex; }
+  .section-admin-btn { background: var(--gold); color: var(--bg); border: none; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
+  .section-admin-btn:hover { opacity: 0.85; }
+
+  /* MAIL DETAIL MODAL */
+  .mail-detail { padding: 4px 0; }
+  .mail-detail-field { margin-bottom: 12px; }
+  .mail-detail-field label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); display: block; margin-bottom: 4px; }
+  .mail-detail-field p { font-size: 13px; color: var(--text); background: var(--bg3); padding: 10px 14px; border-radius: 8px; line-height: 1.6; }
 </style>
 </head>
 <body>
 
-<!-- ADMIN BAR -->
 <div class="admin-bar">
   <span>🛡️</span>
-  <span><strong>Mode Admin actif</strong> — Tu peux modifier le contenu du site en temps réel</span>
+  <span><strong>Mode Admin actif</strong> — Modifie le contenu en temps réel</span>
 </div>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a class="logo" href="#">
-      <div class="logo-box">LatInvader</div>
-      <span class="logo-sub">On met l'accent sur l'actu</span>
-    </a>
+    <div class="logo" onclick="handleLogoClick()">
+      <div id="logo-display">
+        <span class="logo-img-placeholder">LatInvader</span>
+      </div>
+      <span class="logo-upload-hint">🖼️ Changer logo</span>
+      <input type="file" id="logo-file" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display:none" onchange="changeLogo(event)">
+    </div>
     <div class="nav-links">
-      <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant">
-        <span class="nav-icon">🎬</span> L'Instant
-      </button>
-      <button class="nav-btn" onclick="showPage('stories')" id="nav-stories">
-        <span class="nav-icon">✍️</span> Storytelling
-      </button>
-      <button class="nav-btn" onclick="showPage('emploi')" id="nav-emploi">
-        <span class="nav-icon">💼</span> Hub Emploi
-      </button>
-      <button class="nav-btn" onclick="showPage('concepts')" id="nav-concepts">
-        <span class="nav-icon">💡</span> Concepts
-      </button>
-      <button class="nav-btn" onclick="showPage('dropbox')" id="nav-dropbox">
-        <span class="nav-icon">📬</span> Drop Box
-      </button>
-      <button class="nav-btn" onclick="showPage('radar')" id="nav-radar">
-        <span class="nav-icon">📡</span> Le Radar
-      </button>
+      <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant"><span>🎬</span> L'Instant</button>
+      <button class="nav-btn" onclick="showPage('stories')" id="nav-stories"><span>✍️</span> Storytelling</button>
+      <button class="nav-btn" onclick="showPage('emploi')" id="nav-emploi"><span>💼</span> Hub Emploi</button>
+      <button class="nav-btn" onclick="showPage('concepts')" id="nav-concepts"><span>💡</span> Concepts</button>
+      <button class="nav-btn" onclick="showPage('dropbox')" id="nav-dropbox"><span>📬</span> Drop Box</button>
+      <button class="nav-btn" onclick="showPage('radar')" id="nav-radar"><span>📡</span> Le Radar</button>
     </div>
     <div class="nav-right">
-      <button class="theme-btn" onclick="toggleTheme()" title="Changer le thème" id="theme-btn">🌙</button>
-      <button class="admin-btn" onclick="openAdminModal()" id="admin-btn" title="Se connecter">
-        🧍
-        <div class="admin-dot"></div>
-      </button>
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
+      <button class="admin-btn" onclick="openAdminModal()" id="admin-btn" title="Admin">🧍<div class="admin-dot"></div></button>
     </div>
   </div>
 </nav>
 
-<!-- ============ PAGE: L'INSTANT ============ -->
+<!-- ============ L'INSTANT ============ -->
 <div class="page active" id="page-instant">
   <div class="page-header">
     <div class="page-title">🎬 L'Instant</div>
     <div class="page-sub">Un instant de vie capturé pour l'éternité.</div>
   </div>
+  <div class="section-admin-bar">
+    <button class="section-admin-btn" onclick="openVideoModal()">➕ Ajouter une vidéo</button>
+  </div>
   <div class="filter-bar" id="instant-filters">
     <button class="filter-btn active" onclick="filterInstant('tout', this)">TOUT</button>
-    <button class="filter-btn" onclick="filterInstant('60 secondes d\'actu', this)">60 SECONDES D'ACTU</button>
-    <button class="filter-btn" onclick="filterInstant('micro-trottoir', this)">MICRO-TROTTOIR</button>
-    <button class="filter-btn" onclick="filterInstant('colors style', this)">COLORS STYLE</button>
+    <button class="filter-btn" onclick="filterInstant('60s', this)">60 SECONDES D'ACTU</button>
+    <button class="filter-btn" onclick="filterInstant('micro', this)">MICRO-TROTTOIR</button>
+    <button class="filter-btn" onclick="filterInstant('colors', this)">COLORS STYLE</button>
     <button class="add-cat-btn" onclick="addCategory('instant')">+ Catégorie</button>
   </div>
   <div class="video-grid" id="instant-grid">
-    <!-- Sample GTA RP cards -->
-    <div class="video-card" data-cat="60 secondes d'actu">
-      <div class="video-thumb">
-        <div class="video-thumb-placeholder">🏙️</div>
-        <div class="video-badge badge-red">60 SECONDES D'ACTU</div>
-        <div class="video-overlay"><div class="video-overlay-title">Un monde de chien pour l'ouverture de la nouvelle boutique de vêtement</div></div>
-      </div>
-      <div class="video-info">
-        <div class="video-info-title">Un monde de chien pour l'ouverture...</div>
-        <div class="video-info-sub">Notre reporter sur place pour...</div>
-      </div>
-    </div>
-    <div class="video-card" data-cat="60 secondes d'actu">
-      <div class="video-thumb">
-        <div class="video-thumb-placeholder">🏦</div>
-        <div class="video-badge badge-red">60 SECONDES D'ACTU</div>
-        <div class="video-overlay"><div class="video-overlay-title">Braquage au Fleeca Bank : 60 secondes chrono</div></div>
-      </div>
-      <div class="video-info">
-        <div class="video-info-title">Braquage au Fleeca Bank : 60s</div>
-        <div class="video-info-sub">Résumé ultra-rapide du braquage...</div>
-      </div>
-    </div>
-    <div class="video-card" data-cat="micro-trottoir">
-      <div class="video-thumb">
-        <div class="video-thumb-placeholder">🎤</div>
-        <div class="video-badge badge-blue">MICRO-TROTTOIR</div>
-        <div class="video-overlay"><div class="video-overlay-title">C'est quoi ton salaire à LS ?</div></div>
-      </div>
-      <div class="video-info">
-        <div class="video-info-title">C'est quoi ton salaire à LS ?</div>
-        <div class="video-info-sub">On a posé la question qui fâche...</div>
-      </div>
-    </div>
-    <div class="video-card" data-cat="colors style">
-      <div class="video-thumb">
-        <div class="video-thumb-placeholder">🎶</div>
-        <div class="video-badge badge-purple">COLORS STYLE</div>
-        <div class="video-overlay"><div class="video-overlay-title">Lil Smokey — Interview Colors</div></div>
-      </div>
-      <div class="video-info">
-        <div class="video-info-title">Lil Smokey — Interview Colors</div>
-        <div class="video-info-sub">Le rappeur de Strawberry se confie...</div>
-      </div>
-    </div>
-    <div class="video-card" data-cat="60 secondes d'actu">
-      <div class="video-thumb">
-        <div class="video-thumb-placeholder">🚗</div>
-        <div class="video-badge badge-red">60 SECONDES D'ACTU</div>
-        <div class="video-overlay"><div class="video-overlay-title">Course-poursuite sur l'autoroute : 60s</div></div>
-      </div>
-      <div class="video-info">
-        <div class="video-info-title">Course-poursuite sur l'autoroute</div>
-        <div class="video-info-sub">La LSPD en action ce matin à 6h...</div>
-      </div>
-    </div>
-    <div class="video-card add-video-card" onclick="openAddModal('instant')">
-      <div style="font-size:28px">➕</div>
-      <span>Ajouter une vidéo</span>
-    </div>
+    <!-- JS rendered -->
   </div>
 </div>
 
-<!-- ============ PAGE: STORYTELLING ============ -->
+<!-- ============ STORYTELLING ============ -->
 <div class="page" id="page-stories">
   <div class="page-header">
     <div class="page-title">✍️ Storytelling</div>
     <div class="page-sub">On dit tout haut ce que vous pensez tout bas.</div>
   </div>
-  <div class="filter-bar">
-    <button class="filter-btn active" onclick="filterCat(this)">TOUT</button>
-    <button class="filter-btn" onclick="filterCat(this)">POTINS</button>
-    <button class="filter-btn" onclick="filterCat(this)">BREAKING</button>
-    <button class="filter-btn" onclick="filterCat(this)">FAITS DIVERS</button>
+  <div class="section-admin-bar">
+    <button class="section-admin-btn" onclick="openStoryModal()">➕ Ajouter un article</button>
+  </div>
+  <div class="filter-bar" id="stories-filters">
+    <button class="filter-btn active" onclick="filterStories('tout', this)">TOUT</button>
+    <button class="filter-btn" onclick="filterStories('POTINS', this)">POTINS</button>
+    <button class="filter-btn" onclick="filterStories('BREAKING', this)">BREAKING</button>
+    <button class="filter-btn" onclick="filterStories('FAITS DIVERS', this)">FAITS DIVERS</button>
     <button class="add-cat-btn" onclick="addCategory('stories')">+ Catégorie</button>
   </div>
-  <!-- Featured -->
-  <div class="story-featured">
-    <div class="story-featured-img">🔫</div>
-    <div class="story-featured-body">
-      <div class="story-cat">⚡ BREAKING</div>
-      <div class="story-featured-title">BREAKING : Fusillade au Unicorn, 3 blessés</div>
-      <div class="story-featured-sub">Les secours sont sur place, la police boucle le quartier</div>
-      <div class="story-time">🕐 Il y a 16 heures</div>
-    </div>
-  </div>
-  <div class="stories-list">
-    <div class="story-item">
-      <div class="story-item-img">🎩</div>
-      <div>
-        <div class="story-item-cat">POTINS</div>
-        <div class="story-item-title">Qui est la mystérieuse femme du maire ?</div>
-        <div class="story-item-time">🕐 Il y a 16 heures</div>
-      </div>
-    </div>
-    <div class="story-item">
-      <div class="story-item-img">🚔</div>
-      <div>
-        <div class="story-item-cat">FAITS DIVERS</div>
-        <div class="story-item-title">Un dealer arrêté en plein deal à Strawberry</div>
-        <div class="story-item-time">🕐 Il y a 2 heures</div>
-      </div>
-    </div>
-    <div class="story-item">
-      <div class="story-item-img">💰</div>
-      <div>
-        <div class="story-item-cat">POTINS</div>
-        <div class="story-item-title">Le Diamond Casino racheté ? Les rumeurs s'intensifient</div>
-        <div class="story-item-time">🕐 Il y a 1 jour</div>
-      </div>
-    </div>
-    <div class="story-item add-video-card" style="min-height:70px;border-radius:10px;" onclick="openAddModal('story')">
-      <div style="font-size:22px">➕</div>
-      <span>Ajouter un article</span>
-    </div>
-  </div>
+  <div id="stories-container"></div>
 </div>
 
-<!-- ============ PAGE: HUB EMPLOI ============ -->
+<!-- ============ HUB EMPLOI ============ -->
 <div class="page" id="page-emploi">
   <div class="page-header">
     <div class="page-title">💼 Hub Emploi</div>
-    <div class="page-sub">Le cabinet de recrutement n°1 de Los Santos. Trouve ton job ou dépose ta candidature.</div>
+    <div class="page-sub">Le cabinet de recrutement n°1 de Los Santos.</div>
   </div>
-  <div class="emploi-tabs">
+  <div class="emploi-tabs" id="emploi-tabs">
     <button class="tab-btn active" onclick="switchEmploi('recrute', this)">On Recrute</button>
     <button class="tab-btn" onclick="switchEmploi('cherche', this)">Je Cherche</button>
+    <button class="tab-btn" id="tab-mails" style="display:none" onclick="switchEmploi('mails', this)">📨 Mails reçus</button>
   </div>
 
-  <!-- ON RECRUTE -->
   <div class="emploi-section active" id="emploi-recrute">
-    <div class="emploi-cats filter-bar">
+    <div class="section-admin-bar">
+      <button class="section-admin-btn" onclick="openEmploiModal()">➕ Ajouter une offre</button>
+    </div>
+    <div class="filter-bar" id="emploi-filters">
       <button class="filter-btn active" onclick="filterEmploy('tout', this)">TOUT</button>
       <button class="filter-btn" onclick="filterEmploy('service public', this)">SERVICE PUBLIC</button>
       <button class="filter-btn" onclick="filterEmploy('boîte de nuit', this)">BOÎTE DE NUIT</button>
@@ -738,75 +378,24 @@
       <button class="filter-btn" onclick="filterEmploy('media', this)">MÉDIA</button>
       <button class="add-cat-btn" onclick="addCategory('emploi')">+ Catégorie</button>
     </div>
-    <div class="emploi-grid" id="emploi-grid">
-      <div class="emploi-card" data-cat="service public">
-        <div class="emploi-icon">🚑</div>
-        <div>
-          <div class="emploi-title">Ambulancier <span class="emploi-badge badge-legal">LÉGAL</span></div>
-          <div class="emploi-company">Los Santos Medical Center</div>
-          <div class="emploi-desc">On cherche des ambulanciers motivés pour les urgences de nuit.</div>
-        </div>
-        <button class="edit-btn" onclick="editItem(this)">✏️</button>
-      </div>
-      <div class="emploi-card" data-cat="boîte de nuit">
-        <div class="emploi-icon">🎧</div>
-        <div>
-          <div class="emploi-title">Barman / DJ <span class="emploi-badge badge-passion">PASSION</span></div>
-          <div class="emploi-company">Bahama Mamas</div>
-          <div class="emploi-desc">Le club le plus hype de LS recrute pour les soirées du week-end.</div>
-        </div>
-        <button class="edit-btn" onclick="editItem(this)">✏️</button>
-      </div>
-      <div class="emploi-card" data-cat="mécano">
-        <div class="emploi-icon">🔧</div>
-        <div>
-          <div class="emploi-title">Mécanicien <span class="emploi-badge badge-service">SERVICE</span></div>
-          <div class="emploi-company">LS Customs</div>
-          <div class="emploi-desc">Tu sais tourner une clé ? On a besoin de toi.</div>
-        </div>
-        <button class="edit-btn" onclick="editItem(this)">✏️</button>
-      </div>
-      <div class="emploi-card" data-cat="media">
-        <div class="emploi-icon">📹</div>
-        <div>
-          <div class="emploi-title">Caméraman <span class="emploi-badge badge-legal">LÉGAL</span></div>
-          <div class="emploi-company">Weazel News</div>
-          <div class="emploi-desc">Oui, même la concurrence recrute.</div>
-        </div>
-        <button class="edit-btn" onclick="editItem(this)">✏️</button>
-      </div>
-      <div class="emploi-card" data-cat="restaurant">
-        <div class="emploi-icon">🍔</div>
-        <div>
-          <div class="emploi-title">Serveur <span class="emploi-badge badge-service">SERVICE</span></div>
-          <div class="emploi-company">Burger Shot — Vespucci</div>
-          <div class="emploi-desc">Le rush du midi, ça te connaît ? Rejoins l'équipe.</div>
-        </div>
-        <button class="edit-btn" onclick="editItem(this)">✏️</button>
-      </div>
-      <div class="emploi-card add-video-card" style="min-height:90px;border-radius:10px;" onclick="openAddModal('emploi')">
-        <div style="font-size:22px">➕</div>
-        <span>Ajouter une offre</span>
-      </div>
-    </div>
+    <div class="emploi-grid" id="emploi-grid"></div>
   </div>
 
-  <!-- JE CHERCHE -->
   <div class="emploi-section" id="emploi-cherche">
     <div class="form-card">
       <div class="form-title">📩 Dépose ta candidature</div>
       <div class="form-sub">On te recontacte quand une entreprise cherche dans ton domaine.</div>
       <div class="form-group">
         <label class="form-label">Ton prénom RP</label>
-        <input type="text" class="form-input" placeholder="Ex: Marcus Reyes">
+        <input type="text" class="form-input" id="cand-name" placeholder="Ex: Marcus Reyes">
       </div>
       <div class="form-group">
         <label class="form-label">Numéro RP</label>
-        <input type="text" class="form-input" placeholder="Ex: #4821">
+        <input type="text" class="form-input" id="cand-num" placeholder="Ex: #4821">
       </div>
       <div class="form-group">
         <label class="form-label">Domaine recherché</label>
-        <select class="form-select">
+        <select class="form-select" id="cand-domain">
           <option value="">Sélectionner un domaine...</option>
           <option>Service public (LSMC, LSPD, LSFD...)</option>
           <option>Boîte de nuit / Entertainment</option>
@@ -819,71 +408,41 @@
       </div>
       <div class="form-group">
         <label class="form-label">Précisions (optionnel)</label>
-        <textarea class="form-textarea" placeholder="Expérience, disponibilités, envies..."></textarea>
+        <textarea class="form-textarea" id="cand-note" placeholder="Expérience, disponibilités, envies..."></textarea>
       </div>
-      <button class="btn-submit" onclick="submitForm()">📨 Envoyer ma candidature</button>
+      <button class="btn-submit" onclick="submitCandidature()">📨 Envoyer ma candidature</button>
     </div>
+  </div>
+
+  <div class="emploi-section" id="emploi-mails">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:14px;color:var(--text2)" id="mail-count">Chargement...</div>
+      <button class="section-admin-btn" onclick="clearMails()">🗑️ Tout effacer</button>
+    </div>
+    <div class="mail-list" id="mail-list"></div>
   </div>
 </div>
 
-<!-- ============ PAGE: CONCEPTS ============ -->
+<!-- ============ CONCEPTS ============ -->
 <div class="page" id="page-concepts">
   <div class="page-header">
     <div class="page-title">💡 Concepts Originaux</div>
-    <div class="page-sub">Fast & Food, Outfits, Le Switch — nos formats uniques qu'on retrouve nulle part ailleurs.</div>
+    <div class="page-sub">Fast & Food, Outfits, Le Switch — nos formats uniques.</div>
   </div>
-  <div class="filter-bar">
-    <button class="filter-btn active" onclick="filterCat(this)">TOUT</button>
-    <button class="filter-btn" onclick="filterCat(this)">🍔 FAST & FOOD</button>
-    <button class="filter-btn" onclick="filterCat(this)">👗 OUTFITS</button>
-    <button class="filter-btn" onclick="filterCat(this)">🔀 LE SWITCH</button>
+  <div class="section-admin-bar">
+    <button class="section-admin-btn" onclick="openConceptModal()">➕ Ajouter un concept</button>
+  </div>
+  <div class="filter-bar" id="concepts-filters">
+    <button class="filter-btn active" onclick="filterConcepts('tout', this)">TOUT</button>
+    <button class="filter-btn" onclick="filterConcepts('FAST & FOOD', this)">🍔 FAST & FOOD</button>
+    <button class="filter-btn" onclick="filterConcepts('OUTFITS', this)">👗 OUTFITS</button>
+    <button class="filter-btn" onclick="filterConcepts('LE SWITCH', this)">🔀 LE SWITCH</button>
     <button class="add-cat-btn" onclick="addCategory('concepts')">+ Catégorie</button>
   </div>
-  <div class="concepts-grid">
-    <div class="concept-card">
-      <div class="concept-img">
-        🍔
-        <div class="concept-badge"><span class="video-badge badge-gold">FAST & FOOD</span></div>
-      </div>
-      <div class="concept-body">
-        <div class="concept-title">Le Mega Burger du Burger Shot</div>
-        <div class="concept-meta">Burger Shot — Vespucci</div>
-        <div class="stars">⭐⭐☆☆☆</div>
-        <div class="concept-desc">C'est gras, c'est cheap, mais ça cale. Le classique de LS.</div>
-      </div>
-    </div>
-    <div class="concept-card">
-      <div class="concept-img">
-        👗
-        <div class="concept-badge"><span class="video-badge badge-blue">OUTFITS</span></div>
-      </div>
-      <div class="concept-body">
-        <div class="concept-title">L'outfit à 50k$ de Marcus</div>
-        <div class="concept-meta">Ponsonbys — Rockford Hills</div>
-        <div class="stars">⭐⭐⭐⭐⭐</div>
-        <div class="concept-desc">Marcus nous a montré sa tenue complète Ponsonbys. Le drip est réel.</div>
-      </div>
-    </div>
-    <div class="concept-card">
-      <div class="concept-img">
-        🔀
-        <div class="concept-badge"><span class="video-badge badge-purple">LE SWITCH</span></div>
-      </div>
-      <div class="concept-body">
-        <div class="concept-title">24h dans la peau d'un dépanneur</div>
-        <div class="concept-meta">LS Roads — Davis</div>
-        <div class="stars">⭐⭐⭐☆☆</div>
-        <div class="concept-desc">On a suivi un dépanneur pendant 24h. Entre les PV et les accidents, c'est un métier de fou.</div>
-      </div>
-    </div>
-    <div class="concept-card add-video-card" style="min-height:200px;border-radius:10px;" onclick="openAddModal('concept')">
-      <div style="font-size:28px">➕</div>
-      <span>Ajouter un concept</span>
-    </div>
-  </div>
+  <div class="concepts-grid" id="concepts-grid"></div>
 </div>
 
-<!-- ============ PAGE: DROP BOX ============ -->
+<!-- ============ DROP BOX ============ -->
 <div class="page" id="page-dropbox">
   <div class="page-header">
     <div class="page-title">📬 Drop Box</div>
@@ -893,15 +452,15 @@
     <div class="form-card" style="max-width:100%">
       <div class="form-group">
         <label class="form-label">Titre (optionnel)</label>
-        <input type="text" class="form-input" placeholder="Donne un titre à ton info...">
+        <input type="text" class="form-input" id="drop-title" placeholder="Donne un titre à ton info...">
       </div>
       <div class="form-group">
         <label class="form-label">Ton info</label>
-        <textarea class="form-textarea" style="min-height:140px" placeholder="Décris ce que tu as vu, entendu, ou ce que tu veux signaler..."></textarea>
+        <textarea class="form-textarea" style="min-height:140px" id="drop-body" placeholder="Décris ce que tu as vu, entendu..."></textarea>
       </div>
       <div class="form-group">
         <label class="form-label">Catégorie</label>
-        <select class="form-select">
+        <select class="form-select" id="drop-cat">
           <option>Bavure policière / Abus de pouvoir</option>
           <option>Activité illégale</option>
           <option>Scoop / Info exclusive</option>
@@ -909,19 +468,12 @@
           <option>Autre</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Fichiers (photos, vidéos)</label>
-        <div style="border:1px dashed var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text3);cursor:pointer;font-size:13px;" onclick="this.querySelector('input').click()">
-          📎 Ajouter des fichiers (photos, vidéos)
-          <input type="file" style="display:none" multiple>
-        </div>
-      </div>
-      <button class="btn-submit" onclick="submitForm()">📨 Envoyer anonymement</button>
+      <button class="btn-submit" onclick="submitDrop()">📨 Envoyer anonymement</button>
     </div>
     <div class="dropbox-sidebar">
       <div class="info-card">
         <div class="info-card-title">🛡️ 100% Anonyme</div>
-        <p style="font-size:13px;color:var(--text2)">Ton identité est protégée. On ne stocke aucune information personnelle. Seule la rédaction de LatInvader a accès aux envois.</p>
+        <p style="font-size:13px;color:var(--text2)">Ton identité est protégée. Seule la rédaction de LatInvader a accès aux envois.</p>
       </div>
       <div class="info-card">
         <div class="info-card-title">🎯 Ce qu'on recherche</div>
@@ -937,160 +489,32 @@
   </div>
 </div>
 
-<!-- ============ PAGE: LE RADAR ============ -->
+<!-- ============ RADAR ============ -->
 <div class="page" id="page-radar">
   <div class="page-header">
     <div class="page-title">📡 Le Radar</div>
-    <div class="page-sub">Où ça bouge ce soir à Los Santos ? Les spots les plus hype en temps réel.</div>
+    <div class="page-sub">Où ça bouge ce soir à Los Santos ?</div>
   </div>
-
+  <div class="section-admin-bar">
+    <button class="section-admin-btn" onclick="openRadarModal()">➕ Ajouter un spot</button>
+  </div>
   <div class="radar-section">
-    <div class="radar-section-title">
-      <div class="radar-live-dot"></div>
-      SPOTS HYPE — MAINTENANT
-    </div>
-    <div class="radar-grid" id="radar-hype-grid">
-      <div class="radar-card" data-crowd="5" data-status="hype">
-        <div class="radar-card-left">
-          <div class="radar-name">Vanilla Unicorn <span class="radar-badge radar-hype">HYPE</span></div>
-          <div class="radar-location">📍 Strawberry</div>
-          <div class="radar-desc" id="desc-unicorn">La soirée bat son plein, DJ set live ce soir.</div>
-          <div class="radar-edit-controls">
-            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowd(this)">
-              <option value="1">Vide</option><option value="2">Calme</option>
-              <option value="3">Animé</option><option value="4">Blindé</option>
-              <option value="5" selected>Ouf</option>
-            </select>
-            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-unicorn')">
-          </div>
-        </div>
-        <div class="radar-right">
-          <div class="crowd-meter" id="meter-unicorn">
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar hype filled"></div>
-          </div>
-          <div class="crowd-label">👥 Crowd</div>
-        </div>
-      </div>
-      <div class="radar-card" data-crowd="4" data-status="hype">
-        <div class="radar-card-left">
-          <div class="radar-name">Bahama Mamas <span class="radar-badge radar-hype">HYPE</span></div>
-          <div class="radar-location">📍 Downtown LS</div>
-          <div class="radar-desc" id="desc-bahama">Soirée open bar + contest DJ. Ça va être chaud.</div>
-          <div class="radar-edit-controls">
-            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-bahama')">
-              <option value="1">Vide</option><option value="2">Calme</option>
-              <option value="3">Animé</option><option value="4" selected>Blindé</option>
-              <option value="5">Ouf</option>
-            </select>
-            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-bahama')">
-          </div>
-        </div>
-        <div class="radar-right">
-          <div class="crowd-meter" id="meter-bahama">
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar hype filled"></div>
-            <div class="crowd-bar"></div>
-          </div>
-          <div class="crowd-label">👥 Crowd</div>
-        </div>
-      </div>
-    </div>
+    <div class="radar-section-title"><div class="radar-live-dot"></div> SPOTS HYPE — MAINTENANT</div>
+    <div class="radar-grid" id="radar-hype-grid"></div>
   </div>
-
   <div class="radar-section">
     <div class="radar-section-title">AUTRES SPOTS</div>
-    <div class="radar-grid">
-      <div class="radar-card">
-        <div class="radar-card-left">
-          <div class="radar-name">Del Perro Pier <span class="radar-badge radar-chill">CHILL</span></div>
-          <div class="radar-location">📍 Del Perro Beach</div>
-          <div class="radar-desc" id="desc-delperro">Chill au bord de l'eau, quelques groupes tranquilles.</div>
-          <div class="radar-edit-controls">
-            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-delperro')">
-              <option value="1">Vide</option><option value="2">Calme</option>
-              <option value="3" selected>Animé</option><option value="4">Blindé</option><option value="5">Ouf</option>
-            </select>
-            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-delperro')">
-          </div>
-        </div>
-        <div class="radar-right">
-          <div class="crowd-meter" id="meter-delperro">
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar"></div><div class="crowd-bar"></div>
-          </div>
-          <div class="crowd-label">👥 Crowd</div>
-        </div>
-      </div>
-      <div class="radar-card">
-        <div class="radar-card-left">
-          <div class="radar-name">Diamond Casino & Resort <span class="radar-badge radar-business">BUSINESS</span></div>
-          <div class="radar-location">📍 Vinewood</div>
-          <div class="radar-desc" id="desc-diamond">Les gros joueurs sont là ce soir. Ambiance feutrée.</div>
-          <div class="radar-edit-controls">
-            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-diamond')">
-              <option value="1">Vide</option><option value="2">Calme</option>
-              <option value="3">Animé</option><option value="4" selected>Blindé</option><option value="5">Ouf</option>
-            </select>
-            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-diamond')">
-          </div>
-        </div>
-        <div class="radar-right">
-          <div class="crowd-meter" id="meter-diamond">
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar"></div>
-          </div>
-          <div class="crowd-label">👥 Crowd</div>
-        </div>
-      </div>
-      <div class="radar-card">
-        <div class="radar-card-left">
-          <div class="radar-name">Grove Street <span class="radar-badge radar-danger">DANGER</span></div>
-          <div class="radar-location">📍 Davis</div>
-          <div class="radar-desc" id="desc-grove">Tensions ce soir, restez prudents dans le coin.</div>
-          <div class="radar-edit-controls">
-            <select class="form-select" style="padding:4px 8px;font-size:11px;" onchange="updateCrowdEl(this, 'meter-grove')">
-              <option value="1">Vide</option><option value="2" selected>Calme</option>
-              <option value="3">Animé</option><option value="4">Blindé</option><option value="5">Ouf</option>
-            </select>
-            <input class="form-input" style="padding:4px 8px;font-size:11px;" placeholder="Modifier description..." onchange="updateDesc(this, 'desc-grove')">
-          </div>
-        </div>
-        <div class="radar-right">
-          <div class="crowd-meter" id="meter-grove">
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar filled"></div>
-            <div class="crowd-bar"></div><div class="crowd-bar"></div><div class="crowd-bar"></div>
-          </div>
-          <div class="crowd-label">👥 Crowd</div>
-        </div>
-      </div>
-      <div class="radar-card add-video-card" style="min-height:90px;border-radius:10px;" onclick="openAddModal('radar')">
-        <div style="font-size:22px">➕</div>
-        <span>Ajouter un spot</span>
-      </div>
-    </div>
+    <div class="radar-grid" id="radar-other-grid"></div>
   </div>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
-    <div class="footer-left">
-      <div class="footer-logo-box">L</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:28px;height:28px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--bg)">L</div>
       <span class="footer-text">© LatInvader — On met l'accent sur l'actualité</span>
     </div>
-    <div class="footer-right">Le média n°1 de Los Santos</div>
+    <span class="footer-text">Le média n°1 de Los Santos</span>
   </div>
 </footer>
 
@@ -1098,8 +522,8 @@
 <div class="modal-overlay" id="admin-modal">
   <div class="modal">
     <div class="modal-avatar">🧍</div>
-    <div class="modal-title" id="admin-modal-title">Connexion Admin</div>
-    <div class="modal-sub" id="admin-modal-sub">Entre ton mot de passe pour accéder au mode édition.</div>
+    <div class="modal-title">Connexion Admin</div>
+    <div class="modal-sub">Entre ton mot de passe pour accéder au mode édition.</div>
     <div class="form-group">
       <label class="form-label">Mot de passe</label>
       <input type="password" class="form-input" id="admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()">
@@ -1112,207 +536,938 @@
   </div>
 </div>
 
-<!-- ===== MODAL: ADD ITEM ===== -->
-<div class="modal-overlay" id="add-modal">
-  <div class="modal" style="width:440px">
-    <div class="modal-title" id="add-modal-title">Ajouter un élément</div>
+<!-- ===== MODAL: ADD/EDIT VIDEO ===== -->
+<div class="modal-overlay" id="video-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-title" id="video-modal-title">Ajouter une vidéo</div>
     <div style="margin-bottom:20px"></div>
     <div class="form-group">
       <label class="form-label">Titre</label>
-      <input type="text" class="form-input" id="add-title" placeholder="Titre...">
+      <input type="text" class="form-input" id="vm-title" placeholder="Titre de la vidéo...">
     </div>
     <div class="form-group">
-      <label class="form-label">Sous-titre / Description</label>
-      <input type="text" class="form-input" id="add-sub" placeholder="Description courte...">
+      <label class="form-label">Description</label>
+      <input type="text" class="form-input" id="vm-desc" placeholder="Description courte...">
     </div>
-    <div class="form-group" id="add-cat-group">
+    <div class="form-group">
       <label class="form-label">Catégorie</label>
-      <input type="text" class="form-input" id="add-cat" placeholder="Ex: Micro-trottoir">
+      <select class="form-select" id="vm-cat">
+        <option value="60s">60 SECONDES D'ACTU</option>
+        <option value="micro">MICRO-TROTTOIR</option>
+        <option value="colors">COLORS STYLE</option>
+      </select>
     </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn-submit" onclick="confirmAdd()">✅ Ajouter</button>
-      <button style="flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:8px;cursor:pointer;" onclick="closeModal('add-modal')">Annuler</button>
+    <div class="form-group">
+      <label class="form-label">Fichier vidéo</label>
+      <div class="upload-zone" onclick="document.getElementById('vm-file').click()">
+        📹 Cliquez pour uploader une vidéo
+        <input type="file" id="vm-file" accept="video/*" onchange="previewVideo(event)">
+      </div>
+      <div class="upload-preview" id="vm-preview" style="display:none"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-submit" onclick="saveVideo()">✅ Enregistrer</button>
+      <button class="btn-secondary" onclick="closeModal('video-modal')">Annuler</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">✅ Action effectuée avec succès !</div>
+<!-- ===== MODAL: VIDEO PLAYER ===== -->
+<div class="video-modal-overlay" id="video-player-overlay" onclick="closeVideoPlayer(event)">
+  <div class="video-modal" id="video-modal-box">
+    <div class="video-modal-header">
+      <span class="video-modal-title" id="vplayer-title">Vidéo</span>
+      <button class="video-modal-close" onclick="closeVideoPlayer()">✕</button>
+    </div>
+    <video id="vplayer-el" controls></video>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD/EDIT CONCEPT ===== -->
+<div class="modal-overlay" id="concept-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-title" id="concept-modal-title">Ajouter un concept</div>
+    <div style="margin-bottom:20px"></div>
+    <div class="form-group">
+      <label class="form-label">Titre</label>
+      <input type="text" class="form-input" id="cm-title" placeholder="Titre...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Lieu / Sous-titre</label>
+      <input type="text" class="form-input" id="cm-meta" placeholder="Ex: Burger Shot — Vespucci">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="cm-desc" placeholder="Description..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Catégorie</label>
+      <select class="form-select" id="cm-cat">
+        <option value="FAST & FOOD">🍔 FAST & FOOD</option>
+        <option value="OUTFITS">👗 OUTFITS</option>
+        <option value="LE SWITCH">🔀 LE SWITCH</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Note (étoiles)</label>
+      <div class="star-input" id="cm-stars">
+        <span onclick="setStars(1)">★</span>
+        <span onclick="setStars(2)">★</span>
+        <span onclick="setStars(3)">★</span>
+        <span onclick="setStars(4)">★</span>
+        <span onclick="setStars(5)">★</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Image (PNG/JPG)</label>
+      <div class="upload-zone" onclick="document.getElementById('cm-file').click()">
+        🖼️ Cliquez pour uploader une image
+        <input type="file" id="cm-file" accept="image/*" onchange="previewImage(event, 'cm-preview')">
+      </div>
+      <div class="upload-preview" id="cm-preview" style="display:none"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-submit" onclick="saveConcept()">✅ Enregistrer</button>
+      <button class="btn-secondary" onclick="closeModal('concept-modal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD/EDIT EMPLOI ===== -->
+<div class="modal-overlay" id="emploi-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-title" id="emploi-modal-title">Ajouter une offre</div>
+    <div style="margin-bottom:20px"></div>
+    <div class="form-group">
+      <label class="form-label">Titre du poste</label>
+      <input type="text" class="form-input" id="em-title" placeholder="Ex: Ambulancier">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Entreprise</label>
+      <input type="text" class="form-input" id="em-company" placeholder="Ex: Los Santos Medical Center">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="em-desc" placeholder="Description du poste..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Catégorie</label>
+      <select class="form-select" id="em-cat">
+        <option value="service public">Service public</option>
+        <option value="boîte de nuit">Boîte de nuit</option>
+        <option value="mécano">Mécano</option>
+        <option value="restaurant">Restaurant</option>
+        <option value="media">Média</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Statut</label>
+      <select class="form-select" id="em-status">
+        <option value="legal">Légal</option>
+        <option value="service">Service</option>
+        <option value="passion">Passion</option>
+        <option value="illegal">Illégal</option>
+        <option value="closed">Ne recrute plus</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Icône / Logo (PNG)</label>
+      <div class="upload-zone" onclick="document.getElementById('em-file').click()">
+        🏢 Cliquez pour uploader une image
+        <input type="file" id="em-file" accept="image/*" onchange="previewImage(event, 'em-preview')">
+      </div>
+      <div class="upload-preview" id="em-preview" style="display:none"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-submit" onclick="saveEmploi()">✅ Enregistrer</button>
+      <button class="btn-secondary" onclick="closeModal('emploi-modal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD/EDIT RADAR ===== -->
+<div class="modal-overlay" id="radar-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-title" id="radar-modal-title">Ajouter un spot</div>
+    <div style="margin-bottom:20px"></div>
+    <div class="form-group">
+      <label class="form-label">Nom du spot</label>
+      <input type="text" class="form-input" id="rm-name" placeholder="Ex: Vanilla Unicorn">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Quartier / Localisation</label>
+      <input type="text" class="form-input" id="rm-loc" placeholder="Ex: Strawberry">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="rm-desc" placeholder="Ce qui se passe là-bas..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Ambiance</label>
+      <select class="form-select" id="rm-status">
+        <option value="hype">HYPE</option>
+        <option value="chill">CHILL</option>
+        <option value="business">BUSINESS</option>
+        <option value="danger">DANGER</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Affluence (1-5)</label>
+      <input type="range" min="1" max="5" value="3" id="rm-crowd" class="crowd-slider" oninput="document.getElementById('rm-crowd-val').textContent=this.value">
+      <div style="display:flex;justify-content:space-between;margin-top:4px">
+        <span style="font-size:11px;color:var(--text3)">Vide</span>
+        <span style="font-size:12px;color:var(--gold);font-weight:700" id="rm-crowd-val">3</span>
+        <span style="font-size:11px;color:var(--text3)">Blindé</span>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-submit" onclick="saveRadar()">✅ Enregistrer</button>
+      <button class="btn-secondary" onclick="closeModal('radar-modal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: MAIL DETAIL ===== -->
+<div class="modal-overlay" id="mail-modal">
+  <div class="modal" style="width:500px">
+    <div class="modal-title">📨 Candidature</div>
+    <div style="height:16px"></div>
+    <div class="mail-detail" id="mail-detail-content"></div>
+    <div style="margin-top:16px">
+      <button class="btn-secondary" style="width:100%" onclick="closeModal('mail-modal')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: ADD CATEGORY ===== -->
+<div class="modal-overlay" id="addcat-modal">
+  <div class="modal">
+    <div class="modal-title">Nouvelle catégorie</div>
+    <div class="modal-sub">Donne un nom à ta catégorie.</div>
+    <div class="form-group">
+      <label class="form-label">Nom</label>
+      <input type="text" class="form-input" id="addcat-name" placeholder="Ex: Interviews">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-submit" onclick="confirmAddCategory()">✅ Créer</button>
+      <button class="btn-secondary" onclick="closeModal('addcat-modal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: STORY ===== -->
+<div class="modal-overlay" id="story-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-title" id="story-modal-title">Ajouter un article</div>
+    <div style="margin-bottom:20px"></div>
+    <div class="form-group">
+      <label class="form-label">Titre</label>
+      <input type="text" class="form-input" id="sm-title" placeholder="Titre de l'article...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Sous-titre</label>
+      <input type="text" class="form-input" id="sm-sub" placeholder="Sous-titre...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Catégorie</label>
+      <select class="form-select" id="sm-cat">
+        <option>BREAKING</option>
+        <option>POTINS</option>
+        <option>FAITS DIVERS</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Heure de publication</label>
+      <input type="text" class="form-input" id="sm-time" placeholder="Ex: Il y a 2 heures">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Image (optionnel)</label>
+      <div class="upload-zone" onclick="document.getElementById('sm-file').click()">
+        🖼️ Cliquez pour uploader une image
+        <input type="file" id="sm-file" accept="image/*" onchange="previewImage(event, 'sm-preview')">
+      </div>
+      <div class="upload-preview" id="sm-preview" style="display:none"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-submit" onclick="saveStory()">✅ Enregistrer</button>
+      <button class="btn-secondary" onclick="closeModal('story-modal')">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ Action effectuée !</div>
 
 <script>
-  // ===== STATE =====
-  let isAdmin = false;
-  const ADMIN_PASS = "latinvader2025"; // Change ici
-  let currentAddContext = '';
+// ===== STATE =====
+let isAdmin = false;
+const ADMIN_PASS = "21032001";
+let currentCatContext = '';
+let editingId = null;
+let currentStars = 3;
+let currentLogoSrc = null;
 
-  // ===== NAVIGATION =====
-  function showPage(page) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('page-' + page).classList.add('active');
-    document.getElementById('nav-' + page).classList.add('active');
-  }
+// DATA STORES
+let videos = [
+  { id: 1, title: "Un monde de chien pour l'ouverture de la boutique", desc: "Notre reporter sur place", cat: "60s", videoSrc: null },
+  { id: 2, title: "Braquage au Fleeca Bank : 60 secondes chrono", desc: "Résumé ultra-rapide du braquage", cat: "60s", videoSrc: null },
+  { id: 3, title: "C'est quoi ton salaire à LS ?", desc: "On a posé la question qui fâche...", cat: "micro", videoSrc: null },
+  { id: 4, title: "Lil Smokey — Interview Colors", desc: "Le rappeur de Strawberry se confie...", cat: "colors", videoSrc: null },
+  { id: 5, title: "Course-poursuite sur l'autoroute", desc: "La LSPD en action ce matin à 6h", cat: "60s", videoSrc: null },
+];
+let videoIdSeq = 6;
+let instantCats = [
+  { id: '60s', label: '60 SECONDES D\'ACTU' },
+  { id: 'micro', label: 'MICRO-TROTTOIR' },
+  { id: 'colors', label: 'COLORS STYLE' },
+];
+let currentInstantFilter = 'tout';
 
-  // ===== THEME =====
-  function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    document.getElementById('theme-btn').textContent = isDark ? '🌙' : '☀️';
-  }
+let stories = [
+  { id: 1, title: "BREAKING : Fusillade au Unicorn, 3 blessés", sub: "Les secours sont sur place, la police boucle le quartier", cat: "BREAKING", time: "Il y a 16 heures", img: null, featured: true },
+  { id: 2, title: "Qui est la mystérieuse femme du maire ?", sub: "", cat: "POTINS", time: "Il y a 16 heures", img: null, featured: false },
+  { id: 3, title: "Un dealer arrêté en plein deal à Strawberry", sub: "", cat: "FAITS DIVERS", time: "Il y a 2 heures", img: null, featured: false },
+  { id: 4, title: "Le Diamond Casino racheté ? Les rumeurs s'intensifient", sub: "", cat: "POTINS", time: "Il y a 1 jour", img: null, featured: false },
+];
+let storyIdSeq = 5;
+let storyCats = ['BREAKING', 'POTINS', 'FAITS DIVERS'];
+let currentStoriesFilter = 'tout';
 
-  // ===== ADMIN =====
-  function openAdminModal() {
-    if (isAdmin) { logoutAdmin(); return; }
+let emplois = [
+  { id: 1, title: "Ambulancier", company: "Los Santos Medical Center", desc: "On cherche des ambulanciers motivés.", cat: "service public", status: "legal", img: null },
+  { id: 2, title: "Barman / DJ", company: "Bahama Mamas", desc: "Le club le plus hype de LS recrute.", cat: "boîte de nuit", status: "passion", img: null },
+  { id: 3, title: "Mécanicien", company: "LS Customs", desc: "Tu sais tourner une clé ? On a besoin de toi.", cat: "mécano", status: "service", img: null },
+  { id: 4, title: "Caméraman", company: "Weazel News", desc: "Oui, même la concurrence recrute.", cat: "media", status: "legal", img: null },
+  { id: 5, title: "Serveur", company: "Burger Shot — Vespucci", desc: "Le rush du midi, ça te connaît ?", cat: "restaurant", status: "service", img: null },
+];
+let emploiIdSeq = 6;
+let emploiCats = ['service public', 'boîte de nuit', 'mécano', 'restaurant', 'media'];
+let currentEmploiFilter = 'tout';
+let mailbox = [];
+
+let concepts = [
+  { id: 1, title: "Le Mega Burger du Burger Shot", meta: "Burger Shot — Vespucci", desc: "C'est gras, c'est cheap, mais ça cale.", cat: "FAST & FOOD", stars: 2, img: null },
+  { id: 2, title: "L'outfit à 50k$ de Marcus", meta: "Ponsonbys — Rockford Hills", desc: "Marcus nous a montré sa tenue complète. Le drip est réel.", cat: "OUTFITS", stars: 5, img: null },
+  { id: 3, title: "24h dans la peau d'un dépanneur", meta: "LS Roads — Davis", desc: "On a suivi un dépanneur pendant 24h. C'est un métier de fou.", cat: "LE SWITCH", stars: 3, img: null },
+];
+let conceptIdSeq = 4;
+let conceptCats = ['FAST & FOOD', 'OUTFITS', 'LE SWITCH'];
+let currentConceptsFilter = 'tout';
+
+let radarSpots = [
+  { id: 1, name: "Vanilla Unicorn", loc: "Strawberry", desc: "La soirée bat son plein, DJ set live ce soir.", status: "hype", crowd: 5 },
+  { id: 2, name: "Bahama Mamas", loc: "Downtown LS", desc: "Soirée open bar + contest DJ. Ça va être chaud.", status: "hype", crowd: 4 },
+  { id: 3, name: "Del Perro Pier", loc: "Del Perro Beach", desc: "Chill au bord de l'eau, quelques groupes tranquilles.", status: "chill", crowd: 3 },
+  { id: 4, name: "Diamond Casino & Resort", loc: "Vinewood", desc: "Les gros joueurs sont là ce soir. Ambiance feutrée.", status: "business", crowd: 4 },
+  { id: 5, name: "Grove Street", loc: "Davis", desc: "Tensions ce soir, restez prudents dans le coin.", status: "danger", crowd: 2 },
+];
+let radarIdSeq = 6;
+
+// ===== NAVIGATION =====
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  if (page === 'instant') renderInstant();
+  if (page === 'stories') renderStories();
+  if (page === 'concepts') renderConcepts();
+  if (page === 'emploi') renderEmploi();
+  if (page === 'radar') renderRadar();
+}
+
+// ===== THEME =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
+}
+
+// ===== LOGO =====
+function handleLogoClick() {
+  if (isAdmin) document.getElementById('logo-file').click();
+}
+function changeLogo(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  currentLogoSrc = url;
+  document.getElementById('logo-display').innerHTML = `<img src="${url}" class="logo-img" alt="LatInvader Logo">`;
+  showToast('🖼️ Logo mis à jour !');
+}
+
+// ===== ADMIN =====
+function openAdminModal() {
+  if (isAdmin) { logoutAdmin(); return; }
+  document.getElementById('admin-password').value = '';
+  document.getElementById('admin-error').style.display = 'none';
+  openModal('admin-modal');
+  setTimeout(() => document.getElementById('admin-password').focus(), 100);
+}
+function loginAdmin() {
+  if (document.getElementById('admin-password').value === ADMIN_PASS) {
+    isAdmin = true;
+    document.body.classList.add('admin-mode');
+    document.getElementById('admin-btn').classList.add('logged');
+    document.getElementById('tab-mails').style.display = 'flex';
+    closeModal('admin-modal');
+    renderAll();
+    showToast('🛡️ Mode admin activé !');
+  } else {
+    document.getElementById('admin-error').style.display = 'block';
     document.getElementById('admin-password').value = '';
-    document.getElementById('admin-error').style.display = 'none';
-    document.getElementById('admin-modal').classList.add('open');
-    setTimeout(() => document.getElementById('admin-password').focus(), 100);
   }
-  function loginAdmin() {
-    const pass = document.getElementById('admin-password').value;
-    if (pass === ADMIN_PASS) {
-      isAdmin = true;
-      document.body.classList.add('admin-mode');
-      document.getElementById('admin-btn').classList.add('logged');
-      closeModal('admin-modal');
-      showToast('🛡️ Mode admin activé !');
-    } else {
-      document.getElementById('admin-error').style.display = 'block';
-      document.getElementById('admin-password').value = '';
-      document.getElementById('admin-password').focus();
-    }
-  }
-  function logoutAdmin() {
-    isAdmin = false;
-    document.body.classList.remove('admin-mode');
-    document.getElementById('admin-btn').classList.remove('logged');
-    showToast('👋 Déconnecté du mode admin');
-  }
+}
+function logoutAdmin() {
+  isAdmin = false;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('admin-btn').classList.remove('logged');
+  document.getElementById('tab-mails').style.display = 'none';
+  renderAll();
+  showToast('👋 Déconnecté du mode admin');
+}
 
-  // ===== MODALS =====
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-  document.querySelectorAll('.modal-overlay').forEach(m => {
-    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+// ===== MODAL HELPERS =====
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ===== RENDER ALL =====
+function renderAll() {
+  renderInstant();
+  renderStories();
+  renderConcepts();
+  renderEmploi();
+  renderRadar();
+}
+
+// ===== CAT FILTER HELPER =====
+function buildFilterBar(containerId, cats, allLabel, filterFn, currentFilter, addCatCtx) {
+  const bar = document.getElementById(containerId);
+  bar.innerHTML = `<button class="filter-btn${currentFilter==='tout'?' active':''}" onclick="${filterFn}('tout', this)">${allLabel}</button>`;
+  cats.forEach(c => {
+    const id = typeof c === 'object' ? c.id : c;
+    const label = typeof c === 'object' ? c.label : c;
+    bar.innerHTML += `<button class="filter-btn${currentFilter===id?' active':''}" onclick="${filterFn}('${id}', this)">${label}</button>`;
   });
+  bar.innerHTML += `<button class="add-cat-btn" onclick="addCategory('${addCatCtx}')">+ Catégorie</button>`;
+}
 
-  // ===== FILTERS =====
-  function filterCat(btn) {
-    btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+// ===== INSTANT / VIDEOS =====
+function renderInstant() {
+  buildFilterBar('instant-filters', instantCats, 'TOUT', 'filterInstant', currentInstantFilter, 'instant');
+  const grid = document.getElementById('instant-grid');
+  const filtered = currentInstantFilter === 'tout' ? videos : videos.filter(v => v.cat === currentInstantFilter);
+  grid.innerHTML = filtered.map(v => `
+    <div class="video-card" data-id="${v.id}" data-cat="${v.cat}">
+      <div class="video-thumb" onclick="playVideo(${v.id})">
+        ${v.videoSrc ? `<video src="${v.videoSrc}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div class="play-icon">▶</div></div>`}
+        <div class="video-badge badge-red">${getCatLabel(v.cat, instantCats)}</div>
+        <div class="video-play-btn"><span>▶</span></div>
+        ${isAdmin ? `<div class="admin-actions">
+          <button class="action-btn" onclick="event.stopPropagation();editVideo(${v.id})">✏️ Modifier</button>
+          <button class="action-btn del" onclick="event.stopPropagation();deleteVideo(${v.id})">🗑️</button>
+        </div>` : ''}
+      </div>
+      <div class="video-info">
+        <div class="video-info-title">${v.title}</div>
+        <div class="video-info-sub">${v.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function getCatLabel(id, catsArr) {
+  const c = catsArr.find(x => (typeof x === 'object' ? x.id : x) === id);
+  return c ? (typeof c === 'object' ? c.label : c) : id;
+}
+function filterInstant(cat, btn) {
+  currentInstantFilter = cat;
+  renderInstant();
+}
+function openVideoModal(id = null) {
+  editingId = id;
+  const v = id ? videos.find(x => x.id === id) : null;
+  document.getElementById('video-modal-title').textContent = id ? 'Modifier la vidéo' : 'Ajouter une vidéo';
+  document.getElementById('vm-title').value = v ? v.title : '';
+  document.getElementById('vm-desc').value = v ? v.desc : '';
+  document.getElementById('vm-cat').innerHTML = instantCats.map(c => `<option value="${c.id}"${v && v.cat===c.id?' selected':''}>${c.label}</option>`).join('');
+  document.getElementById('vm-preview').style.display = 'none';
+  document.getElementById('vm-file').value = '';
+  openModal('video-modal');
+}
+function previewVideo(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  e.target.dataset.url = url;
+  const prev = document.getElementById('vm-preview');
+  prev.style.display = 'flex';
+  prev.innerHTML = `<video src="${url}" style="width:120px;height:70px;border-radius:6px" muted></video><span>${file.name}</span>`;
+}
+function saveVideo() {
+  const title = document.getElementById('vm-title').value.trim();
+  if (!title) { showToast('⚠️ Donne un titre !'); return; }
+  const fileInput = document.getElementById('vm-file');
+  const videoSrc = fileInput.dataset.url || (editingId ? videos.find(v=>v.id===editingId)?.videoSrc : null);
+  const data = { title, desc: document.getElementById('vm-desc').value, cat: document.getElementById('vm-cat').value, videoSrc };
+  if (editingId) {
+    const idx = videos.findIndex(v => v.id === editingId);
+    videos[idx] = { ...videos[idx], ...data };
+  } else {
+    videos.push({ id: videoIdSeq++, ...data });
   }
-  function filterInstant(cat, btn) {
-    btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('#instant-grid .video-card[data-cat]').forEach(card => {
-      if (cat === 'tout' || card.dataset.cat === cat) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
+  closeModal('video-modal');
+  renderInstant();
+  showToast(editingId ? '✅ Vidéo modifiée !' : '✅ Vidéo ajoutée !');
+  editingId = null;
+}
+function editVideo(id) { openVideoModal(id); }
+function deleteVideo(id) {
+  if (!confirm('Supprimer cette vidéo ?')) return;
+  videos = videos.filter(v => v.id !== id);
+  renderInstant();
+  showToast('🗑️ Vidéo supprimée');
+}
+function playVideo(id) {
+  const v = videos.find(x => x.id === id);
+  if (!v || !v.videoSrc) { showToast('ℹ️ Aucune vidéo uploadée pour ce post.'); return; }
+  document.getElementById('vplayer-title').textContent = v.title;
+  const el = document.getElementById('vplayer-el');
+  el.src = v.videoSrc;
+  el.play();
+  document.getElementById('video-player-overlay').classList.add('open');
+}
+function closeVideoPlayer(e) {
+  if (e && e.target !== document.getElementById('video-player-overlay')) return;
+  document.getElementById('vplayer-el').pause();
+  document.getElementById('video-player-overlay').classList.remove('open');
+}
+
+// ===== STORIES =====
+function renderStories() {
+  buildFilterBar('stories-filters', storyCats.map(c => ({id:c,label:c})), 'TOUT', 'filterStories', currentStoriesFilter, 'stories');
+  const container = document.getElementById('stories-container');
+  const filtered = currentStoriesFilter === 'tout' ? stories : stories.filter(s => s.cat === currentStoriesFilter);
+  const featured = filtered.find(s => s.featured) || filtered[0];
+  const list = filtered.filter(s => s !== featured);
+  let html = '';
+  if (featured) {
+    html += `<div class="story-featured" style="position:relative">
+      <div class="story-featured-img">${featured.img ? `<img src="${featured.img}">` : '🔫'}</div>
+      <div class="story-featured-body">
+        <div class="story-cat">⚡ ${featured.cat}</div>
+        <div class="story-featured-title">${featured.title}</div>
+        <div class="story-featured-sub">${featured.sub}</div>
+        <div class="story-time">🕐 ${featured.time}</div>
+      </div>
+      ${isAdmin ? `<div class="admin-actions" style="top:12px;right:12px">
+        <button class="action-btn" onclick="editStory(${featured.id})">✏️</button>
+        <button class="action-btn del" onclick="deleteStory(${featured.id})">🗑️</button>
+      </div>` : ''}
+    </div>`;
+  }
+  html += `<div class="stories-list">`;
+  list.forEach(s => {
+    html += `<div class="story-item" style="position:relative">
+      <div class="story-item-img">${s.img ? `<img src="${s.img}">` : '📰'}</div>
+      <div>
+        <div class="story-item-cat">${s.cat}</div>
+        <div class="story-item-title">${s.title}</div>
+        <div class="story-item-time">🕐 ${s.time}</div>
+      </div>
+      ${isAdmin ? `<div class="admin-actions">
+        <button class="action-btn" onclick="editStory(${s.id})">✏️</button>
+        <button class="action-btn del" onclick="deleteStory(${s.id})">🗑️</button>
+      </div>` : ''}
+    </div>`;
+  });
+  html += `</div>`;
+  container.innerHTML = html;
+}
+function filterStories(cat, btn) { currentStoriesFilter = cat; renderStories(); }
+function openStoryModal(id = null) {
+  editingId = id;
+  const s = id ? stories.find(x => x.id === id) : null;
+  document.getElementById('story-modal-title').textContent = id ? 'Modifier l\'article' : 'Ajouter un article';
+  document.getElementById('sm-title').value = s ? s.title : '';
+  document.getElementById('sm-sub').value = s ? s.sub : '';
+  document.getElementById('sm-cat').innerHTML = storyCats.map(c => `<option value="${c}"${s&&s.cat===c?' selected':''}>${c}</option>`).join('');
+  document.getElementById('sm-time').value = s ? s.time : 'Il y a quelques instants';
+  document.getElementById('sm-preview').style.display = 'none';
+  openModal('story-modal');
+}
+function saveStory() {
+  const title = document.getElementById('sm-title').value.trim();
+  if (!title) { showToast('⚠️ Donne un titre !'); return; }
+  const fileInput = document.getElementById('sm-file');
+  const img = (fileInput.files[0] && fileInput.dataset.url) || (editingId ? stories.find(s=>s.id===editingId)?.img : null);
+  const data = { title, sub: document.getElementById('sm-sub').value, cat: document.getElementById('sm-cat').value, time: document.getElementById('sm-time').value || 'Il y a quelques instants', img, featured: false };
+  if (editingId) {
+    const idx = stories.findIndex(s => s.id === editingId);
+    stories[idx] = { ...stories[idx], ...data };
+  } else {
+    stories.push({ id: storyIdSeq++, ...data });
+  }
+  closeModal('story-modal');
+  renderStories();
+  showToast(editingId ? '✅ Article modifié !' : '✅ Article ajouté !');
+  editingId = null;
+}
+function editStory(id) { openStoryModal(id); }
+function deleteStory(id) {
+  if (!confirm('Supprimer cet article ?')) return;
+  stories = stories.filter(s => s.id !== id);
+  renderStories();
+  showToast('🗑️ Article supprimé');
+}
+
+// ===== CONCEPTS =====
+function renderConcepts() {
+  buildFilterBar('concepts-filters', conceptCats.map(c=>({id:c,label:c})), 'TOUT', 'filterConcepts', currentConceptsFilter, 'concepts');
+  const grid = document.getElementById('concepts-grid');
+  const filtered = currentConceptsFilter === 'tout' ? concepts : concepts.filter(c => c.cat === currentConceptsFilter);
+  grid.innerHTML = filtered.map(c => `
+    <div class="concept-card">
+      <div class="concept-img">
+        ${c.img ? `<img src="${c.img}">` : catEmoji(c.cat)}
+        <div class="concept-badge"><span class="video-badge badge-gold">${c.cat}</span></div>
+        ${isAdmin ? `<div class="admin-actions">
+          <button class="action-btn" onclick="editConcept(${c.id})">✏️</button>
+          <button class="action-btn del" onclick="deleteConcept(${c.id})">🗑️</button>
+        </div>` : ''}
+      </div>
+      <div class="concept-body">
+        <div class="concept-title">${c.title}</div>
+        <div class="concept-meta">${c.meta}</div>
+        <div class="stars">${'⭐'.repeat(c.stars)}${'☆'.repeat(5-c.stars)}</div>
+        <div class="concept-desc">${c.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function catEmoji(cat) {
+  if (cat === 'FAST & FOOD') return '🍔';
+  if (cat === 'OUTFITS') return '👗';
+  if (cat === 'LE SWITCH') return '🔀';
+  return '💡';
+}
+function filterConcepts(cat, btn) { currentConceptsFilter = cat; renderConcepts(); }
+function openConceptModal(id = null) {
+  editingId = id;
+  const c = id ? concepts.find(x => x.id === id) : null;
+  currentStars = c ? c.stars : 3;
+  document.getElementById('concept-modal-title').textContent = id ? 'Modifier le concept' : 'Ajouter un concept';
+  document.getElementById('cm-title').value = c ? c.title : '';
+  document.getElementById('cm-meta').value = c ? c.meta : '';
+  document.getElementById('cm-desc').value = c ? c.desc : '';
+  document.getElementById('cm-cat').innerHTML = conceptCats.map(cat => `<option value="${cat}"${c&&c.cat===cat?' selected':''}>${cat}</option>`).join('');
+  document.getElementById('cm-preview').style.display = 'none';
+  document.getElementById('cm-file').value = '';
+  renderStars();
+  openModal('concept-modal');
+}
+function setStars(n) { currentStars = n; renderStars(); }
+function renderStars() {
+  const els = document.querySelectorAll('#cm-stars span');
+  els.forEach((el, i) => el.classList.toggle('lit', i < currentStars));
+}
+function saveConcept() {
+  const title = document.getElementById('cm-title').value.trim();
+  if (!title) { showToast('⚠️ Donne un titre !'); return; }
+  const fileInput = document.getElementById('cm-file');
+  const img = fileInput.dataset.url || (editingId ? concepts.find(c=>c.id===editingId)?.img : null);
+  const data = { title, meta: document.getElementById('cm-meta').value, desc: document.getElementById('cm-desc').value, cat: document.getElementById('cm-cat').value, stars: currentStars, img };
+  if (editingId) {
+    const idx = concepts.findIndex(c => c.id === editingId);
+    concepts[idx] = { ...concepts[idx], ...data };
+  } else {
+    concepts.push({ id: conceptIdSeq++, ...data });
+  }
+  closeModal('concept-modal');
+  renderConcepts();
+  showToast(editingId ? '✅ Concept modifié !' : '✅ Concept ajouté !');
+  editingId = null;
+}
+function editConcept(id) { openConceptModal(id); }
+function deleteConcept(id) {
+  if (!confirm('Supprimer ce concept ?')) return;
+  concepts = concepts.filter(c => c.id !== id);
+  renderConcepts();
+  showToast('🗑️ Concept supprimé');
+}
+
+// ===== EMPLOI =====
+function renderEmploi() {
+  buildFilterBar('emploi-filters', emploiCats.map(c=>({id:c,label:c.toUpperCase()})), 'TOUT', 'filterEmploy', currentEmploiFilter, 'emploi');
+  const grid = document.getElementById('emploi-grid');
+  const filtered = currentEmploiFilter === 'tout' ? emplois : emplois.filter(e => e.cat === currentEmploiFilter);
+  grid.innerHTML = filtered.map(e => {
+    const badgeMap = { legal:'badge-legal', service:'badge-service', passion:'badge-passion', illegal:'badge-illegal', closed:'badge-closed' };
+    const badgeLabel = { legal:'LÉGAL', service:'SERVICE', passion:'PASSION', illegal:'ILLÉGAL', closed:'NE RECRUTE PLUS' };
+    const inactive = e.status === 'closed' ? ' inactive' : '';
+    return `<div class="emploi-card${inactive}" data-cat="${e.cat}">
+      <div class="emploi-icon">${e.img ? `<img src="${e.img}">` : '🏢'}</div>
+      <div style="flex:1">
+        <div class="emploi-title">${e.title} <span class="emploi-badge ${badgeMap[e.status]||'badge-service'}">${badgeLabel[e.status]||e.status}</span></div>
+        <div class="emploi-company">${e.company}</div>
+        <div class="emploi-desc">${e.desc}</div>
+      </div>
+      ${isAdmin ? `<div class="admin-actions" style="position:relative;top:0;right:0;margin-left:auto">
+        <button class="action-btn" onclick="editEmploi(${e.id})">✏️</button>
+        <button class="action-btn del" onclick="deleteEmploi(${e.id})">🗑️</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+function filterEmploy(cat, btn) { currentEmploiFilter = cat; renderEmploi(); }
+function openEmploiModal(id = null) {
+  editingId = id;
+  const e = id ? emplois.find(x => x.id === id) : null;
+  document.getElementById('emploi-modal-title').textContent = id ? 'Modifier l\'offre' : 'Ajouter une offre';
+  document.getElementById('em-title').value = e ? e.title : '';
+  document.getElementById('em-company').value = e ? e.company : '';
+  document.getElementById('em-desc').value = e ? e.desc : '';
+  document.getElementById('em-cat').innerHTML = emploiCats.map(c => `<option value="${c}"${e&&e.cat===c?' selected':''}>${c.toUpperCase()}</option>`).join('');
+  document.getElementById('em-status').value = e ? e.status : 'legal';
+  document.getElementById('em-preview').style.display = 'none';
+  document.getElementById('em-file').value = '';
+  openModal('emploi-modal');
+}
+function saveEmploi() {
+  const title = document.getElementById('em-title').value.trim();
+  if (!title) { showToast('⚠️ Donne un titre !'); return; }
+  const fileInput = document.getElementById('em-file');
+  const img = fileInput.dataset.url || (editingId ? emplois.find(e=>e.id===editingId)?.img : null);
+  const data = { title, company: document.getElementById('em-company').value, desc: document.getElementById('em-desc').value, cat: document.getElementById('em-cat').value, status: document.getElementById('em-status').value, img };
+  if (editingId) {
+    const idx = emplois.findIndex(e => e.id === editingId);
+    emplois[idx] = { ...emplois[idx], ...data };
+  } else {
+    emplois.push({ id: emploiIdSeq++, ...data });
+  }
+  closeModal('emploi-modal');
+  renderEmploi();
+  showToast(editingId ? '✅ Offre modifiée !' : '✅ Offre ajoutée !');
+  editingId = null;
+}
+function editEmploi(id) { openEmploiModal(id); }
+function deleteEmploi(id) {
+  if (!confirm('Supprimer cette offre ?')) return;
+  emplois = emplois.filter(e => e.id !== id);
+  renderEmploi();
+  showToast('🗑️ Offre supprimée');
+}
+function submitCandidature() {
+  const name = document.getElementById('cand-name').value.trim();
+  const num = document.getElementById('cand-num').value.trim();
+  const domain = document.getElementById('cand-domain').value;
+  const note = document.getElementById('cand-note').value.trim();
+  if (!name || !domain) { showToast('⚠️ Remplis les champs obligatoires.'); return; }
+  mailbox.unshift({ id: Date.now(), from: `${name} (${num})`, domain, note, time: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}), read: false });
+  document.getElementById('cand-name').value = '';
+  document.getElementById('cand-num').value = '';
+  document.getElementById('cand-domain').value = '';
+  document.getElementById('cand-note').value = '';
+  showToast('📨 Candidature envoyée !');
+}
+function switchEmploi(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.emploi-section').forEach(s => s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('emploi-' + tab).classList.add('active');
+  if (tab === 'mails') renderMails();
+}
+function renderMails() {
+  const list = document.getElementById('mail-list');
+  document.getElementById('mail-count').textContent = `${mailbox.length} candidature(s) reçue(s)`;
+  if (mailbox.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Aucune candidature reçue pour l'instant.</p></div>`;
+    return;
+  }
+  list.innerHTML = mailbox.map(m => `
+    <div class="mail-item${m.read ? '' : ' unread'}" onclick="openMail(${m.id})">
+      <div class="mail-item-header">
+        <span class="mail-from">${m.from}</span>
+        <span class="mail-time">${m.time}</span>
+      </div>
+      <div class="mail-domain">${m.domain}</div>
+      <div class="mail-preview">${m.note || '(pas de précisions)'}</div>
+      ${!m.read ? '<div class="mail-tag">Nouveau</div>' : ''}
+    </div>
+  `).join('');
+}
+function openMail(id) {
+  const m = mailbox.find(x => x.id === id);
+  if (!m) return;
+  m.read = true;
+  renderMails();
+  document.getElementById('mail-detail-content').innerHTML = `
+    <div class="mail-detail-field"><label>Candidat</label><p>${m.from}</p></div>
+    <div class="mail-detail-field"><label>Domaine recherché</label><p>${m.domain}</p></div>
+    <div class="mail-detail-field"><label>Heure</label><p>${m.time}</p></div>
+    <div class="mail-detail-field"><label>Précisions</label><p>${m.note || 'Aucune précision fournie.'}</p></div>
+  `;
+  openModal('mail-modal');
+}
+function clearMails() {
+  if (!confirm('Effacer toutes les candidatures ?')) return;
+  mailbox = [];
+  renderMails();
+  showToast('🗑️ Boîte vidée');
+}
+
+// ===== RADAR =====
+function renderRadar() {
+  const hypeGrid = document.getElementById('radar-hype-grid');
+  const otherGrid = document.getElementById('radar-other-grid');
+  const hypeSpots = radarSpots.filter(s => s.status === 'hype');
+  const otherSpots = radarSpots.filter(s => s.status !== 'hype');
+  hypeGrid.innerHTML = hypeSpots.map(s => renderRadarCard(s)).join('');
+  otherGrid.innerHTML = otherSpots.map(s => renderRadarCard(s)).join('');
+}
+function renderRadarCard(s) {
+  const badgeClass = { hype: 'radar-hype', chill: 'radar-chill', business: 'radar-business', danger: 'radar-danger' };
+  const badgeLabel = { hype: 'HYPE', chill: 'CHILL', business: 'BUSINESS', danger: 'DANGER' };
+  const bars = Array.from({length:5}, (_,i) => `<div class="crowd-bar${i < s.crowd ? (s.status==='hype'?' hype filled':' filled') : ''}"></div>`).join('');
+  return `<div class="radar-card">
+    <div class="radar-card-left">
+      <div class="radar-name">${s.name} <span class="radar-badge ${badgeClass[s.status]}">${badgeLabel[s.status]}</span></div>
+      <div class="radar-location">📍 ${s.loc}</div>
+      <div class="radar-desc" id="rdesc-${s.id}">${s.desc}</div>
+      ${isAdmin ? `<div class="radar-admin-controls">
+        <div style="font-size:11px;color:var(--text3)">Affluence</div>
+        <div class="radar-crowd-edit">
+          <input type="range" min="1" max="5" value="${s.crowd}" class="crowd-slider" style="flex:1" oninput="updateRadarCrowd(${s.id}, this.value)" id="rslider-${s.id}">
+          <span class="crowd-value" id="rcval-${s.id}">${s.crowd}</span>
+        </div>
+        <input class="form-input" style="font-size:11px;padding:6px 10px" placeholder="Modifier description..." onchange="updateRadarDesc(${s.id}, this.value)">
+        <div style="display:flex;gap:6px">
+          <button class="action-btn" onclick="editRadar(${s.id})">✏️ Modifier</button>
+          <button class="action-btn del" onclick="deleteRadar(${s.id})">🗑️ Supprimer</button>
+        </div>
+      </div>` : ''}
+    </div>
+    <div class="radar-right">
+      <div class="crowd-meter" id="rmeter-${s.id}">${bars}</div>
+      <div class="crowd-label">👥 Crowd</div>
+    </div>
+  </div>`;
+}
+function updateRadarCrowd(id, val) {
+  const s = radarSpots.find(x => x.id === id);
+  if (!s) return;
+  s.crowd = parseInt(val);
+  document.getElementById('rcval-' + id).textContent = val;
+  const meter = document.getElementById('rmeter-' + id);
+  if (meter) {
+    meter.querySelectorAll('.crowd-bar').forEach((b, i) => {
+      b.className = 'crowd-bar' + (i < s.crowd ? (s.status==='hype'?' hype filled':' filled') : '');
     });
   }
-  function filterEmploy(cat, btn) {
-    btn.closest('.filter-bar').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('#emploi-grid .emploi-card[data-cat]').forEach(card => {
-      if (cat === 'tout' || card.dataset.cat === cat) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
+}
+function updateRadarDesc(id, val) {
+  if (!val.trim()) return;
+  const s = radarSpots.find(x => x.id === id);
+  if (!s) return;
+  s.desc = val.trim();
+  const el = document.getElementById('rdesc-' + id);
+  if (el) el.textContent = val.trim();
+  showToast('✅ Description mise à jour !');
+}
+function openRadarModal(id = null) {
+  editingId = id;
+  const s = id ? radarSpots.find(x => x.id === id) : null;
+  document.getElementById('radar-modal-title').textContent = id ? 'Modifier le spot' : 'Ajouter un spot';
+  document.getElementById('rm-name').value = s ? s.name : '';
+  document.getElementById('rm-loc').value = s ? s.loc : '';
+  document.getElementById('rm-desc').value = s ? s.desc : '';
+  document.getElementById('rm-status').value = s ? s.status : 'hype';
+  document.getElementById('rm-crowd').value = s ? s.crowd : 3;
+  document.getElementById('rm-crowd-val').textContent = s ? s.crowd : 3;
+  openModal('radar-modal');
+}
+function saveRadar() {
+  const name = document.getElementById('rm-name').value.trim();
+  if (!name) { showToast('⚠️ Donne un nom !'); return; }
+  const data = { name, loc: document.getElementById('rm-loc').value, desc: document.getElementById('rm-desc').value, status: document.getElementById('rm-status').value, crowd: parseInt(document.getElementById('rm-crowd').value) };
+  if (editingId) {
+    const idx = radarSpots.findIndex(s => s.id === editingId);
+    radarSpots[idx] = { ...radarSpots[idx], ...data };
+  } else {
+    radarSpots.push({ id: radarIdSeq++, ...data });
   }
+  closeModal('radar-modal');
+  renderRadar();
+  showToast(editingId ? '✅ Spot modifié !' : '✅ Spot ajouté !');
+  editingId = null;
+}
+function editRadar(id) { openRadarModal(id); }
+function deleteRadar(id) {
+  if (!confirm('Supprimer ce spot ?')) return;
+  radarSpots = radarSpots.filter(s => s.id !== id);
+  renderRadar();
+  showToast('🗑️ Spot supprimé');
+}
 
-  // ===== TAB SWITCH =====
-  function switchEmploi(tab, btn) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.emploi-section').forEach(s => s.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('emploi-' + tab).classList.add('active');
+// ===== ADD CATEGORY =====
+let pendingCatContext = '';
+function addCategory(ctx) {
+  pendingCatContext = ctx;
+  document.getElementById('addcat-name').value = '';
+  openModal('addcat-modal');
+}
+function confirmAddCategory() {
+  const name = document.getElementById('addcat-name').value.trim();
+  if (!name) { showToast('⚠️ Donne un nom !'); return; }
+  if (pendingCatContext === 'instant') {
+    const id = name.toLowerCase().replace(/\s+/g,'-');
+    instantCats.push({ id, label: name.toUpperCase() });
+    renderInstant();
+  } else if (pendingCatContext === 'stories') {
+    storyCats.push(name.toUpperCase());
+    renderStories();
+  } else if (pendingCatContext === 'emploi') {
+    emploiCats.push(name.toLowerCase());
+    renderEmploi();
+  } else if (pendingCatContext === 'concepts') {
+    conceptCats.push(name.toUpperCase());
+    renderConcepts();
   }
+  closeModal('addcat-modal');
+  showToast(`✅ Catégorie "${name}" créée !`);
+}
 
-  // ===== ADD CATEGORY =====
-  function addCategory(context) {
-    if (!isAdmin) return;
-    const name = prompt('Nom de la nouvelle catégorie :');
-    if (!name) return;
-    // Find the right filter bar
-    const pages = { instant: 'instant-filters', stories: 'page-stories', emploi: 'emploi-cats', concepts: 'page-concepts' };
-    let filterBar;
-    if (context === 'instant') filterBar = document.getElementById('instant-filters');
-    else if (context === 'stories') filterBar = document.querySelector('#page-stories .filter-bar');
-    else if (context === 'emploi') filterBar = document.querySelector('#emploi-recrute .filter-bar');
-    else if (context === 'concepts') filterBar = document.querySelector('#page-concepts .filter-bar');
-    if (!filterBar) return;
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.textContent = name.toUpperCase();
-    btn.onclick = function() { filterCat(this); };
-    filterBar.insertBefore(btn, filterBar.querySelector('.add-cat-btn'));
-    showToast('✅ Catégorie "' + name + '" ajoutée !');
-  }
+// ===== IMAGE / FILE PREVIEW HELPERS =====
+function previewImage(e, previewId) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const url = URL.createObjectURL(file);
+  e.target.dataset.url = url;
+  const prev = document.getElementById(previewId);
+  prev.style.display = 'flex';
+  prev.innerHTML = `<img src="${url}"><span>${file.name}</span>`;
+}
 
-  // ===== ADD ITEM MODAL =====
-  function openAddModal(ctx) {
-    if (!isAdmin) { showToast('🔒 Connecte-toi en admin d\'abord !'); return; }
-    currentAddContext = ctx;
-    const titles = {
-      instant: 'Ajouter une vidéo',
-      story: 'Ajouter un article',
-      emploi: 'Ajouter une offre d\'emploi',
-      concept: 'Ajouter un concept',
-      radar: 'Ajouter un spot'
-    };
-    document.getElementById('add-modal-title').textContent = titles[ctx] || 'Ajouter';
-    document.getElementById('add-title').value = '';
-    document.getElementById('add-sub').value = '';
-    document.getElementById('add-cat').value = '';
-    document.getElementById('add-modal').classList.add('open');
-  }
-  function confirmAdd() {
-    const title = document.getElementById('add-title').value.trim();
-    if (!title) { alert('Donne un titre !'); return; }
-    showToast('✅ Élément ajouté avec succès !');
-    closeModal('add-modal');
-  }
+// ===== TOAST =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.display = 'none', 3000);
+}
 
-  // ===== EDIT ITEM =====
-  function editItem(btn) {
-    const card = btn.closest('.emploi-card');
-    const titleEl = card.querySelector('.emploi-title');
-    const newTitle = prompt('Modifier le titre :', titleEl.firstChild.textContent.trim());
-    if (newTitle) { titleEl.firstChild.textContent = newTitle + ' '; showToast('✅ Modifié !'); }
-  }
+// ===== DROP BOX =====
+function submitDrop() {
+  showToast('📨 Envoyé anonymement !');
+  document.getElementById('drop-title').value = '';
+  document.getElementById('drop-body').value = '';
+}
 
-  // ===== RADAR UPDATES =====
-  function updateCrowdEl(select, meterId) {
-    const val = parseInt(select.value);
-    const meter = document.getElementById(meterId);
-    if (!meter) return;
-    meter.querySelectorAll('.crowd-bar').forEach((bar, i) => {
-      bar.classList.toggle('filled', i < val);
-    });
-  }
-  function updateDesc(input, descId) {
-    if (input.value.trim()) {
-      document.getElementById(descId).textContent = input.value.trim();
-      input.value = '';
-      showToast('✅ Description mise à jour !');
-    }
-  }
-
-  // ===== TOAST =====
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; }, 3000);
-  }
-
-  // ===== FORM SUBMIT =====
-  function submitForm() {
-    showToast('📨 Envoyé avec succès !');
-  }
+// ===== INIT =====
+renderAll();
 </script>
 </body>
 </html>
