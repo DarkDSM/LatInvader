@@ -313,7 +313,7 @@
       </div>
     </div>
     <div class="settings-section" id="filters-section">
-      <div class="settings-label">Filtres de la page</div>
+      <div class="settings-label">Couleur des filtres (boutons)</div>
       <div id="filters-list-container" class="filters-list"></div>
     </div>
   </div>
@@ -321,7 +321,6 @@
 
 <nav>
   <div class="nav-inner">
-    <!-- NOUVEAU LOGO ÉLARGI ET PRO -->
     <div class="logo-svg-wrap">
       <svg width="280" height="48" viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -335,22 +334,15 @@
             <stop offset="100%" stop-color="#0e0c08"/>
           </linearGradient>
         </defs>
-        <!-- fond -->
         <rect width="280" height="48" rx="8" fill="url(#bgLogoGrad)" stroke="url(#logoGrad)" stroke-width="1.5"/>
-        <!-- losange décoratif -->
         <polygon points="20,24 26,14 32,24 26,34" fill="url(#logoGrad)" opacity="0.9"/>
         <polygon points="24,24 26,20 28,24 26,28" fill="#0e0c08" opacity="0.5"/>
-        <!-- séparateur vertical -->
         <line x1="44" y1="12" x2="44" y2="36" stroke="url(#logoGrad)" stroke-width="1" opacity="0.5"/>
-        <!-- texte principal -->
         <text x="58" y="30" font-family="'Playfair Display', Georgia, serif" font-size="20" font-weight="800" fill="url(#logoGrad)" letter-spacing="1">LatInvader</text>
-        <!-- séparateur -->
         <line x1="168" y1="14" x2="168" y2="34" stroke="url(#logoGrad)" stroke-width="0.8" opacity="0.4"/>
-        <!-- tagline -->
         <text x="180" y="20" font-family="'DM Sans', sans-serif" font-size="8" font-weight="700" fill="url(#logoGrad)" letter-spacing="1.5" opacity="0.9">ON MET</text>
         <text x="180" y="29" font-family="'DM Sans', sans-serif" font-size="8" font-weight="700" fill="url(#logoGrad)" letter-spacing="1.5" opacity="0.9">L'ACCENT</text>
         <text x="180" y="38" font-family="'DM Sans', sans-serif" font-size="8" font-weight="700" fill="url(#logoGrad)" letter-spacing="1.5" opacity="0.9">SUR L'ACTU</text>
-        <!-- petite étoile décor -->
         <text x="268" y="18" font-size="10" fill="url(#logoGrad)" opacity="0.7">✦</text>
       </svg>
     </div>
@@ -364,6 +356,7 @@
     </div>
     <div class="nav-right">
       <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
+      <button class="icon-btn" onclick="openSettingsPanel()" id="settings-icon-btn" style="display:none;">⚙️</button>
       <button class="icon-btn admin-btn" onclick="openAdminModal()" id="admin-btn" title="Admin">🧍<div class="admin-dot"></div></button>
     </div>
   </div>
@@ -674,6 +667,21 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ========== STORAGE KEYS ==========
+const STORAGE_KEYS = {
+  VIDEOS: 'latinvader_videos',
+  VIDEO_CATS: 'latinvader_video_cats',
+  STORIES: 'latinvader_stories',
+  STORY_CATS: 'latinvader_story_cats',
+  EMPLOIS: 'latinvader_emplois',
+  EMPLOI_CATS: 'latinvader_emploi_cats',
+  CONCEPTS: 'latinvader_concepts',
+  CONCEPT_CATS: 'latinvader_concept_cats',
+  RADAR: 'latinvader_radar',
+  MAILBOX: 'latinvader_mailbox',
+  FILTER_COLORS: 'latinvader_filter_colors'
+};
+
 // ========== STATE ==========
 let isAdmin = false;
 const ADMIN_PASS = "21032001";
@@ -682,64 +690,142 @@ let pendingCatCtx = '';
 let currentStars = 3;
 
 // Couleurs des filtres par page
-let filterColors = {
-  instant: {},
-  stories: {},
-  emploi: {},
-  concepts: {}
-};
+let filterColors = { instant: {}, stories: {}, emploi: {}, concepts: {} };
 
-// ========== DATA ==========
-let videos = [
-  {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,views:142,likes:38,liked:false},
-  {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,views:89,likes:21,liked:false},
-  {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,views:211,likes:54,liked:false},
-  {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,views:75,likes:19,liked:false},
-  {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,views:304,likes:67,liked:false},
-];
-let vidSeq = 6;
-let instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS STYLE'}];
+// ========== DATA (avec valeurs par défaut) ==========
+let videos = [];
+let vidSeq = 1;
+let instantCats = [];
 let instantFilter = 'tout';
 
-let stories = [
-  {id:1,title:"BREAKING : Fusillade au Unicorn, 3 blessés",sub:"Les secours sont sur place",cat:"BREAKING",time:"Il y a 16 heures",img:null,content:"<p>Une fusillade a éclaté cette nuit au Vanilla Unicorn. Les secours sont rapidement intervenus.</p>"},
-  {id:2,title:"Qui est la mystérieuse femme du maire ?",sub:"",cat:"POTINS",time:"Il y a 16 heures",img:null,content:"<p>Des rumeurs circulent sur l'identité de la compagne du maire...</p>"},
-  {id:3,title:"Un dealer arrêté en plein deal à Strawberry",sub:"",cat:"FAITS DIVERS",time:"Il y a 2 heures",img:null,content:"<p>La police a interpellé un individu en possession de stupéfiants.</p>"},
-  {id:4,title:"Le Diamond Casino racheté ? Les rumeurs s'intensifient",sub:"",cat:"POTINS",time:"Il y a 1 jour",img:null,content:"<p>Un mystérieux investisseur serait sur le point de racheter le casino.</p>"},
-];
-let storySeq = 5;
-let storyCats = ['BREAKING','POTINS','FAITS DIVERS'];
+let stories = [];
+let storySeq = 1;
+let storyCats = [];
 let storiesFilter = 'tout';
 
-let emplois = [
-  {id:1,title:"Ambulancier",company:"Los Santos Medical Center",desc:"Ambulanciers motivés pour les urgences de nuit.",cat:"service public",status:"legal",img:null},
-  {id:2,title:"Barman / DJ",company:"Bahama Mamas",desc:"Le club le plus hype de LS recrute.",cat:"boîte de nuit",status:"passion",img:null},
-  {id:3,title:"Mécanicien",company:"LS Customs",desc:"Tu sais tourner une clé ? On a besoin de toi.",cat:"mécano",status:"service",img:null},
-  {id:4,title:"Caméraman",company:"Weazel News",desc:"Oui, même la concurrence recrute.",cat:"media",status:"legal",img:null},
-  {id:5,title:"Serveur",company:"Burger Shot — Vespucci",desc:"Le rush du midi, ça te connaît ?",cat:"restaurant",status:"service",img:null},
-];
-let emploiSeq = 6;
-let emploiCats = ['service public','boîte de nuit','mécano','restaurant','media'];
+let emplois = [];
+let emploiSeq = 1;
+let emploiCats = [];
 let emploiFilter = 'tout';
 let mailbox = [];
 
-let concepts = [
-  {id:1,title:"Le Mega Burger du Burger Shot",meta:"Burger Shot — Vespucci",desc:"C'est gras, c'est cheap, mais ça cale.",cat:"FAST & FOOD",stars:2,img:null},
-  {id:2,title:"L'outfit à 50k$ de Marcus",meta:"Ponsonbys — Rockford Hills",desc:"Marcus nous a montré sa tenue. Le drip est réel.",cat:"OUTFITS",stars:5,img:null},
-  {id:3,title:"24h dans la peau d'un dépanneur",meta:"LS Roads — Davis",desc:"On a suivi un dépanneur 24h. C'est un métier de fou.",cat:"LE SWITCH",stars:3,img:null},
-];
-let conceptSeq = 4;
-let conceptCats = ['FAST & FOOD','OUTFITS','LE SWITCH'];
+let concepts = [];
+let conceptSeq = 1;
+let conceptCats = [];
 let conceptsFilter = 'tout';
 
-let radarSpots = [
-  {id:1,name:"Vanilla Unicorn",loc:"Strawberry",desc:"La soirée bat son plein, DJ set live.",status:"hype",crowd:5},
-  {id:2,name:"Bahama Mamas",loc:"Downtown LS",desc:"Soirée open bar + contest DJ.",status:"hype",crowd:4},
-  {id:3,name:"Del Perro Pier",loc:"Del Perro Beach",desc:"Chill au bord de l'eau.",status:"chill",crowd:3},
-  {id:4,name:"Diamond Casino & Resort",loc:"Vinewood",desc:"Les gros joueurs sont là ce soir.",status:"business",crowd:4},
-  {id:5,name:"Grove Street",loc:"Davis",desc:"Tensions ce soir, restez prudents.",status:"danger",crowd:2},
-];
-let radarSeq = 6;
+let radarSpots = [];
+let radarSeq = 1;
+
+// ========== INITIALISATION / CHARGEMENT DES DONNÉES ==========
+function loadData() {
+  // Videos
+  const savedVideos = localStorage.getItem(STORAGE_KEYS.VIDEOS);
+  if(savedVideos) {
+    videos = JSON.parse(savedVideos);
+    vidSeq = Math.max(...videos.map(v=>v.id), 0) + 1;
+  } else {
+    videos = [
+      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,views:142,likes:38,liked:false},
+      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,views:89,likes:21,liked:false},
+      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,views:211,likes:54,liked:false},
+      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,views:75,likes:19,liked:false},
+      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,views:304,likes:67,liked:false},
+    ];
+    vidSeq = 6;
+  }
+  
+  const savedVideoCats = localStorage.getItem(STORAGE_KEYS.VIDEO_CATS);
+  if(savedVideoCats) instantCats = JSON.parse(savedVideoCats);
+  else instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS STYLE'}];
+  
+  const savedStories = localStorage.getItem(STORAGE_KEYS.STORIES);
+  if(savedStories) {
+    stories = JSON.parse(savedStories);
+    storySeq = Math.max(...stories.map(s=>s.id), 0) + 1;
+  } else {
+    stories = [
+      {id:1,title:"BREAKING : Fusillade au Unicorn, 3 blessés",sub:"Les secours sont sur place",cat:"BREAKING",time:"Il y a 16 heures",img:null,content:"<p>Une fusillade a éclaté cette nuit au Vanilla Unicorn. Les secours sont rapidement intervenus.</p><p>Trois personnes ont été blessées mais leurs jours ne sont pas en danger.</p>"},
+      {id:2,title:"Qui est la mystérieuse femme du maire ?",sub:"",cat:"POTINS",time:"Il y a 16 heures",img:null,content:"<p>Des rumeurs circulent sur l'identité de la compagne du maire...</p>"},
+      {id:3,title:"Un dealer arrêté en plein deal à Strawberry",sub:"",cat:"FAITS DIVERS",time:"Il y a 2 heures",img:null,content:"<p>La police a interpellé un individu en possession de stupéfiants.</p>"},
+      {id:4,title:"Le Diamond Casino racheté ? Les rumeurs s'intensifient",sub:"",cat:"POTINS",time:"Il y a 1 jour",img:null,content:"<p>Un mystérieux investisseur serait sur le point de racheter le casino.</p>"},
+    ];
+    storySeq = 5;
+  }
+  
+  const savedStoryCats = localStorage.getItem(STORAGE_KEYS.STORY_CATS);
+  if(savedStoryCats) storyCats = JSON.parse(savedStoryCats);
+  else storyCats = ['BREAKING','POTINS','FAITS DIVERS'];
+  
+  const savedEmplois = localStorage.getItem(STORAGE_KEYS.EMPLOIS);
+  if(savedEmplois) {
+    emplois = JSON.parse(savedEmplois);
+    emploiSeq = Math.max(...emplois.map(e=>e.id), 0) + 1;
+  } else {
+    emplois = [
+      {id:1,title:"Ambulancier",company:"Los Santos Medical Center",desc:"Ambulanciers motivés pour les urgences de nuit.",cat:"service public",status:"legal",img:null},
+      {id:2,title:"Barman / DJ",company:"Bahama Mamas",desc:"Le club le plus hype de LS recrute.",cat:"boîte de nuit",status:"passion",img:null},
+      {id:3,title:"Mécanicien",company:"LS Customs",desc:"Tu sais tourner une clé ? On a besoin de toi.",cat:"mécano",status:"service",img:null},
+      {id:4,title:"Caméraman",company:"Weazel News",desc:"Oui, même la concurrence recrute.",cat:"media",status:"legal",img:null},
+      {id:5,title:"Serveur",company:"Burger Shot — Vespucci",desc:"Le rush du midi, ça te connaît ?",cat:"restaurant",status:"service",img:null},
+    ];
+    emploiSeq = 6;
+  }
+  
+  const savedEmploiCats = localStorage.getItem(STORAGE_KEYS.EMPLOI_CATS);
+  if(savedEmploiCats) emploiCats = JSON.parse(savedEmploiCats);
+  else emploiCats = ['service public','boîte de nuit','mécano','restaurant','media'];
+  
+  const savedConcepts = localStorage.getItem(STORAGE_KEYS.CONCEPTS);
+  if(savedConcepts) {
+    concepts = JSON.parse(savedConcepts);
+    conceptSeq = Math.max(...concepts.map(c=>c.id), 0) + 1;
+  } else {
+    concepts = [
+      {id:1,title:"Le Mega Burger du Burger Shot",meta:"Burger Shot — Vespucci",desc:"C'est gras, c'est cheap, mais ça cale.",cat:"FAST & FOOD",stars:2,img:null},
+      {id:2,title:"L'outfit à 50k$ de Marcus",meta:"Ponsonbys — Rockford Hills",desc:"Marcus nous a montré sa tenue. Le drip est réel.",cat:"OUTFITS",stars:5,img:null},
+      {id:3,title:"24h dans la peau d'un dépanneur",meta:"LS Roads — Davis",desc:"On a suivi un dépanneur 24h. C'est un métier de fou.",cat:"LE SWITCH",stars:3,img:null},
+    ];
+    conceptSeq = 4;
+  }
+  
+  const savedConceptCats = localStorage.getItem(STORAGE_KEYS.CONCEPT_CATS);
+  if(savedConceptCats) conceptCats = JSON.parse(savedConceptCats);
+  else conceptCats = ['FAST & FOOD','OUTFITS','LE SWITCH'];
+  
+  const savedRadar = localStorage.getItem(STORAGE_KEYS.RADAR);
+  if(savedRadar) {
+    radarSpots = JSON.parse(savedRadar);
+    radarSeq = Math.max(...radarSpots.map(r=>r.id), 0) + 1;
+  } else {
+    radarSpots = [
+      {id:1,name:"Vanilla Unicorn",loc:"Strawberry",desc:"La soirée bat son plein, DJ set live.",status:"hype",crowd:5},
+      {id:2,name:"Bahama Mamas",loc:"Downtown LS",desc:"Soirée open bar + contest DJ.",status:"hype",crowd:4},
+      {id:3,name:"Del Perro Pier",loc:"Del Perro Beach",desc:"Chill au bord de l'eau.",status:"chill",crowd:3},
+      {id:4,name:"Diamond Casino & Resort",loc:"Vinewood",desc:"Les gros joueurs sont là ce soir.",status:"business",crowd:4},
+      {id:5,name:"Grove Street",loc:"Davis",desc:"Tensions ce soir, restez prudents.",status:"danger",crowd:2},
+    ];
+    radarSeq = 6;
+  }
+  
+  const savedMailbox = localStorage.getItem(STORAGE_KEYS.MAILBOX);
+  if(savedMailbox) mailbox = JSON.parse(savedMailbox);
+  
+  const savedColors = localStorage.getItem(STORAGE_KEYS.FILTER_COLORS);
+  if(savedColors) filterColors = JSON.parse(savedColors);
+}
+
+function saveVideos() { localStorage.setItem(STORAGE_KEYS.VIDEOS, JSON.stringify(videos)); }
+function saveVideoCats() { localStorage.setItem(STORAGE_KEYS.VIDEO_CATS, JSON.stringify(instantCats)); }
+function saveStories() { localStorage.setItem(STORAGE_KEYS.STORIES, JSON.stringify(stories)); }
+function saveStoryCats() { localStorage.setItem(STORAGE_KEYS.STORY_CATS, JSON.stringify(storyCats)); }
+function saveEmplois() { localStorage.setItem(STORAGE_KEYS.EMPLOIS, JSON.stringify(emplois)); }
+function saveEmploiCats() { localStorage.setItem(STORAGE_KEYS.EMPLOI_CATS, JSON.stringify(emploiCats)); }
+function saveConcepts() { localStorage.setItem(STORAGE_KEYS.CONCEPTS, JSON.stringify(concepts)); }
+function saveConceptCats() { localStorage.setItem(STORAGE_KEYS.CONCEPT_CATS, JSON.stringify(conceptCats)); }
+function saveRadar() { localStorage.setItem(STORAGE_KEYS.RADAR, JSON.stringify(radarSpots)); }
+function saveMailbox() { localStorage.setItem(STORAGE_KEYS.MAILBOX, JSON.stringify(mailbox)); }
+function saveFilterColors() { localStorage.setItem(STORAGE_KEYS.FILTER_COLORS, JSON.stringify(filterColors)); }
 
 // ========== SETTINGS PANEL ==========
 let currentSettingsPage = 'instant';
@@ -782,7 +868,7 @@ function renderFiltersList() {
       <div class="filter-color-item">
         <span class="filter-name">${cat.label}</span>
         <div style="display:flex;align-items:center;gap:8px;">
-          <div class="color-preview" style="background-color: ${currentColor || 'transparent'}; border:1px solid var(--border);"></div>
+          <div class="color-preview" style="background-color: ${currentColor || '#c9a84c'}; border:1px solid var(--border);"></div>
           <input type="color" class="color-input" value="${currentColor || '#c9a84c'}" onchange="updateFilterColor('${page}', '${cat.id}', this.value)">
         </div>
       </div>
@@ -793,13 +879,13 @@ function renderFiltersList() {
 function updateFilterColor(page, catId, color) {
   if(!filterColors[page]) filterColors[page] = {};
   filterColors[page][catId] = color;
-  // Re-render la page concernée
+  saveFilterColors();
   if(page === 'instant') renderInstant();
   else if(page === 'stories') renderStories();
   else if(page === 'emploi') renderEmploi();
   else if(page === 'concepts') renderConcepts();
-  renderFiltersList(); // Mettre à jour l'aperçu
-  showToast(`🎨 Couleur du filtre "${catId}" modifiée !`);
+  renderFiltersList();
+  showToast(`🎨 Couleur du filtre modifiée !`);
 }
 
 function getFilterStyle(page, catId) {
@@ -837,6 +923,7 @@ function loginAdmin(){
     isAdmin=true;
     document.body.classList.add('admin-mode');
     document.getElementById('admin-btn').classList.add('logged');
+    document.getElementById('settings-icon-btn').style.display='flex';
     document.getElementById('tab-mails').style.display='flex';
     document.getElementById('drag-hint-instant').style.display='flex';
     document.getElementById('drag-hint-stories').style.display='flex';
@@ -852,11 +939,12 @@ function logoutAdmin(){
   isAdmin=false;
   document.body.classList.remove('admin-mode');
   document.getElementById('admin-btn').classList.remove('logged');
+  document.getElementById('settings-icon-btn').style.display='none';
   document.getElementById('tab-mails').style.display='none';
   document.getElementById('drag-hint-instant').style.display='none';
   document.getElementById('drag-hint-stories').style.display='none';
   renderAll();
-  showToast('👋 Déconnecté');
+  showToast('👎 Déconnecté');
 }
 
 // ========== MODALS ==========
@@ -900,8 +988,8 @@ function renderInstant(){
         </div>`:''}
       </div>
       <div class="video-info">
-        <div class="video-info-title">${v.title}</div>
-        <div class="video-info-sub">${v.desc}</div>
+        <div class="video-info-title">${escapeHtml(v.title)}</div>
+        <div class="video-info-sub">${escapeHtml(v.desc)}</div>
       </div>
       <div class="video-stats">
         <div class="stat-item">
@@ -916,14 +1004,17 @@ function renderInstant(){
 function filterInstant(cat,btn){instantFilter=cat;renderInstant();}
 function getCatLabel(id,arr){const c=arr.find(x=>(typeof x==='object'?x.id:x)===id);return c?(typeof c==='object'?c.label:c):id;}
 function formatNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
+function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;});}
 function toggleLike(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   v.liked=!v.liked;v.likes+=v.liked?1:-1;
+  saveVideos();
   renderInstant();
 }
 function playVideo(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   v.views++;
+  saveVideos();
   if(!v.src){showToast('ℹ️ Aucune vidéo uploadée pour ce post.');renderInstant();return;}
   document.getElementById('vplayer-title').textContent=v.title;
   document.getElementById('vplayer-el').src=v.src;
@@ -960,10 +1051,11 @@ function saveVideo(){
   const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src};
   if(editingId){const i=videos.findIndex(v=>v.id===editingId);videos[i]={...videos[i],...d};}
   else{videos.push({id:vidSeq++,...d,views:0,likes:0,liked:false});}
+  saveVideos();
   closeModal('video-modal');renderInstant();showToast(editingId?'✅ Vidéo modifiée !':'✅ Vidéo ajoutée !');editingId=null;
 }
 function editVideo(id){openVideoModal(id);}
-function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);renderInstant();showToast('🗑️ Supprimée');}
+function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);saveVideos();renderInstant();showToast('🗑️ Supprimée');}
 
 // ========== STORYTELLING ==========
 function renderStories(){
@@ -977,8 +1069,8 @@ function renderStories(){
       <div class="story-featured-img">${feat.img?`<img src="${feat.img}">`:'🔫'}</div>
       <div class="story-featured-body">
         <div class="story-cat">⚡ ${feat.cat}</div>
-        <div class="story-featured-title">${feat.title}</div>
-        <div class="story-featured-sub">${feat.sub}</div>
+        <div class="story-featured-title">${escapeHtml(feat.title)}</div>
+        <div class="story-featured-sub">${escapeHtml(feat.sub)}</div>
         <div class="story-time">🕐 ${feat.time}</div>
       </div>
       ${isAdmin?`<div class="card-admin-actions" style="top:12px;right:12px">
@@ -992,7 +1084,7 @@ function renderStories(){
           <div class="story-item-img">${s.img?`<img src="${s.img}">`:'📰'}</div>
           <div style="flex:1">
             <div class="story-item-cat">${s.cat}</div>
-            <div class="story-item-title">${s.title}</div>
+            <div class="story-item-title">${escapeHtml(s.title)}</div>
             <div class="story-item-time">🕐 ${s.time}</div>
           </div>
           ${isAdmin?`<div class="card-admin-actions" style="position:relative;top:0;right:0;margin-left:auto">
@@ -1024,18 +1116,15 @@ function openStoryModal(id=null){
   document.getElementById('sm-time').value=s?s.time:'Il y a quelques instants';
   document.getElementById('sm-preview').style.display='none';
   document.getElementById('sm-file').value='';delete document.getElementById('sm-file').dataset.url;
-  // Restaurer le contenu éditeur
   const editor = document.getElementById('story-editor');
   if(s && s.content) editor.innerHTML = s.content;
   else editor.innerHTML = '<p>Commencez à écrire votre article ici...</p>';
   openModal('story-modal');
 }
-
 function execCmd(command, value) {
   document.execCommand(command, false, value);
   document.getElementById('story-editor').focus();
 }
-
 function addImageToEditor() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -1045,9 +1134,6 @@ function addImageToEditor() {
     if(file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        const img = document.createElement('img');
-        img.src = event.target.result;
-        img.style.maxWidth = '100%';
         document.execCommand('insertImage', false, event.target.result);
       };
       reader.readAsDataURL(file);
@@ -1055,7 +1141,6 @@ function addImageToEditor() {
   };
   input.click();
 }
-
 function saveStory(){
   const t=document.getElementById('sm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
   const fi=document.getElementById('sm-file');
@@ -1064,10 +1149,11 @@ function saveStory(){
   const d={title:t,sub:document.getElementById('sm-sub').value,cat:document.getElementById('sm-cat').value,time:document.getElementById('sm-time').value||'Il y a quelques instants',img,content};
   if(editingId){const i=stories.findIndex(s=>s.id===editingId);stories[i]={...stories[i],...d};}
   else{stories.push({id:storySeq++,...d});}
+  saveStories();
   closeModal('story-modal');renderStories();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editStory(id){openStoryModal(id);}
-function deleteStory(id){if(!confirm('Supprimer ?'))return;stories=stories.filter(s=>s.id!==id);renderStories();showToast('🗑️ Supprimé');}
+function deleteStory(id){if(!confirm('Supprimer ?'))return;stories=stories.filter(s=>s.id!==id);saveStories();renderStories();showToast('🗑️ Supprimé');}
 
 // ========== CONCEPTS ==========
 function renderConcepts(){
@@ -1084,10 +1170,10 @@ function renderConcepts(){
         </div>`:''}
       </div>
       <div class="concept-body">
-        <div class="concept-title">${c.title}</div>
-        <div class="concept-meta">${c.meta}</div>
+        <div class="concept-title">${escapeHtml(c.title)}</div>
+        <div class="concept-meta">${escapeHtml(c.meta)}</div>
         <div class="stars">${'⭐'.repeat(c.stars)}${'☆'.repeat(5-c.stars)}</div>
-        <div class="concept-desc">${c.desc}</div>
+        <div class="concept-desc">${escapeHtml(c.desc)}</div>
       </div>
     </div>
   `).join('');
@@ -1115,10 +1201,11 @@ function saveConcept(){
   const d={title:t,meta:document.getElementById('cm-meta').value,desc:document.getElementById('cm-desc').value,cat:document.getElementById('cm-cat').value,stars:currentStars,img};
   if(editingId){const i=concepts.findIndex(c=>c.id===editingId);concepts[i]={...concepts[i],...d};}
   else{concepts.push({id:conceptSeq++,...d});}
+  saveConcepts();
   closeModal('concept-modal');renderConcepts();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editConcept(id){openConceptModal(id);}
-function deleteConcept(id){if(!confirm('Supprimer ?'))return;concepts=concepts.filter(c=>c.id!==id);renderConcepts();showToast('🗑️ Supprimé');}
+function deleteConcept(id){if(!confirm('Supprimer ?'))return;concepts=concepts.filter(c=>c.id!==id);saveConcepts();renderConcepts();showToast('🗑️ Supprimé');}
 
 // ========== EMPLOI ==========
 function renderEmploi(){
@@ -1130,9 +1217,9 @@ function renderEmploi(){
     <div class="emploi-card${e.status==='closed'?' inactive':''}">
       <div class="emploi-icon">${e.img?`<img src="${e.img}">`:'🏢'}</div>
       <div style="flex:1">
-        <div class="emploi-title">${e.title} <span class="emploi-badge ${badgeCls[e.status]||'badge-service'}">${badgeLbl[e.status]||e.status}</span></div>
-        <div class="emploi-company">${e.company}</div>
-        <div class="emploi-desc">${e.desc}</div>
+        <div class="emploi-title">${escapeHtml(e.title)} <span class="emploi-badge ${badgeCls[e.status]||'badge-service'}">${badgeLbl[e.status]||e.status}</span></div>
+        <div class="emploi-company">${escapeHtml(e.company)}</div>
+        <div class="emploi-desc">${escapeHtml(e.desc)}</div>
       </div>
       ${isAdmin?`<div style="display:flex;flex-direction:column;gap:4px;margin-left:auto">
         <button class="action-btn" onclick="editEmploi(${e.id})">✏️</button>
@@ -1161,15 +1248,17 @@ function saveEmploi(){
   const d={title:t,company:document.getElementById('em-company').value,desc:document.getElementById('em-desc').value,cat:document.getElementById('em-cat').value,status:document.getElementById('em-status').value,img};
   if(editingId){const i=emplois.findIndex(e=>e.id===editingId);emplois[i]={...emplois[i],...d};}
   else{emplois.push({id:emploiSeq++,...d});}
+  saveEmplois();
   closeModal('emploi-modal');renderEmploi();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editEmploi(id){openEmploiModal(id);}
-function deleteEmploi(id){if(!confirm('Supprimer ?'))return;emplois=emplois.filter(e=>e.id!==id);renderEmploi();showToast('🗑️ Supprimée');}
+function deleteEmploi(id){if(!confirm('Supprimer ?'))return;emplois=emplois.filter(e=>e.id!==id);saveEmplois();renderEmploi();showToast('🗑️ Supprimée');}
 function submitCandidature(){
   const name=document.getElementById('cand-name').value.trim();
   const domain=document.getElementById('cand-domain').value;
   if(!name||!domain){showToast('⚠️ Remplis les champs requis.');return;}
   mailbox.unshift({id:Date.now(),from:`${name} (${document.getElementById('cand-num').value.trim()})`,domain,note:document.getElementById('cand-note').value.trim(),time:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),read:false});
+  saveMailbox();
   ['cand-name','cand-num','cand-note'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cand-domain').value='';
   showToast('📨 Candidature envoyée !');
@@ -1187,25 +1276,25 @@ function renderMails(){
   if(!mailbox.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><p>Aucune candidature.</p></div>`;return;}
   list.innerHTML=mailbox.map(m=>`
     <div class="mail-item${m.read?'':' unread'}" onclick="openMail(${m.id})">
-      <div class="mail-item-hd"><span class="mail-from">${m.from}</span><span class="mail-time">${m.time}</span></div>
-      <div class="mail-domain">${m.domain}</div>
-      <div class="mail-preview">${m.note||'(pas de précisions)'}</div>
+      <div class="mail-item-hd"><span class="mail-from">${escapeHtml(m.from)}</span><span class="mail-time">${m.time}</span></div>
+      <div class="mail-domain">${escapeHtml(m.domain)}</div>
+      <div class="mail-preview">${escapeHtml(m.note)||'(pas de précisions)'}</div>
       ${!m.read?'<div class="mail-tag">Nouveau</div>':''}
     </div>
   `).join('');
 }
 function openMail(id){
   const m=mailbox.find(x=>x.id===id);if(!m)return;
-  m.read=true;renderMails();
+  m.read=true;saveMailbox();renderMails();
   document.getElementById('mail-detail').innerHTML=`
-    <div class="mail-detail-field"><label>Candidat</label><p>${m.from}</p></div>
-    <div class="mail-detail-field"><label>Domaine</label><p>${m.domain}</p></div>
+    <div class="mail-detail-field"><label>Candidat</label><p>${escapeHtml(m.from)}</p></div>
+    <div class="mail-detail-field"><label>Domaine</label><p>${escapeHtml(m.domain)}</p></div>
     <div class="mail-detail-field"><label>Heure</label><p>${m.time}</p></div>
-    <div class="mail-detail-field"><label>Précisions</label><p>${m.note||'Aucune précision.'}</p></div>
+    <div class="mail-detail-field"><label>Précisions</label><p>${escapeHtml(m.note)||'Aucune précision.'}</p></div>
   `;
   openModal('mail-modal');
 }
-function clearMails(){if(!confirm('Effacer tout ?'))return;mailbox=[];renderMails();showToast('🗑️ Boîte vidée');}
+function clearMails(){if(!confirm('Effacer tout ?'))return;mailbox=[];saveMailbox();renderMails();showToast('🗑️ Boîte vidée');}
 
 // ========== RADAR ==========
 function renderRadar(){
@@ -1220,9 +1309,9 @@ function renderRadarCard(s){
   const bars=Array.from({length:5},(_,i)=>`<div class="crowd-bar${i<s.crowd?(s.status==='hype'?' hype filled':' filled'):''}"></div>`).join('');
   return `<div class="radar-card">
     <div class="radar-card-left">
-      <div class="radar-name">${s.name} <span class="radar-badge ${bCls[s.status]}">${bLbl[s.status]}</span></div>
-      <div class="radar-location">📍 ${s.loc}</div>
-      <div class="radar-desc" id="rdesc-${s.id}">${s.desc}</div>
+      <div class="radar-name">${escapeHtml(s.name)} <span class="radar-badge ${bCls[s.status]}">${bLbl[s.status]}</span></div>
+      <div class="radar-location">📍 ${escapeHtml(s.loc)}</div>
+      <div class="radar-desc" id="rdesc-${s.id}">${escapeHtml(s.desc)}</div>
       ${isAdmin?`<div class="radar-admin-controls">
         <div style="font-size:11px;color:var(--text3)">Affluence</div>
         <div style="display:flex;gap:8px;align-items:center">
@@ -1245,6 +1334,7 @@ function renderRadarCard(s){
 function updateRadarCrowd(id,val){
   const s=radarSpots.find(x=>x.id===id);if(!s)return;
   s.crowd=parseInt(val);
+  saveRadar();
   document.getElementById('rcval-'+id).textContent=val;
   const m=document.getElementById('rmeter-'+id);
   if(m)m.querySelectorAll('.crowd-bar').forEach((b,i)=>{b.className='crowd-bar'+(i<s.crowd?(s.status==='hype'?' hype filled':' filled'):'');});
@@ -1253,6 +1343,7 @@ function updateRadarDesc(id,val){
   if(!val.trim())return;
   const s=radarSpots.find(x=>x.id===id);if(!s)return;
   s.desc=val.trim();
+  saveRadar();
   const el=document.getElementById('rdesc-'+id);if(el)el.textContent=val.trim();
   showToast('✅ Description mise à jour !');
 }
@@ -1272,19 +1363,20 @@ function saveRadar(){
   const d={name:n,loc:document.getElementById('rm-loc').value,desc:document.getElementById('rm-desc').value,status:document.getElementById('rm-status').value,crowd:parseInt(document.getElementById('rm-crowd').value)};
   if(editingId){const i=radarSpots.findIndex(s=>s.id===editingId);radarSpots[i]={...radarSpots[i],...d};}
   else{radarSpots.push({id:radarSeq++,...d});}
+  saveRadar();
   closeModal('radar-modal');renderRadar();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editRadar(id){openRadarModal(id);}
-function deleteRadar(id){if(!confirm('Supprimer ?'))return;radarSpots=radarSpots.filter(s=>s.id!==id);renderRadar();showToast('🗑️ Supprimé');}
+function deleteRadar(id){if(!confirm('Supprimer ?'))return;radarSpots=radarSpots.filter(s=>s.id!==id);saveRadar();renderRadar();showToast('🗑️ Supprimé');}
 
 // ========== ADD CATEGORY ==========
 function addCategory(ctx){pendingCatCtx=ctx;document.getElementById('addcat-name').value='';openModal('addcat-modal');}
 function confirmAddCat(){
   const name=document.getElementById('addcat-name').value.trim();if(!name){showToast('⚠️ Nom requis');return;}
-  if(pendingCatCtx==='instant'){const id=name.toLowerCase().replace(/\s+/g,'-');instantCats.push({id,label:name.toUpperCase()});renderInstant();}
-  else if(pendingCatCtx==='stories'){storyCats.push(name.toUpperCase());renderStories();}
-  else if(pendingCatCtx==='emploi'){emploiCats.push(name.toLowerCase());renderEmploi();}
-  else if(pendingCatCtx==='concepts'){conceptCats.push(name.toUpperCase());renderConcepts();}
+  if(pendingCatCtx==='instant'){const id=name.toLowerCase().replace(/\s+/g,'-');instantCats.push({id,label:name.toUpperCase()});saveVideoCats();renderInstant();}
+  else if(pendingCatCtx==='stories'){storyCats.push(name.toUpperCase());saveStoryCats();renderStories();}
+  else if(pendingCatCtx==='emploi'){emploiCats.push(name.toLowerCase());saveEmploiCats();renderEmploi();}
+  else if(pendingCatCtx==='concepts'){conceptCats.push(name.toUpperCase());saveConceptCats();renderConcepts();}
   closeModal('addcat-modal');showToast(`✅ Catégorie "${name}" créée !`);
 }
 
@@ -1320,6 +1412,7 @@ function dropItem(e,type){
     const ti=arr.findIndex(x=>x.id===targetId);
     if(si<0||ti<0)return;
     [arr[si],arr[ti]]=[arr[ti],arr[si]];
+    saveVideos();
     renderInstant();
   }
   showToast('✅ Ordre mis à jour !');
@@ -1333,6 +1426,7 @@ function showToast(msg){
 }
 
 // ========== INIT ==========
+loadData();
 renderAll();
 </script>
 </body>
