@@ -4,12 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LatInvader — On met l'accent sur l'actu</title>
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<!-- Ton fichier de config Firebase (à créer) -->
-<script src="firebase-config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@700;800&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -36,10 +30,13 @@
   .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
   .logo-svg-wrap img{height:55px;width:auto;display:block;}
+  
+  /* SOLUTION POUR LOGO - UN SEUL VISIBLE PAR THEME */
   .logo-dark { display: block; }
   .logo-light { display: none; }
   :root[data-theme="light"] .logo-dark { display: none; }
   :root[data-theme="light"] .logo-light { display: block; }
+  
   .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
   .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
   .nav-btn:hover{color:var(--text);background:var(--bg3);}
@@ -505,7 +502,7 @@
   </div>
 </footer>
 
-<!-- Tous les modals (idem que précédemment) -->
+<!-- MODALS -->
 <div class="modal-overlay" id="admin-modal">
   <div class="modal">
     <div class="modal-avatar">🧍</div>
@@ -679,41 +676,57 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ========== VARIABLES GLOBALES ==========
-let isAdmin = false;
-const ADMIN_PASS = "21032001";
-let editingId = null;
-let pendingCatCtx = '';
-let currentStars = 3;
-let badgeColors = {};
-let currentMediaType = 'video';
-let currentUserId = null;
-
-let videos = [];
-let vidSeq = 1;
-let instantCats = [];
+// ========== DONNÉES PAR DÉFAUT ==========
+let videos = [
+  {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142,likes:38},
+  {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89,likes:21},
+  {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211,likes:54},
+  {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75,likes:19},
+  {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304,likes:67},
+];
+let vidSeq = 6;
+let instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS'}];
 let instantFilter = 'tout';
 
-let stories = [];
-let storySeq = 1;
-let storyCats = [];
+let stories = [
+  {id:1,title:"BREAKING : Fusillade au Unicorn, 3 blessés",sub:"Les secours sont sur place",cat:"BREAKING",time:"Il y a 16 heures",img:null,content:"<p>Une fusillade a éclaté cette nuit au Vanilla Unicorn. Les secours sont rapidement intervenus.</p>"},
+  {id:2,title:"Qui est la mystérieuse femme du maire ?",sub:"",cat:"POTINS",time:"Il y a 16 heures",img:null,content:"<p>Des rumeurs circulent sur l'identité de la compagne du maire...</p>"},
+  {id:3,title:"Un dealer arrêté en plein deal à Strawberry",sub:"",cat:"FAITS DIVERS",time:"Il y a 2 heures",img:null,content:"<p>La police a interpellé un individu en possession de stupéfiants.</p>"},
+  {id:4,title:"Le Diamond Casino racheté ? Les rumeurs s'intensifient",sub:"",cat:"POTINS",time:"Il y a 1 jour",img:null,content:"<p>Un mystérieux investisseur serait sur le point de racheter le casino.</p>"},
+];
+let storySeq = 5;
+let storyCats = ['BREAKING','POTINS','FAITS DIVERS'];
 let storiesFilter = 'tout';
 
-let emplois = [];
-let emploiSeq = 1;
-let emploiCats = [];
+let emplois = [
+  {id:1,title:"Ambulancier",company:"Los Santos Medical Center",desc:"Ambulanciers motivés pour les urgences de nuit.",cat:"service public",status:"legal",img:null},
+  {id:2,title:"Barman / DJ",company:"Bahama Mamas",desc:"Le club le plus hype de LS recrute.",cat:"boîte de nuit",status:"passion",img:null},
+  {id:3,title:"Mécanicien",company:"LS Customs",desc:"Tu sais tourner une clé ? On a besoin de toi.",cat:"mécano",status:"service",img:null},
+  {id:4,title:"Caméraman",company:"Weazel News",desc:"Oui, même la concurrence recrute.",cat:"media",status:"legal",img:null},
+  {id:5,title:"Serveur",company:"Burger Shot — Vespucci",desc:"Le rush du midi, ça te connaît ?",cat:"restaurant",status:"service",img:null},
+];
+let emploiSeq = 6;
+let emploiCats = ['service public','boîte de nuit','mécano','restaurant','media'];
 let emploiFilter = 'tout';
 let mailbox = [];
 
-let dropMessages = [];
-
-let concepts = [];
-let conceptSeq = 1;
-let conceptCats = [];
+let concepts = [
+  {id:1,title:"Le Mega Burger du Burger Shot",meta:"Burger Shot — Vespucci",desc:"C'est gras, c'est cheap, mais ça cale.",cat:"FAST & FOOD",stars:2,img:null},
+  {id:2,title:"L'outfit à 50k$ de Marcus",meta:"Ponsonbys — Rockford Hills",desc:"Marcus nous a montré sa tenue. Le drip est réel.",cat:"OUTFITS",stars:5,img:null},
+  {id:3,title:"24h dans la peau d'un dépanneur",meta:"LS Roads — Davis",desc:"On a suivi un dépanneur 24h. C'est un métier de fou.",cat:"LE SWITCH",stars:3,img:null},
+];
+let conceptSeq = 4;
+let conceptCats = ['FAST & FOOD','OUTFITS','LE SWITCH'];
 let conceptsFilter = 'tout';
 
-let radarSpots = [];
-let radarSeq = 1;
+let radarSpots = [
+  {id:1,name:"Vanilla Unicorn",loc:"Strawberry",desc:"La soirée bat son plein, DJ set live.",status:"hype",crowd:5},
+  {id:2,name:"Bahama Mamas",loc:"Downtown LS",desc:"Soirée open bar + contest DJ.",status:"hype",crowd:4},
+  {id:3,name:"Del Perro Pier",loc:"Del Perro Beach",desc:"Chill au bord de l'eau.",status:"chill",crowd:3},
+  {id:4,name:"Diamond Casino & Resort",loc:"Vinewood",desc:"Les gros joueurs sont là ce soir.",status:"business",crowd:4},
+  {id:5,name:"Grove Street",loc:"Davis",desc:"Tensions ce soir, restez prudents.",status:"danger",crowd:2},
+];
+let radarSeq = 6;
 let radarAmbiances = [
   {id:'hype', label:'HYPE', color:'#d4472a'},
   {id:'chill', label:'CHILL', color:'#3d8bcd'},
@@ -721,194 +734,139 @@ let radarAmbiances = [
   {id:'danger', label:'DANGER', color:'#e05a3a'}
 ];
 
-// ========== FIREBASE INITIALISATION ==========
-// Ces valeurs seront remplacées par ton fichier firebase-config.js
-// Assure-toi que firebase-config.js est chargé AVANT ce script
+let dropMessages = [];
 
-async function initFirebase() {
-  return new Promise((resolve) => {
-    auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        currentUserId = user.uid;
-        console.log("Utilisateur connecté:", currentUserId);
-        await loadVideosFromFirestore();
-        await loadLikesFromFirestore();
-        resolve();
-      } else {
-        // Connexion anonyme
-        const result = await auth.signInAnonymously();
-        currentUserId = result.user.uid;
-        console.log("Nouvel utilisateur anonyme:", currentUserId);
-        await loadVideosFromFirestore();
-        await loadLikesFromFirestore();
-        resolve();
-      }
-    });
-  });
+// ========== VARIABLES ==========
+let isAdmin = false;
+const ADMIN_PASS = "21032001";
+let editingId = null;
+let pendingCatCtx = '';
+let currentStars = 3;
+let badgeColors = {};
+let currentMediaType = 'video';
+let currentUserId = localStorage.getItem('latinvader_user_id');
+if(!currentUserId) {
+  currentUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  localStorage.setItem('latinvader_user_id', currentUserId);
 }
 
-async function loadVideosFromFirestore() {
-  const snapshot = await db.collection('videos').get();
-  if (!snapshot.empty) {
-    videos = [];
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      videos.push({ id: parseInt(doc.id), ...data });
-    });
-    videos.sort((a,b) => a.id - b.id);
+// ========== CHARGEMENT/SAUVEGARDE ==========
+function loadData() {
+  const savedVideos = localStorage.getItem('latinvader_videos');
+  if(savedVideos) {
+    const parsed = JSON.parse(savedVideos);
+    if(parsed.length) videos = parsed;
     vidSeq = Math.max(...videos.map(v=>v.id), 0) + 1;
-  } else {
-    // Données par défaut
-    videos = [
-      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142},
-      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89},
-      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211},
-      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75},
-      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304},
-    ];
-    vidSeq = 6;
-    // Sauvegarder les vidéos par défaut dans Firestore
-    for (const v of videos) {
-      await db.collection('videos').doc(v.id.toString()).set(v);
-    }
   }
-  renderAll();
+  const savedVideoCats = localStorage.getItem('latinvader_video_cats');
+  if(savedVideoCats) instantCats = JSON.parse(savedVideoCats);
+  const savedStories = localStorage.getItem('latinvader_stories');
+  if(savedStories) {
+    stories = JSON.parse(savedStories);
+    storySeq = Math.max(...stories.map(s=>s.id), 0) + 1;
+  }
+  const savedStoryCats = localStorage.getItem('latinvader_story_cats');
+  if(savedStoryCats) storyCats = JSON.parse(savedStoryCats);
+  const savedEmplois = localStorage.getItem('latinvader_emplois');
+  if(savedEmplois) {
+    emplois = JSON.parse(savedEmplois);
+    emploiSeq = Math.max(...emplois.map(e=>e.id), 0) + 1;
+  }
+  const savedEmploiCats = localStorage.getItem('latinvader_emploi_cats');
+  if(savedEmploiCats) emploiCats = JSON.parse(savedEmploiCats);
+  const savedConcepts = localStorage.getItem('latinvader_concepts');
+  if(savedConcepts) {
+    concepts = JSON.parse(savedConcepts);
+    conceptSeq = Math.max(...concepts.map(c=>c.id), 0) + 1;
+  }
+  const savedConceptCats = localStorage.getItem('latinvader_concept_cats');
+  if(savedConceptCats) conceptCats = JSON.parse(savedConceptCats);
+  const savedRadar = localStorage.getItem('latinvader_radar');
+  if(savedRadar) {
+    radarSpots = JSON.parse(savedRadar);
+    radarSeq = Math.max(...radarSpots.map(r=>r.id), 0) + 1;
+  }
+  const savedAmbiances = localStorage.getItem('latinvader_radar_ambiances');
+  if(savedAmbiances) radarAmbiances = JSON.parse(savedAmbiances);
+  const savedMailbox = localStorage.getItem('latinvader_mailbox');
+  if(savedMailbox) mailbox = JSON.parse(savedMailbox);
+  const savedDropbox = localStorage.getItem('latinvader_dropbox');
+  if(savedDropbox) dropMessages = JSON.parse(savedDropbox);
+  const savedBadgeColors = localStorage.getItem('latinvader_badge_colors');
+  if(savedBadgeColors) badgeColors = JSON.parse(savedBadgeColors);
 }
 
-async function loadLikesFromFirestore() {
-  const snapshot = await db.collection('likes').get();
-  likesData = {};
-  snapshot.forEach(doc => {
-    likesData[doc.id] = doc.data();
+function saveAll() {
+  localStorage.setItem('latinvader_videos', JSON.stringify(videos));
+  localStorage.setItem('latinvader_video_cats', JSON.stringify(instantCats));
+  localStorage.setItem('latinvader_stories', JSON.stringify(stories));
+  localStorage.setItem('latinvader_story_cats', JSON.stringify(storyCats));
+  localStorage.setItem('latinvader_emplois', JSON.stringify(emplois));
+  localStorage.setItem('latinvader_emploi_cats', JSON.stringify(emploiCats));
+  localStorage.setItem('latinvader_concepts', JSON.stringify(concepts));
+  localStorage.setItem('latinvader_concept_cats', JSON.stringify(conceptCats));
+  localStorage.setItem('latinvader_radar', JSON.stringify(radarSpots));
+  localStorage.setItem('latinvader_radar_ambiances', JSON.stringify(radarAmbiances));
+  localStorage.setItem('latinvader_mailbox', JSON.stringify(mailbox));
+  localStorage.setItem('latinvader_dropbox', JSON.stringify(dropMessages));
+  localStorage.setItem('latinvader_badge_colors', JSON.stringify(badgeColors));
+}
+
+// ========== FONCTIONS D'AFFICHAGE ==========
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('nav-'+p).classList.add('active');
+  if(p === 'instant') renderInstant();
+  if(p === 'stories') renderStories();
+  if(p === 'concepts') renderConcepts();
+  if(p === 'emploi') renderEmploi();
+  if(p === 'radar') renderRadar();
+  if(p === 'dropbox') renderDropMessages();
+}
+
+function toggleTheme(){
+  const h=document.documentElement;
+  const d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('theme-btn').textContent=d?'☀️':'🌙';
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
+});
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000);
+}
+
+function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;});}
+function formatNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
+function getCatLabel(id,arr){const c=arr.find(x=>(typeof x==='object'?x.id:x)===id);return c?(typeof c==='object'?c.label:c):id;}
+function getBadgeStyle(page, catId) {
+  const color = badgeColors[page]?.[catId];
+  if(color) return `background:${color};border-color:${color};color:#fff;`;
+  return '';
+}
+
+// ========== L'INSTANT ==========
+function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, pageId) {
+  const bar = document.getElementById(containerId);
+  if(!bar) return;
+  bar.innerHTML = `<button class="filter-btn${currentFilter==='tout'?' active':''}" onclick="${filterFn}('tout',this)">TOUT</button>`;
+  cats.forEach(c=>{
+    const id=typeof c==='object'?c.id:c;
+    const lbl=typeof c==='object'?c.label:c;
+    bar.innerHTML+=`<button class="filter-btn${currentFilter===id?' active':''}" onclick="${filterFn}('${id}',this)">${lbl}</button>`;
   });
-  renderInstant();
+  bar.innerHTML+=`<button class="add-cat-btn" onclick="addCategory('${catCtx}')">+ Catégorie</button>`;
 }
 
-let likesData = {};
-
-async function saveVideoToFirestore(video) {
-  await db.collection('videos').doc(video.id.toString()).set(video);
-}
-
-async function deleteVideoFromFirestore(videoId) {
-  await db.collection('videos').doc(videoId.toString()).delete();
-}
-
-async function updateLikeInFirestore(postId, likes, userLiked) {
-  await db.collection('likes').doc(postId.toString()).set({
-    likes: likes,
-    users: userLiked
-  });
-}
-
-async function incrementViewInFirestore(postId, views) {
-  await db.collection('videos').doc(postId.toString()).update({
-    views: views
-  });
-}
-
-// ========== FONCTIONS METIER ==========
-async function toggleLike(id) {
-  if(!likesData[id]) {
-    likesData[id] = { likes: 0, users: {} };
-  }
-  
-  if(likesData[id].users[currentUserId]) {
-    delete likesData[id].users[currentUserId];
-    likesData[id].likes--;
-  } else {
-    likesData[id].users[currentUserId] = true;
-    likesData[id].likes++;
-  }
-  
-  await updateLikeInFirestore(id, likesData[id].likes, likesData[id].users);
-  
-  const likeSpan = document.getElementById(`like-count-${id}`);
-  if(likeSpan) likeSpan.textContent = likesData[id].likes;
-  
-  const likeBtn = document.querySelector(`.video-card[data-id="${id}"] .like-btn`);
-  if(likeBtn) {
-    if(likesData[id].users[currentUserId]) {
-      likeBtn.classList.add('liked');
-      likeBtn.innerHTML = '❤️';
-    } else {
-      likeBtn.classList.remove('liked');
-      likeBtn.innerHTML = '🤍';
-    }
-  }
-}
-
-async function playMedia(id) {
-  const v = videos.find(x=>x.id===id);
-  if(!v) return;
-  v.views++;
-  await incrementViewInFirestore(id, v.views);
-  const viewSpan = document.getElementById(`view-count-${id}`);
-  if(viewSpan) viewSpan.textContent = formatNum(v.views);
-  if(!v.src) {
-    showToast('ℹ️ Aucun média uploadé pour ce post.');
-    return;
-  }
-  document.getElementById('vplayer-title').textContent = v.title;
-  const container = document.getElementById('vplayer-container');
-  if(v.mediaType === 'image') {
-    container.innerHTML = `<img src="${v.src}" style="width:100%;max-height:70vh;object-fit:contain;background:#000;">`;
-    document.getElementById('vplayer-el')?.remove();
-  } else {
-    container.innerHTML = `<video id="vplayer-el" src="${v.src}" controls style="width:100%;max-height:70vh;"></video>`;
-  }
-  document.getElementById('vplayer-overlay').classList.add('open');
-}
-
-async function saveVideo() {
-  const t = document.getElementById('vm-title').value.trim();
-  if(!t) {
-    showToast('⚠️ Donne un titre !');
-    return;
-  }
-  const fi = document.getElementById('vm-file');
-  const src = fi.dataset.url || (editingId ? videos.find(v=>v.id===editingId)?.src : null);
-  const d = {
-    title: t,
-    desc: document.getElementById('vm-desc').value,
-    cat: document.getElementById('vm-cat').value,
-    src: src,
-    mediaType: currentMediaType,
-    views: editingId ? videos.find(v=>v.id===editingId)?.views || 0 : 0
-  };
-  
-  if(editingId) {
-    const index = videos.findIndex(v=>v.id===editingId);
-    videos[index] = { ...videos[index], ...d };
-    await saveVideoToFirestore(videos[index]);
-  } else {
-    const newId = vidSeq++;
-    const newVideo = { id: newId, ...d };
-    videos.push(newVideo);
-    await saveVideoToFirestore(newVideo);
-    if(!likesData[newId]) {
-      likesData[newId] = { likes: 0, users: {} };
-      await updateLikeInFirestore(newId, 0, {});
-    }
-  }
-  closeModal('video-modal');
-  renderInstant();
-  showToast(editingId ? '✅ Post modifié !' : '✅ Post ajouté !');
-  editingId = null;
-}
-
-async function deleteVideo(id) {
-  if(!confirm('Supprimer ?')) return;
-  videos = videos.filter(v=>v.id!==id);
-  delete likesData[id];
-  await deleteVideoFromFirestore(id);
-  await db.collection('likes').doc(id.toString()).delete();
-  renderInstant();
-  showToast('🗑️ Supprimé');
-}
-
-// ========== AUTRES FONCTIONS (raccourcies pour la longueur) ==========
-function renderInstant() {
+function renderInstant(){
   buildFilterBar('instant-filters',instantCats,'filterInstant',instantFilter,'instant','instant');
   const filtered = instantFilter==='tout' ? [...videos] : videos.filter(v=>v.cat===instantFilter);
   const grid = document.getElementById('instant-grid');
@@ -917,8 +875,9 @@ function renderInstant() {
     const mediaDisplay = v.mediaType === 'image' && v.src ? 
       `<img src="${v.src}" style="width:100%;height:100%;object-fit:cover;">` :
       (v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">${v.mediaType === 'image' ? '🖼️' : '▶'}</div><div style="font-size:12px">Aucun média</div></div>`);
-    const hasLiked = likesData[v.id] && likesData[v.id].users && likesData[v.id].users[currentUserId];
-    const likeCount = likesData[v.id] ? likesData[v.id].likes : 0;
+    const likedKey = `liked_${v.id}_${currentUserId}`;
+    const hasLiked = localStorage.getItem(likedKey) === 'true';
+    const likeCount = v.likes || 0;
     return `
     <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
          ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
@@ -946,31 +905,59 @@ function renderInstant() {
   `}).join('');
 }
 
-// Toutes les autres fonctions (renderStories, renderConcepts, renderEmploi, renderRadar, etc.)
-// sont identiques aux versions précédentes, je les garde identiques pour la longueur
-
-// Fonctions utilitaires
-function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, pageId) {
-  const bar = document.getElementById(containerId);
-  if(!bar) return;
-  bar.innerHTML = `<button class="filter-btn${currentFilter==='tout'?' active':''}" onclick="${filterFn}('tout',this)">TOUT</button>`;
-  cats.forEach(c=>{
-    const id=typeof c==='object'?c.id:c;
-    const lbl=typeof c==='object'?c.label:c;
-    bar.innerHTML+=`<button class="filter-btn${currentFilter===id?' active':''}" onclick="${filterFn}('${id}',this)">${lbl}</button>`;
-  });
-  bar.innerHTML+=`<button class="add-cat-btn" onclick="addCategory('${catCtx}')">+ Catégorie</button>`;
-}
-
 function filterInstant(cat,btn){instantFilter=cat;renderInstant();}
-function getCatLabel(id,arr){const c=arr.find(x=>(typeof x==='object'?x.id:x)===id);return c?(typeof c==='object'?c.label:c):id;}
-function formatNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
-function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;});}
-function getBadgeStyle(page, catId) {
-  const color = badgeColors[page]?.[catId];
-  if(color) return `background:${color};border-color:${color};color:#fff;`;
-  return '';
+
+function toggleLike(id){
+  const v = videos.find(x=>x.id===id);
+  if(!v) return;
+  const likedKey = `liked_${id}_${currentUserId}`;
+  const hasLiked = localStorage.getItem(likedKey) === 'true';
+  if(hasLiked) {
+    localStorage.removeItem(likedKey);
+    v.likes--;
+  } else {
+    localStorage.setItem(likedKey, 'true');
+    v.likes++;
+  }
+  saveAll();
+  const likeSpan = document.getElementById(`like-count-${id}`);
+  if(likeSpan) likeSpan.textContent = v.likes;
+  const likeBtn = document.querySelector(`.video-card[data-id="${id}"] .like-btn`);
+  if(likeBtn) {
+    if(!hasLiked) {
+      likeBtn.classList.add('liked');
+      likeBtn.innerHTML = '❤️';
+    } else {
+      likeBtn.classList.remove('liked');
+      likeBtn.innerHTML = '🤍';
+    }
+  }
 }
+
+function playMedia(id){
+  const v=videos.find(x=>x.id===id);if(!v)return;
+  v.views++;
+  saveAll();
+  const viewSpan = document.getElementById(`view-count-${id}`);
+  if(viewSpan) viewSpan.textContent = formatNum(v.views);
+  if(!v.src){showToast('ℹ️ Aucun média uploadé pour ce post.');return;}
+  document.getElementById('vplayer-title').textContent=v.title;
+  const container = document.getElementById('vplayer-container');
+  if(v.mediaType === 'image') {
+    container.innerHTML = `<img src="${v.src}" style="width:100%;max-height:70vh;object-fit:contain;background:#000;">`;
+  } else {
+    container.innerHTML = `<video id="vplayer-el" src="${v.src}" controls style="width:100%;max-height:70vh;"></video>`;
+  }
+  document.getElementById('vplayer-overlay').classList.add('open');
+}
+
+function closeVPlayer(e){
+  if(e&&e.target!==document.getElementById('vplayer-overlay'))return;
+  const video = document.getElementById('vplayer-el');
+  if(video) video.pause();
+  document.getElementById('vplayer-overlay').classList.remove('open');
+}
+
 function setMediaType(type) {
   currentMediaType = type;
   document.querySelectorAll('.media-type-btn').forEach(btn => {
@@ -985,6 +972,7 @@ function setMediaType(type) {
     }
   }
 }
+
 function handleMediaFile(e){
   const f=e.target.files[0];if(!f)return;
   const url=URL.createObjectURL(f);e.target.dataset.url=url;
@@ -995,6 +983,7 @@ function handleMediaFile(e){
     p.innerHTML=`<img src="${url}" style="width:80px;height:60px;border-radius:4px;object-fit:cover;"><span>${f.name}</span>`;
   }
 }
+
 function openVideoModal(id=null){
   editingId=id;
   const v=id?videos.find(x=>x.id===id):null;
@@ -1026,22 +1015,400 @@ function openVideoModal(id=null){
   }
   openModal('video-modal');
 }
+
+function saveVideo(){
+  const t=document.getElementById('vm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
+  const fi=document.getElementById('vm-file');
+  const src=fi.dataset.url||(editingId?videos.find(v=>v.id===editingId)?.src:null);
+  const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src,mediaType:currentMediaType};
+  if(editingId){
+    const i=videos.findIndex(v=>v.id===editingId);
+    videos[i]={...videos[i],...d};
+  } else {
+    videos.push({id:vidSeq++,...d,views:0,likes:0});
+  }
+  saveAll();
+  closeModal('video-modal');renderInstant();showToast(editingId?'✅ Post modifié !':'✅ Post ajouté !');editingId=null;
+}
 function editVideo(id){openVideoModal(id);}
+function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);saveAll();renderInstant();showToast('🗑️ Supprimé');}
 
-function showPage(p) {
-  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+p).classList.add('active');
-  document.getElementById('nav-'+p).classList.add('active');
+// ========== STORYTELLING ==========
+function renderStories(){
+  buildFilterBar('stories-filters',storyCats.map(c=>({id:c,label:c})),'filterStories',storiesFilter,'stories','stories');
+  const filtered=storiesFilter==='tout'?[...stories]:stories.filter(s=>s.cat===storiesFilter);
+  const c=document.getElementById('stories-container');
+  if(!filtered.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>Aucun article.</p></div>';return;}
+  const [feat,...rest]=filtered;
+  c.innerHTML=`
+    <div class="story-featured" data-id="${feat.id}" onclick="openStoryRead(${feat.id})">
+      <div class="story-featured-img">${feat.img?`<img src="${feat.img}">`:'🔫'}</div>
+      <div class="story-featured-body">
+        <div class="story-cat" style="${getBadgeStyle('stories', feat.cat)}">⚡ ${feat.cat}</div>
+        <div class="story-featured-title">${escapeHtml(feat.title)}</div>
+        <div class="story-featured-sub">${escapeHtml(feat.sub)}</div>
+        <div class="story-time">🕐 ${feat.time}</div>
+      </div>
+      ${isAdmin?`<div class="card-admin-actions" style="top:12px;right:12px">
+        <button class="action-btn" onclick="event.stopPropagation();editStory(${feat.id})">✏️</button>
+        <button class="action-btn del" onclick="event.stopPropagation();deleteStory(${feat.id})">🗑️</button>
+      </div>`:''}
+    </div>
+    <div class="stories-list">
+      ${rest.map(s=>`
+        <div class="story-item" data-id="${s.id}" onclick="openStoryRead(${s.id})">
+          <div class="story-item-img">${s.img?`<img src="${s.img}">`:'📰'}</div>
+          <div style="flex:1">
+            <div class="story-item-cat" style="${getBadgeStyle('stories', s.cat)}">${s.cat}</div>
+            <div class="story-item-title">${escapeHtml(s.title)}</div>
+            <div class="story-item-time">🕐 ${s.time}</div>
+          </div>
+          ${isAdmin?`<div class="card-admin-actions" style="position:relative;top:0;right:0;margin-left:auto">
+            <button class="action-btn" onclick="event.stopPropagation();editStory(${s.id})">✏️</button>
+            <button class="action-btn del" onclick="event.stopPropagation();deleteStory(${s.id})">🗑️</button>
+          </div>`:''}
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
 
-function toggleTheme(){
-  const h=document.documentElement;
-  const d=h.getAttribute('data-theme')==='dark';
-  h.setAttribute('data-theme',d?'light':'dark');
-  document.getElementById('theme-btn').textContent=d?'☀️':'🌙';
+function openStoryRead(id){
+  const story = stories.find(s=>s.id===id);
+  if(!story) return;
+  document.getElementById('read-title').textContent = story.title;
+  document.getElementById('read-meta').innerHTML = `<span>📂 ${story.cat}</span><span>🕐 ${story.time}</span>${story.sub?`<span>📌 ${story.sub}</span>`:''}`;
+  document.getElementById('read-content').innerHTML = story.content || '<p>Contenu non disponible.</p>';
+  openModal('story-read-modal');
 }
 
+function filterStories(cat){storiesFilter=cat;renderStories();}
+function openStoryModal(id=null){
+  editingId=id;const s=id?stories.find(x=>x.id===id):null;
+  document.getElementById('sm-modal-title').textContent=id?'Modifier l\'article':'Ajouter un article';
+  document.getElementById('sm-title').value=s?s.title:'';
+  document.getElementById('sm-sub').value=s?s.sub:'';
+  document.getElementById('sm-cat').innerHTML=storyCats.map(c=>`<option value="${c}"${s&&s.cat===c?' selected':''}>${c}</option>`).join('');
+  document.getElementById('sm-time').value=s?s.time:'Il y a quelques instants';
+  document.getElementById('sm-preview').style.display='none';
+  document.getElementById('sm-file').value='';delete document.getElementById('sm-file').dataset.url;
+  const editor = document.getElementById('story-editor');
+  if(s && s.content) editor.innerHTML = s.content;
+  else editor.innerHTML = '<p>Commencez à écrire votre article ici...</p>';
+  openModal('story-modal');
+}
+function execCmd(command, value) {
+  document.execCommand(command, false, value);
+  document.getElementById('story-editor').focus();
+}
+function addImageToEditor() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if(file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        document.execCommand('insertImage', false, event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  input.click();
+}
+function saveStory(){
+  const t=document.getElementById('sm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
+  const fi=document.getElementById('sm-file');
+  const img=fi.dataset.url||(editingId?stories.find(s=>s.id===editingId)?.img:null);
+  const content = document.getElementById('story-editor').innerHTML;
+  const d={title:t,sub:document.getElementById('sm-sub').value,cat:document.getElementById('sm-cat').value,time:document.getElementById('sm-time').value||'Il y a quelques instants',img,content};
+  if(editingId){const i=stories.findIndex(s=>s.id===editingId);stories[i]={...stories[i],...d};}
+  else{stories.push({id:storySeq++,...d});}
+  saveAll();
+  closeModal('story-modal');renderStories();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
+}
+function editStory(id){openStoryModal(id);}
+function deleteStory(id){if(!confirm('Supprimer ?'))return;stories=stories.filter(s=>s.id!==id);saveAll();renderStories();showToast('🗑️ Supprimé');}
+
+// ========== CONCEPTS ==========
+function renderConcepts(){
+  buildFilterBar('concepts-filters',conceptCats.map(c=>({id:c,label:c})),'filterConcepts',conceptsFilter,'concepts','concepts');
+  const filtered=conceptsFilter==='tout'?concepts:concepts.filter(c=>c.cat===conceptsFilter);
+  document.getElementById('concepts-grid').innerHTML=filtered.map(c=>`
+    <div class="concept-card">
+      <div class="concept-img">
+        ${c.img?`<img src="${c.img}">`:(c.cat==='FAST & FOOD'?'🍔':c.cat==='OUTFITS'?'👗':'🔀')}
+        <div class="concept-badge"><span class="video-badge" style="${getBadgeStyle('concepts', c.cat)}">${c.cat}</span></div>
+        ${isAdmin?`<div class="card-admin-actions">
+          <button class="action-btn" onclick="editConcept(${c.id})">✏️</button>
+          <button class="action-btn del" onclick="deleteConcept(${c.id})">🗑️</button>
+        </div>`:''}
+      </div>
+      <div class="concept-body">
+        <div class="concept-title">${escapeHtml(c.title)}</div>
+        <div class="concept-meta">${escapeHtml(c.meta)}</div>
+        <div class="stars">${'⭐'.repeat(c.stars)}${'☆'.repeat(5-c.stars)}</div>
+        <div class="concept-desc">${escapeHtml(c.desc)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+function filterConcepts(cat){conceptsFilter=cat;renderConcepts();}
+function openConceptModal(id=null){
+  editingId=id;const c=id?concepts.find(x=>x.id===id):null;
+  currentStars=c?c.stars:3;
+  document.getElementById('cm-modal-title').textContent=id?'Modifier':'Ajouter un concept';
+  document.getElementById('cm-title').value=c?c.title:'';
+  document.getElementById('cm-meta').value=c?c.meta:'';
+  document.getElementById('cm-desc').value=c?c.desc:'';
+  document.getElementById('cm-cat').innerHTML=conceptCats.map(cat=>`<option value="${cat}"${c&&c.cat===cat?' selected':''}>${cat}</option>`).join('');
+  document.getElementById('cm-preview').style.display='none';
+  document.getElementById('cm-file').value='';delete document.getElementById('cm-file').dataset.url;
+  document.querySelectorAll('#cm-stars span').forEach((el,i)=>el.classList.toggle('lit',i<currentStars));
+  openModal('concept-modal');
+}
+function setStars(n){currentStars=n;document.querySelectorAll('#cm-stars span').forEach((el,i)=>el.classList.toggle('lit',i<currentStars));}
+function saveConcept(){
+  const t=document.getElementById('cm-title').value.trim();if(!t){showToast('⚠️ Titre requis');return;}
+  const fi=document.getElementById('cm-file');
+  const img=fi.dataset.url||(editingId?concepts.find(c=>c.id===editingId)?.img:null);
+  const d={title:t,meta:document.getElementById('cm-meta').value,desc:document.getElementById('cm-desc').value,cat:document.getElementById('cm-cat').value,stars:currentStars,img};
+  if(editingId){const i=concepts.findIndex(c=>c.id===editingId);concepts[i]={...concepts[i],...d};}
+  else{concepts.push({id:conceptSeq++,...d});}
+  saveAll();
+  closeModal('concept-modal');renderConcepts();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
+}
+function editConcept(id){openConceptModal(id);}
+function deleteConcept(id){if(!confirm('Supprimer ?'))return;concepts=concepts.filter(c=>c.id!==id);saveAll();renderConcepts();showToast('🗑️ Supprimé');}
+
+// ========== EMPLOI ==========
+function renderEmploi(){
+  buildFilterBar('emploi-filters',emploiCats.map(c=>({id:c,label:c.toUpperCase()})),'filterEmploy',emploiFilter,'emploi','emploi');
+  const filtered=emploiFilter==='tout'?emplois:emplois.filter(e=>e.cat===emploiFilter);
+  const badgeCls={legal:'badge-legal',service:'badge-service',passion:'badge-passion',illegal:'badge-illegal',closed:'badge-closed'};
+  const badgeLbl={legal:'LÉGAL',service:'SERVICE',passion:'PASSION',illegal:'ILLÉGAL',closed:'NE RECRUTE PLUS'};
+  document.getElementById('emploi-grid').innerHTML=filtered.map(e=>`
+    <div class="emploi-card${e.status==='closed'?' inactive':''}">
+      <div class="emploi-icon">${e.img?`<img src="${e.img}">`:'🏢'}</div>
+      <div style="flex:1">
+        <div class="emploi-title">${escapeHtml(e.title)} <span class="emploi-badge ${badgeCls[e.status]||'badge-service'}">${badgeLbl[e.status]||e.status}</span></div>
+        <div class="emploi-company">${escapeHtml(e.company)}</div>
+        <div class="emploi-desc">${escapeHtml(e.desc)}</div>
+      </div>
+      ${isAdmin?`<div style="display:flex;flex-direction:column;gap:4px;margin-left:auto">
+        <button class="action-btn" onclick="editEmploi(${e.id})">✏️</button>
+        <button class="action-btn del" onclick="deleteEmploi(${e.id})">🗑️</button>
+      </div>`:''}
+    </div>
+  `).join('');
+}
+function filterEmploy(cat){emploiFilter=cat;renderEmploi();}
+function openEmploiModal(id=null){
+  editingId=id;const e=id?emplois.find(x=>x.id===id):null;
+  document.getElementById('em-modal-title').textContent=id?'Modifier':'Ajouter une offre';
+  document.getElementById('em-title').value=e?e.title:'';
+  document.getElementById('em-company').value=e?e.company:'';
+  document.getElementById('em-desc').value=e?e.desc:'';
+  document.getElementById('em-cat').innerHTML=emploiCats.map(c=>`<option value="${c}"${e&&e.cat===c?' selected':''}>${c.toUpperCase()}</option>`).join('');
+  document.getElementById('em-status').value=e?e.status:'legal';
+  document.getElementById('em-preview').style.display='none';
+  document.getElementById('em-file').value='';delete document.getElementById('em-file').dataset.url;
+  openModal('emploi-modal');
+}
+function saveEmploi(){
+  const t=document.getElementById('em-title').value.trim();if(!t){showToast('⚠️ Titre requis');return;}
+  const fi=document.getElementById('em-file');
+  const img=fi.dataset.url||(editingId?emplois.find(e=>e.id===editingId)?.img:null);
+  const d={title:t,company:document.getElementById('em-company').value,desc:document.getElementById('em-desc').value,cat:document.getElementById('em-cat').value,status:document.getElementById('em-status').value,img};
+  if(editingId){const i=emplois.findIndex(e=>e.id===editingId);emplois[i]={...emplois[i],...d};}
+  else{emplois.push({id:emploiSeq++,...d});}
+  saveAll();
+  closeModal('emploi-modal');renderEmploi();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
+}
+function editEmploi(id){openEmploiModal(id);}
+function deleteEmploi(id){if(!confirm('Supprimer ?'))return;emplois=emplois.filter(e=>e.id!==id);saveAll();renderEmploi();showToast('🗑️ Supprimée');}
+function submitCandidature(){
+  const name=document.getElementById('cand-name').value.trim();
+  const domain=document.getElementById('cand-domain').value;
+  if(!name||!domain){showToast('⚠️ Remplis les champs requis.');return;}
+  mailbox.unshift({id:Date.now(),from:`${name} (${document.getElementById('cand-num').value.trim()})`,domain,note:document.getElementById('cand-note').value.trim(),time:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),read:false});
+  saveAll();
+  document.getElementById('cand-name').value='';
+  document.getElementById('cand-num').value='';
+  document.getElementById('cand-note').value='';
+  document.getElementById('cand-domain').value='';
+  showToast('📨 Candidature envoyée !');
+}
+function switchEmploi(tab,btn){
+  document.querySelectorAll('#page-emploi .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#page-emploi .emploi-section').forEach(s=>s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('emploi-'+tab).classList.add('active');
+  if(tab==='mails')renderMails();
+}
+function renderMails(){
+  document.getElementById('mail-count').textContent=`${mailbox.length} candidature(s) reçue(s)`;
+  const list=document.getElementById('mail-list');
+  if(!mailbox.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><p>Aucune candidature.</p></div>`;return;}
+  list.innerHTML=mailbox.map(m=>`
+    <div class="mail-item${m.read?'':' unread'}" onclick="openMail(${m.id})">
+      <div class="mail-item-hd"><span class="mail-from">${escapeHtml(m.from)}</span><span class="mail-time">${m.time}</span></div>
+      <div class="mail-domain">${escapeHtml(m.domain)}</div>
+      <div class="mail-preview">${escapeHtml(m.note)||'(pas de précisions)'}</div>
+      ${!m.read?'<div class="mail-tag">Nouveau</div>':''}
+    </div>
+  `).join('');
+}
+function openMail(id){
+  const m=mailbox.find(x=>x.id===id);if(!m)return;
+  m.read=true;saveAll();renderMails();
+  document.getElementById('mail-detail').innerHTML=`
+    <div class="mail-detail-field"><label>Candidat</label><p>${escapeHtml(m.from)}</p></div>
+    <div class="mail-detail-field"><label>Domaine</label><p>${escapeHtml(m.domain)}</p></div>
+    <div class="mail-detail-field"><label>Heure</label><p>${m.time}</p></div>
+    <div class="mail-detail-field"><label>Précisions</label><p>${escapeHtml(m.note)||'Aucune précision.'}</p></div>
+  `;
+  openModal('mail-modal');
+}
+function clearMails(){if(!confirm('Effacer tout ?'))return;mailbox=[];saveAll();renderMails();showToast('🗑️ Boîte vidée');}
+
+// ========== DROPBOX ==========
+function switchDropbox(tab,btn){
+  document.querySelectorAll('#page-dropbox .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#page-dropbox .emploi-section').forEach(s=>s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dropbox-'+tab).classList.add('active');
+  if(tab==='messages')renderDropMessages();
+}
+function submitDrop(){
+  const title=document.getElementById('drop-title').value.trim();
+  const body=document.getElementById('drop-body').value.trim();
+  if(!title||!body){showToast('⚠️ Remplis le titre et le message.');return;}
+  dropMessages.unshift({id:Date.now(),title,body,category:document.getElementById('drop-cat').value,time:new Date().toLocaleString('fr-FR'),read:false});
+  saveAll();
+  document.getElementById('drop-title').value='';
+  document.getElementById('drop-body').value='';
+  showToast('📨 Signalement envoyé anonymement !');
+}
+function renderDropMessages(){
+  document.getElementById('drop-count').textContent=`${dropMessages.length} signalement(s) reçu(s)`;
+  const list=document.getElementById('drop-messages-list');
+  if(!dropMessages.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><p>Aucun signalement.</p></div>`;return;}
+  list.innerHTML=dropMessages.map(m=>`
+    <div class="drop-item${m.read?'':' unread'}" onclick="openDropMessage(${m.id})">
+      <div class="drop-item-hd"><span class="drop-from">${escapeHtml(m.title)}</span><span class="drop-time">${m.time}</span></div>
+      <div class="drop-category">${escapeHtml(m.category)}</div>
+      <div class="drop-preview">${escapeHtml(m.body.substring(0,100))}${m.body.length>100?'...':''}</div>
+      ${!m.read?'<div class="drop-tag">Nouveau</div>':''}
+    </div>
+  `).join('');
+}
+function openDropMessage(id){
+  const m=dropMessages.find(x=>x.id===id);if(!m)return;
+  m.read=true;saveAll();renderDropMessages();
+  document.getElementById('drop-detail').innerHTML=`
+    <div class="drop-detail-field"><label>Titre</label><p>${escapeHtml(m.title)}</p></div>
+    <div class="drop-detail-field"><label>Catégorie</label><p>${escapeHtml(m.category)}</p></div>
+    <div class="drop-detail-field"><label>Date</label><p>${m.time}</p></div>
+    <div class="drop-detail-field"><label>Message</label><p style="white-space:pre-wrap;">${escapeHtml(m.body)}</p></div>
+  `;
+  openModal('drop-modal');
+}
+function clearDropMessages(){if(!confirm('Effacer tous les signalements ?'))return;dropMessages=[];saveAll();renderDropMessages();showToast('🗑️ Signalements vidés');}
+
+// ========== RADAR ==========
+function renderRadar(){
+  const hype=radarSpots.filter(s=>s.status==='hype');
+  const other=radarSpots.filter(s=>s.status!=='hype');
+  document.getElementById('radar-hype-grid').innerHTML=hype.map(renderRadarCard).join('');
+  document.getElementById('radar-other-grid').innerHTML=other.map(renderRadarCard).join('');
+}
+function renderRadarCard(s){
+  const ambiance = radarAmbiances.find(a=>a.id===s.status) || radarAmbiances[0];
+  const bars=Array.from({length:5},(_,i)=>`<div class="crowd-bar${i<s.crowd?(s.status==='hype'?' hype filled':' filled'):''}"></div>`).join('');
+  return `<div class="radar-card">
+    <div class="radar-card-left">
+      <div class="radar-name">${escapeHtml(s.name)} <span class="radar-badge" style="background:${ambiance.color}20;color:${ambiance.color};border-color:${ambiance.color}40;">${ambiance.label}</span></div>
+      <div class="radar-location">📍 ${escapeHtml(s.loc)}</div>
+      <div class="radar-desc">${escapeHtml(s.desc)}</div>
+      ${isAdmin?`<div class="radar-admin-controls">
+        <div style="font-size:11px;color:var(--text3)">Affluence</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="range" min="1" max="5" value="${s.crowd}" class="crowd-slider" style="flex:1" oninput="updateRadarCrowd(${s.id},this.value)" onchange="updateRadarCrowd(${s.id},this.value)">
+          <span class="crowd-value" id="rcval-${s.id}">${s.crowd}</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="action-btn" onclick="editRadar(${s.id})">✏️ Modifier</button>
+          <button class="action-btn del" onclick="deleteRadar(${s.id})">🗑️ Supprimer</button>
+        </div>
+      </div>`:''}
+    </div>
+    <div class="radar-right">
+      <div class="crowd-meter" id="rmeter-${s.id}">${bars}</div>
+      <div class="crowd-label">👥 Crowd</div>
+    </div>
+  </div>`;
+}
+function updateRadarCrowd(id,val){
+  const s=radarSpots.find(x=>x.id===id);if(!s)return;
+  s.crowd=parseInt(val);
+  saveAll();
+  document.getElementById('rcval-'+id).textContent=val;
+  const m=document.getElementById('rmeter-'+id);
+  if(m){
+    m.querySelectorAll('.crowd-bar').forEach((b,i)=>{
+      if(i < s.crowd) {
+        b.classList.add('filled');
+        if(s.status==='hype') b.classList.add('hype');
+      } else {
+        b.classList.remove('filled');
+        b.classList.remove('hype');
+      }
+    });
+  }
+}
+function openRadarModal(id=null){
+  editingId=id;const s=id?radarSpots.find(x=>x.id===id):null;
+  document.getElementById('rm-modal-title').textContent=id?'Modifier le spot':'Ajouter un spot';
+  document.getElementById('rm-name').value=s?s.name:'';
+  document.getElementById('rm-loc').value=s?s.loc:'';
+  document.getElementById('rm-desc').value=s?s.desc:'';
+  const statusSelect = document.getElementById('rm-status');
+  statusSelect.innerHTML = radarAmbiances.map(a=>`<option value="${a.id}"${s&&s.status===a.id?' selected':''}>${a.label}</option>`).join('');
+  openModal('radar-modal');
+}
+function saveRadar(){
+  const n=document.getElementById('rm-name').value.trim();if(!n){showToast('⚠️ Nom requis');return;}
+  let crowdValue = 3;
+  if(editingId) {
+    const existingSpot = radarSpots.find(s=>s.id===editingId);
+    crowdValue = existingSpot ? existingSpot.crowd : 3;
+  }
+  const d={name:n,loc:document.getElementById('rm-loc').value,desc:document.getElementById('rm-desc').value,status:document.getElementById('rm-status').value,crowd:crowdValue};
+  if(editingId){const i=radarSpots.findIndex(s=>s.id===editingId);radarSpots[i]={...radarSpots[i],...d};}
+  else{radarSpots.push({id:radarSeq++,...d});}
+  saveAll();
+  closeModal('radar-modal');renderRadar();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
+}
+function editRadar(id){openRadarModal(id);}
+function deleteRadar(id){if(!confirm('Supprimer ?'))return;radarSpots=radarSpots.filter(s=>s.id!==id);saveAll();renderRadar();showToast('🗑️ Supprimé');}
+function openAddAmbianceModal(){openModal('add-ambiance-modal');}
+function confirmAddAmbiance(){
+  const name=document.getElementById('add-ambiance-name').value.trim().toUpperCase();
+  const color=document.getElementById('add-ambiance-color').value;
+  if(!name){showToast('⚠️ Donne un nom à l\'ambiance');return;}
+  const id = name.toLowerCase().replace(/\s+/g,'-');
+  if(radarAmbiances.find(a=>a.id===id)){showToast('⚠️ Cette ambiance existe déjà');return;}
+  radarAmbiances.push({id,label:name,color});
+  saveAll();
+  closeModal('add-ambiance-modal');
+  document.getElementById('add-ambiance-name').value='';
+  renderRadar();
+  showToast(`✅ Ambiance "${name}" créée !`);
+}
+
+// ========== ADMIN ==========
 function openAdminModal(){
   if(isAdmin){logoutAdmin();return;}
   document.getElementById('admin-password').value='';
@@ -1049,7 +1416,6 @@ function openAdminModal(){
   openModal('admin-modal');
   setTimeout(()=>document.getElementById('admin-password').focus(),100);
 }
-
 function loginAdmin(){
   if(document.getElementById('admin-password').value===ADMIN_PASS){
     isAdmin=true;
@@ -1061,14 +1427,13 @@ function loginAdmin(){
     document.getElementById('drag-hint-instant').style.display='flex';
     document.getElementById('drag-hint-stories').style.display='flex';
     closeModal('admin-modal');
-    renderAll();
+    renderInstant();renderStories();
     showToast('🛡️ Mode admin activé !');
   } else {
     document.getElementById('admin-error').style.display='block';
     document.getElementById('admin-password').value='';
   }
 }
-
 function logoutAdmin(){
   isAdmin=false;
   document.body.classList.remove('admin-mode');
@@ -1078,18 +1443,20 @@ function logoutAdmin(){
   document.getElementById('tab-drop-messages').style.display='none';
   document.getElementById('drag-hint-instant').style.display='none';
   document.getElementById('drag-hint-stories').style.display='none';
-  renderAll();
+  renderInstant();renderStories();
   showToast('👎 Déconnecté');
 }
 
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(m=>{
-  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
-});
-
-function renderAll(){renderInstant();/*renderStories();renderConcepts();renderEmploi();renderRadar();*/}
-
+// ========== PARAMÈTRES ==========
+function openSettingsPanel() {
+  if(!isAdmin) return;
+  document.getElementById('settings-panel').classList.add('open');
+  selectSettingsPage(currentSettingsPage);
+}
+function closeSettingsPanel() {
+  document.getElementById('settings-panel').classList.remove('open');
+}
+let currentSettingsPage = 'instant';
 function selectSettingsPage(page) {
   currentSettingsPage = page;
   document.querySelectorAll('#page-selector-settings button').forEach(btn => {
@@ -1097,14 +1464,14 @@ function selectSettingsPage(page) {
   });
   renderBadgesList();
 }
-
-let currentSettingsPage = 'instant';
 function renderBadgesList() {
   let cats = [];
   let page = currentSettingsPage;
   if(page === 'instant') cats = instantCats.map(c => ({id: c.id, label: c.label}));
+  else if(page === 'stories') cats = storyCats.map(c => ({id: c, label: c}));
+  else if(page === 'emploi') cats = emploiCats.map(c => ({id: c, label: c.toUpperCase()}));
+  else if(page === 'concepts') cats = conceptCats.map(c => ({id: c, label: c}));
   const container = document.getElementById('badges-list-container');
-  if(!container) return;
   if(!cats.length) {
     container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3)">Aucune catégorie pour cette page.</div>';
     return;
@@ -1126,34 +1493,48 @@ function renderBadgesList() {
     `;
   }).join('');
 }
-
 function updateBadgeColor(page, catId, color) {
   if(!badgeColors[page]) badgeColors[page] = {};
   badgeColors[page][catId] = color;
-  localStorage.setItem(STORAGE_KEYS.BADGE_COLORS, JSON.stringify(badgeColors));
-  renderInstant();
+  saveAll();
+  if(page === 'instant') renderInstant();
+  else if(page === 'stories') renderStories();
+  else if(page === 'emploi') renderEmploi();
+  else if(page === 'concepts') renderConcepts();
   renderBadgesList();
   showToast(`🎨 Couleur du badge modifiée !`);
 }
-
 function deleteCategory(page, catId) {
-  if(!confirm(`Supprimer la catégorie "${catId}" ?`)) return;
+  if(!confirm(`Supprimer la catégorie "${catId}" ? Les posts avec cette catégorie ne seront plus visibles.`)) return;
   if(page === 'instant') {
     instantCats = instantCats.filter(c => c.id !== catId);
-    localStorage.setItem(STORAGE_KEYS.VIDEO_CATS, JSON.stringify(instantCats));
+    saveAll();
     renderInstant();
+  } else if(page === 'stories') {
+    storyCats = storyCats.filter(c => c !== catId);
+    saveAll();
+    renderStories();
+  } else if(page === 'emploi') {
+    emploiCats = emploiCats.filter(c => c !== catId);
+    saveAll();
+    renderEmploi();
+  } else if(page === 'concepts') {
+    conceptCats = conceptCats.filter(c => c !== catId);
+    saveAll();
+    renderConcepts();
   }
   renderBadgesList();
   showToast(`🗑️ Catégorie supprimée !`);
 }
-
 function addCategory(ctx){pendingCatCtx=ctx;document.getElementById('addcat-name').value='';openModal('addcat-modal');}
 function confirmAddCat(){
   const name=document.getElementById('addcat-name').value.trim();if(!name){showToast('⚠️ Nom requis');return;}
-  if(pendingCatCtx==='instant'){const id=name.toLowerCase().replace(/\s+/g,'-');instantCats.push({id,label:name.toUpperCase()});localStorage.setItem(STORAGE_KEYS.VIDEO_CATS, JSON.stringify(instantCats));renderInstant();}
+  if(pendingCatCtx==='instant'){const id=name.toLowerCase().replace(/\s+/g,'-');instantCats.push({id,label:name.toUpperCase()});saveAll();renderInstant();}
+  else if(pendingCatCtx==='stories'){storyCats.push(name.toUpperCase());saveAll();renderStories();}
+  else if(pendingCatCtx==='emploi'){emploiCats.push(name.toLowerCase());saveAll();renderEmploi();}
+  else if(pendingCatCtx==='concepts'){conceptCats.push(name.toUpperCase());saveAll();renderConcepts();}
   closeModal('addcat-modal');showToast(`✅ Catégorie "${name}" créée !`);
 }
-
 function previewImg(e,previewId){
   const f=e.target.files[0];if(!f)return;
   const url=URL.createObjectURL(f);e.target.dataset.url=url;
@@ -1161,6 +1542,7 @@ function previewImg(e,previewId){
   p.innerHTML=`<img src="${url}"><span>${f.name}</span>`;
 }
 
+// ========== DRAG & DROP ==========
 let dragSrcId=null;
 let dragType=null;
 function dragStart(e,type){
@@ -1178,84 +1560,26 @@ function dropItem(e,type){
   if(!isAdmin||dragType!==type)return;
   const targetId=parseInt(e.currentTarget.dataset.id);
   if(dragSrcId===targetId)return;
+  if(type==='video'){
+    const arr=videos;
+    const si=arr.findIndex(x=>x.id===dragSrcId);
+    const ti=arr.findIndex(x=>x.id===targetId);
+    if(si<0||ti<0)return;
+    [arr[si],arr[ti]]=[arr[ti],arr[si]];
+    saveAll();
+    renderInstant();
+  }
   showToast('✅ Ordre mis à jour !');
 }
 
-function submitCandidature(){showToast('📨 Candidature envoyée !');}
-function switchEmploi(tab,btn){
-  document.querySelectorAll('#page-emploi .tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('#page-emploi .emploi-section').forEach(s=>s.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('emploi-'+tab).classList.add('active');
-}
-function renderMails(){}
-function openMail(id){}
-function clearMails(){}
-function switchDropbox(tab,btn){
-  document.querySelectorAll('#page-dropbox .tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('#page-dropbox .emploi-section').forEach(s=>s.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('dropbox-'+tab).classList.add('active');
-}
-function submitDrop(){showToast('📨 Signalement envoyé anonymement !');}
-function renderDropMessages(){}
-function openDropMessage(id){}
-function clearDropMessages(){}
-function renderStories(){}
-function openStoryRead(id){}
-function filterStories(cat){}
-function openStoryModal(id){}
-function execCmd(command,value){document.execCommand(command,false,value);}
-function addImageToEditor(){}
-function saveStory(){}
-function editStory(id){}
-function deleteStory(id){}
-function renderConcepts(){}
-function filterConcepts(cat){}
-function openConceptModal(id){}
-function setStars(n){currentStars=n;}
-function saveConcept(){}
-function editConcept(id){}
-function deleteConcept(id){}
-function renderEmploi(){}
-function filterEmploy(cat){}
-function openEmploiModal(id){}
-function saveEmploi(){}
-function editEmploi(id){}
-function deleteEmploi(id){}
-function renderRadar(){}
-function renderRadarCard(s){return '';}
-function updateRadarCrowd(id,val){}
-function openRadarModal(id){}
-function saveRadar(){}
-function editRadar(id){}
-function deleteRadar(id){}
-function openAddAmbianceModal(){}
-function confirmAddAmbiance(){}
-
-function showToast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
-  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000);
-}
-
-// Stockage local pour les catégories et couleurs
-const STORAGE_KEYS = {
-  VIDEO_CATS: 'latinvader_video_cats',
-  BADGE_COLORS: 'latinvader_badge_colors'
-};
-
-function loadLocalData() {
-  const savedVideoCats = localStorage.getItem(STORAGE_KEYS.VIDEO_CATS);
-  if(savedVideoCats) instantCats = JSON.parse(savedVideoCats);
-  else instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS'}];
-  
-  const savedBadgeColors = localStorage.getItem(STORAGE_KEYS.BADGE_COLORS);
-  if(savedBadgeColors) badgeColors = JSON.parse(savedBadgeColors);
-}
-
-// Initialisation
-loadLocalData();
-initFirebase();
+// ========== INIT ==========
+loadData();
+renderInstant();
+renderStories();
+renderConcepts();
+renderEmploi();
+renderRadar();
+renderDropMessages();
 </script>
 </body>
 </html>
