@@ -29,7 +29,10 @@
   nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
   .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
-  .logo-svg-wrap img{height:48px;width:auto;display:block;}
+  .logo-svg-wrap img{height:55px;width:auto;display:block;}
+  .logo-light{display:none;}
+  :root[data-theme="light"] .logo-dark{display:none;}
+  :root[data-theme="light"] .logo-light{display:block;}
   .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
   .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
   .nav-btn:hover{color:var(--text);background:var(--bg3);}
@@ -62,6 +65,7 @@
   .color-preview{width:24px;height:24px;border-radius:4px;margin-right:8px;border:1px solid var(--border);}
   .color-input{width:80px;border:1px solid var(--border);border-radius:4px;padding:4px;background:var(--bg);color:var(--text);font-size:12px;}
   .badge-example{padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-left:8px;}
+  .delete-cat-btn{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;margin-left:8px;}
 
   .page{display:none;max-width:1400px;margin:0 auto;padding:32px 24px 80px;}
   .page.active{display:block;}
@@ -86,6 +90,7 @@
   .video-card.drag-over{border:2px solid var(--gold2);background:rgba(201,168,76,.08);}
   .video-thumb{width:100%;aspect-ratio:16/10;background:var(--bg3);position:relative;overflow:hidden;}
   .video-thumb video{width:100%;height:100%;object-fit:cover;}
+  .video-thumb img{width:100%;height:100%;object-fit:cover;}
   .video-thumb-placeholder{width:100%;height:100%;background:linear-gradient(135deg,var(--bg3) 0%,var(--card2) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3);}
   .play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .2s;cursor:pointer;z-index:2;}
   .video-card:hover .play-overlay{opacity:1;}
@@ -243,6 +248,7 @@
   .vplayer-overlay.open{display:flex;}
   .vplayer-box{width:90vw;max-width:900px;background:var(--bg2);border-radius:12px;overflow:hidden;position:relative;}
   .vplayer-box video{width:100%;max-height:70vh;display:block;background:#000;}
+  .vplayer-box img{width:100%;max-height:70vh;display:block;object-fit:contain;background:#000;}
   .vplayer-header{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
   .vplayer-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
   .vplayer-close{background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
@@ -252,24 +258,27 @@
   .upload-preview{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text2);margin-top:8px;}
   .upload-preview img{width:56px;height:40px;object-fit:cover;border-radius:4px;}
   .upload-preview video{width:90px;height:54px;object-fit:cover;border-radius:4px;}
+  .media-type-selector{display:flex;gap:8px;margin-bottom:12px;}
+  .media-type-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;}
+  .media-type-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);}
   .star-input{display:flex;gap:4px;}
   .star-input span{font-size:24px;cursor:pointer;color:var(--bg3);transition:color .1s;}
   .star-input span.lit{color:var(--gold);}
-  .mail-list{display:flex;flex-direction:column;gap:10px;}
-  .mail-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .2s;}
-  .mail-item:hover{border-color:var(--gold);}
-  .mail-item.unread{border-left:3px solid var(--gold);}
-  .mail-item-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-  .mail-from{font-size:14px;font-weight:700;}
-  .mail-time{font-size:11px;color:var(--text3);}
-  .mail-domain{font-size:12px;color:var(--text2);margin-bottom:4px;}
-  .mail-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .mail-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(201,168,76,.2);color:var(--gold);border:1px solid rgba(201,168,76,.3);margin-top:4px;}
+  .mail-list,.drop-messages-list{display:flex;flex-direction:column;gap:10px;}
+  .mail-item,.drop-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .2s;}
+  .mail-item:hover,.drop-item:hover{border-color:var(--gold);}
+  .mail-item.unread,.drop-item.unread{border-left:3px solid var(--gold);}
+  .mail-item-hd,.drop-item-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .mail-from,.drop-from{font-size:14px;font-weight:700;}
+  .mail-time,.drop-time{font-size:11px;color:var(--text3);}
+  .mail-domain,.drop-category{font-size:12px;color:var(--text2);margin-bottom:4px;}
+  .mail-preview,.drop-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mail-tag,.drop-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(201,168,76,.2);color:var(--gold);border:1px solid rgba(201,168,76,.3);margin-top:4px;}
   .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
   .empty-icon{font-size:48px;margin-bottom:12px;}
-  .mail-detail-field{margin-bottom:12px;}
-  .mail-detail-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);display:block;margin-bottom:4px;}
-  .mail-detail-field p{font-size:13px;color:var(--text);background:var(--bg3);padding:10px 14px;border-radius:8px;line-height:1.6;}
+  .mail-detail-field,.drop-detail-field{margin-bottom:12px;}
+  .mail-detail-field label,.drop-detail-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);display:block;margin-bottom:4px;}
+  .mail-detail-field p,.drop-detail-field p{font-size:13px;color:var(--text);background:var(--bg3);padding:10px 14px;border-radius:8px;line-height:1.6;white-space:pre-wrap;}
   .toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--green);color:var(--text);border-radius:8px;padding:12px 20px;font-size:13px;z-index:600;display:none;animation:fadeInUp .3s ease;}
   @keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
@@ -312,9 +321,9 @@
 
 <nav>
   <div class="nav-inner">
-    <!-- LOGO - Remplacez le chemin "votre-logo.png" par le chemin de votre image -->
     <div class="logo-svg-wrap">
-      <img src="latinvader.jpg" alt="LatInvader" style="height:60px; width:auto; max-width:380px;">
+      <img src="latinvader.jpg" alt="LatInvader" class="logo-dark" style="height:55px; width:auto;">
+      <img src="latinvader-light.png" alt="LatInvader" class="logo-light" style="height:55px; width:auto;">
     </div>
     <div class="nav-links">
       <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant">🔴 L'Instant</button>
@@ -339,7 +348,7 @@
     <div class="page-sub">Un instant de vie capturé pour l'éternité.</div>
   </div>
   <div class="sec-admin">
-    <button class="sec-btn" onclick="openVideoModal()">➕ Ajouter une vidéo</button>
+    <button class="sec-btn" onclick="openVideoModal()">➕ Ajouter un post</button>
     <div class="sec-btn-hint" id="drag-hint-instant" style="display:none">🤚 Glisse les cartes pour les réordonner</div>
   </div>
   <div class="filter-bar" id="instant-filters"></div>
@@ -420,27 +429,40 @@
     <div class="page-title">📬 Drop Box</div>
     <div class="page-sub">Balance tout ici, c'est 100% anonyme.</div>
   </div>
-  <div class="dropbox-grid">
-    <div class="form-card" style="max-width:100%">
-      <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="drop-title" placeholder="Titre..."></div>
-      <div class="form-group"><label class="form-label">Ton info</label><textarea class="form-textarea" style="min-height:140px" id="drop-body" placeholder="Décris ce que tu as vu..."></textarea></div>
-      <div class="form-group"><label class="form-label">Catégorie</label>
-        <select class="form-select" id="drop-cat">
-          <option>Bavure policière / Abus de pouvoir</option>
-          <option>Activité illégale</option>
-          <option>Scoop / Info exclusive</option>
-          <option>Course-poursuite / Événement</option>
-          <option>Autre</option>
-        </select>
+  <div class="emploi-tabs">
+    <button class="tab-btn active" onclick="switchDropbox('publier',this)">📝 Publier un signalement</button>
+    <button class="tab-btn" id="tab-drop-messages" style="display:none" onclick="switchDropbox('messages',this)">📨 Signalements reçus</button>
+  </div>
+  <div class="emploi-section active" id="dropbox-publier">
+    <div class="dropbox-grid">
+      <div class="form-card" style="max-width:100%">
+        <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="drop-title" placeholder="Titre..."></div>
+        <div class="form-group"><label class="form-label">Ton info</label><textarea class="form-textarea" style="min-height:140px" id="drop-body" placeholder="Décris ce que tu as vu..."></textarea></div>
+        <div class="form-group"><label class="form-label">Catégorie</label>
+          <select class="form-select" id="drop-cat">
+            <option>Bavure policière / Abus de pouvoir</option>
+            <option>Activité illégale</option>
+            <option>Scoop / Info exclusive</option>
+            <option>Course-poursuite / Événement</option>
+            <option>Autre</option>
+          </select>
+        </div>
+        <button class="btn-submit" onclick="submitDrop()">📨 Envoyer anonymement</button>
       </div>
-      <button class="btn-submit" onclick="submitDrop()">📨 Envoyer anonymement</button>
-    </div>
-    <div class="dropbox-sidebar">
-      <div class="info-card"><div class="info-card-title">🛡️ 100% Anonyme</div><p style="font-size:13px;color:var(--text2)">Seule la rédaction de LatInvader a accès aux envois.</p></div>
-      <div class="info-card"><div class="info-card-title">🎯 Ce qu'on recherche</div>
-        <ul class="info-list"><li>Bavures policières</li><li>Activités illégales</li><li>Scoops exclusifs</li><li>Vidéos d'événements</li><li>Potins sur des personnalités</li></ul>
+      <div class="dropbox-sidebar">
+        <div class="info-card"><div class="info-card-title">🛡️ 100% Anonyme</div><p style="font-size:13px;color:var(--text2)">Seule la rédaction de LatInvader a accès aux envois.</p></div>
+        <div class="info-card"><div class="info-card-title">🎯 Ce qu'on recherche</div>
+          <ul class="info-list"><li>Bavures policières</li><li>Activités illégales</li><li>Scoops exclusifs</li><li>Vidéos d'événements</li><li>Potins sur des personnalités</li></ul>
+        </div>
       </div>
     </div>
+  </div>
+  <div class="emploi-section" id="dropbox-messages">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:14px;color:var(--text2)" id="drop-count">0 signalement(s)</div>
+      <button class="sec-btn" onclick="clearDropMessages()">🗑️ Tout effacer</button>
+    </div>
+    <div class="drop-messages-list" id="drop-messages-list"></div>
   </div>
 </div>
 
@@ -449,7 +471,10 @@
     <div class="page-title">📡 Le Radar</div>
     <div class="page-sub">Où ça bouge ce soir à Los Santos ?</div>
   </div>
-  <div class="sec-admin"><button class="sec-btn" onclick="openRadarModal()">➕ Ajouter un spot</button></div>
+  <div class="sec-admin">
+    <button class="sec-btn" onclick="openRadarModal()">➕ Ajouter un spot</button>
+    <button class="sec-btn" onclick="openAddAmbianceModal()">🏷️ Ajouter une ambiance</button>
+  </div>
   <div class="radar-section">
     <div class="radar-section-title"><div class="radar-live-dot"></div> SPOTS HYPE — MAINTENANT</div>
     <div class="radar-grid" id="radar-hype-grid"></div>
@@ -473,7 +498,7 @@
   </div>
 </footer>
 
-<!-- MODALS (contenu identique à avant) -->
+<!-- MODALS -->
 <div class="modal-overlay" id="admin-modal">
   <div class="modal">
     <div class="modal-avatar">🧍</div>
@@ -488,13 +513,19 @@
 
 <div class="modal-overlay" id="video-modal">
   <div class="modal" style="width:480px">
-    <div class="modal-title" id="vm-modal-title">Ajouter une vidéo</div>
+    <div class="modal-title" id="vm-modal-title">Ajouter un post</div>
     <div style="height:16px"></div>
     <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="vm-title" placeholder="Titre..."></div>
     <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="vm-desc" placeholder="Description..."></div>
     <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="vm-cat"></select></div>
-    <div class="form-group"><label class="form-label">Fichier vidéo</label>
-      <div class="upload-zone" onclick="document.getElementById('vm-file').click()">📹 Uploader une vidéo<input type="file" id="vm-file" accept="video/*" onchange="handleVideoFile(event)"></div>
+    <div class="form-group"><label class="form-label">Type de média</label>
+      <div class="media-type-selector">
+        <button type="button" class="media-type-btn active" data-type="video" onclick="setMediaType('video')">🎬 Vidéo</button>
+        <button type="button" class="media-type-btn" data-type="image" onclick="setMediaType('image')">🖼️ Image</button>
+      </div>
+    </div>
+    <div class="form-group" id="video-upload-group"><label class="form-label">Fichier média</label>
+      <div class="upload-zone" onclick="document.getElementById('vm-file').click()">📹 Uploader un fichier<input type="file" id="vm-file" accept="video/*,image/*" onchange="handleMediaFile(event)"></div>
       <div id="vm-preview" class="upload-preview" style="display:none"></div>
     </div>
     <div class="modal-btns"><button class="btn-submit" onclick="saveVideo()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('video-modal')">Annuler</button></div>
@@ -523,7 +554,7 @@
           <input type="color" class="tool-color" id="textColorPicker" onchange="execCmd('foreColor', this.value)">
           <button class="tool-btn" onclick="addImageToEditor()">🖼️ Image</button>
         </div>
-        <div id="story-editor" class="editor-content" contenteditable="true" placeholder="Écris ton article ici..."></div>
+        <div id="story-editor" class="editor-content" contenteditable="true"></div>
       </div>
     </div>
     <div class="modal-btns"><button class="btn-submit" onclick="saveStory()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('story-modal')">Annuler</button></div>
@@ -585,12 +616,9 @@
     <div class="form-group"><label class="form-label">Quartier</label><input type="text" class="form-input" id="rm-loc"></div>
     <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="rm-desc"></textarea></div>
     <div class="form-group"><label class="form-label">Ambiance</label>
-      <select class="form-select" id="rm-status"><option value="hype">HYPE</option><option value="chill">CHILL</option><option value="business">BUSINESS</option><option value="danger">DANGER</option></select>
+      <select class="form-select" id="rm-status"></select>
     </div>
-    <div class="form-group"><label class="form-label">Affluence</label>
-      <input type="range" min="1" max="5" value="3" id="rm-crowd" class="crowd-slider" oninput="document.getElementById('rm-cv').textContent=this.value">
-      <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:11px;color:var(--text3)">Vide</span><span style="font-size:12px;color:var(--gold);font-weight:700" id="rm-cv">3</span><span style="font-size:11px;color:var(--text3)">Blindé</span></div>
-    </div>
+    <!-- L'affluence n'est plus modifiable ici, uniquement via le slider sur la carte en mode admin -->
     <div class="modal-btns"><button class="btn-submit" onclick="saveRadar()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('radar-modal')">Annuler</button></div>
   </div>
 </div>
@@ -604,6 +632,16 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="add-ambiance-modal">
+  <div class="modal">
+    <div class="modal-title">Nouvelle ambiance</div>
+    <div class="modal-sub">Donne un nom à la nouvelle ambiance.</div>
+    <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="add-ambiance-name" placeholder="Ex: PARTY"></div>
+    <div class="form-group"><label class="form-label">Couleur</label><input type="color" class="form-input" id="add-ambiance-color" value="#d4472a"></div>
+    <div class="modal-btns"><button class="btn-submit" onclick="confirmAddAmbiance()">✅ Créer</button><button class="btn-secondary" onclick="closeModal('add-ambiance-modal')">Annuler</button></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="mail-modal">
   <div class="modal" style="width:500px">
     <div class="modal-title">📨 Candidature</div>
@@ -613,13 +651,22 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="drop-modal">
+  <div class="modal" style="width:500px">
+    <div class="modal-title">📬 Signalement</div>
+    <div style="height:12px"></div>
+    <div id="drop-detail"></div>
+    <div style="margin-top:16px"><button class="btn-secondary" style="width:100%" onclick="closeModal('drop-modal')">Fermer</button></div>
+  </div>
+</div>
+
 <div class="vplayer-overlay" id="vplayer-overlay" onclick="closeVPlayer(event)">
   <div class="vplayer-box">
     <div class="vplayer-header">
-      <span class="vplayer-title" id="vplayer-title">Vidéo</span>
+      <span class="vplayer-title" id="vplayer-title">Média</span>
       <button class="vplayer-close" onclick="closeVPlayer()">✕</button>
     </div>
-    <video id="vplayer-el" controls></video>
+    <div id="vplayer-container"></div>
   </div>
 </div>
 
@@ -638,7 +685,9 @@ const STORAGE_KEYS = {
   CONCEPT_CATS: 'latinvader_concept_cats',
   RADAR: 'latinvader_radar',
   MAILBOX: 'latinvader_mailbox',
-  BADGE_COLORS: 'latinvader_badge_colors'
+  DROPBOX: 'latinvader_dropbox',
+  BADGE_COLORS: 'latinvader_badge_colors',
+  RADAR_AMBIANCES: 'latinvader_radar_ambiances'
 };
 
 let isAdmin = false;
@@ -647,6 +696,15 @@ let editingId = null;
 let pendingCatCtx = '';
 let currentStars = 3;
 let badgeColors = {};
+let currentMediaType = 'video';
+
+// Ambiances radar
+let radarAmbiances = [
+  {id:'hype', label:'HYPE', color:'#d4472a'},
+  {id:'chill', label:'CHILL', color:'#3d8bcd'},
+  {id:'business', label:'BUSINESS', color:'#4caf7d'},
+  {id:'danger', label:'DANGER', color:'#e05a3a'}
+];
 
 let videos = [];
 let vidSeq = 1;
@@ -664,6 +722,8 @@ let emploiCats = [];
 let emploiFilter = 'tout';
 let mailbox = [];
 
+let dropMessages = [];
+
 let concepts = [];
 let conceptSeq = 1;
 let conceptCats = [];
@@ -679,18 +739,18 @@ function loadData() {
     vidSeq = Math.max(...videos.map(v=>v.id), 0) + 1;
   } else {
     videos = [
-      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,views:142,likes:38,liked:false},
-      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,views:89,likes:21,liked:false},
-      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,views:211,likes:54,liked:false},
-      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,views:75,likes:19,liked:false},
-      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,views:304,likes:67,liked:false},
+      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142,likes:38,liked:false},
+      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89,likes:21,liked:false},
+      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211,likes:54,liked:false},
+      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75,likes:19,liked:false},
+      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304,likes:67,liked:false},
     ];
     vidSeq = 6;
   }
   
   const savedVideoCats = localStorage.getItem(STORAGE_KEYS.VIDEO_CATS);
   if(savedVideoCats) instantCats = JSON.parse(savedVideoCats);
-  else instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'CALOR"S'}];
+  else instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS'}];
   
   const savedStories = localStorage.getItem(STORAGE_KEYS.STORIES);
   if(savedStories) {
@@ -764,8 +824,14 @@ function loadData() {
   const savedMailbox = localStorage.getItem(STORAGE_KEYS.MAILBOX);
   if(savedMailbox) mailbox = JSON.parse(savedMailbox);
   
+  const savedDropbox = localStorage.getItem(STORAGE_KEYS.DROPBOX);
+  if(savedDropbox) dropMessages = JSON.parse(savedDropbox);
+  
   const savedBadgeColors = localStorage.getItem(STORAGE_KEYS.BADGE_COLORS);
   if(savedBadgeColors) badgeColors = JSON.parse(savedBadgeColors);
+  
+  const savedAmbiances = localStorage.getItem(STORAGE_KEYS.RADAR_AMBIANCES);
+  if(savedAmbiances) radarAmbiances = JSON.parse(savedAmbiances);
 }
 
 function saveVideos() { localStorage.setItem(STORAGE_KEYS.VIDEOS, JSON.stringify(videos)); }
@@ -778,7 +844,9 @@ function saveConcepts() { localStorage.setItem(STORAGE_KEYS.CONCEPTS, JSON.strin
 function saveConceptCats() { localStorage.setItem(STORAGE_KEYS.CONCEPT_CATS, JSON.stringify(conceptCats)); }
 function saveRadar() { localStorage.setItem(STORAGE_KEYS.RADAR, JSON.stringify(radarSpots)); }
 function saveMailbox() { localStorage.setItem(STORAGE_KEYS.MAILBOX, JSON.stringify(mailbox)); }
+function saveDropbox() { localStorage.setItem(STORAGE_KEYS.DROPBOX, JSON.stringify(dropMessages)); }
 function saveBadgeColors() { localStorage.setItem(STORAGE_KEYS.BADGE_COLORS, JSON.stringify(badgeColors)); }
+function saveRadarAmbiances() { localStorage.setItem(STORAGE_KEYS.RADAR_AMBIANCES, JSON.stringify(radarAmbiances)); }
 
 let currentSettingsPage = 'instant';
 
@@ -818,9 +886,10 @@ function renderBadgesList() {
     const currentColor = badgeColors[page]?.[cat.id] || '';
     return `
       <div class="badge-color-item">
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <span class="badge-name">${cat.label}</span>
           <div class="badge-example" style="background-color: ${currentColor || '#d4472a'}; color: white;">Exemple</div>
+          <button class="delete-cat-btn" onclick="deleteCategory('${page}', '${cat.id}')">🗑️</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
           <div class="color-preview" style="background-color: ${currentColor || '#d4472a'};"></div>
@@ -829,6 +898,29 @@ function renderBadgesList() {
       </div>
     `;
   }).join('');
+}
+
+function deleteCategory(page, catId) {
+  if(!confirm(`Supprimer la catégorie "${catId}" ? Les posts avec cette catégorie ne seront plus visibles.`)) return;
+  if(page === 'instant') {
+    instantCats = instantCats.filter(c => c.id !== catId);
+    saveVideoCats();
+    renderInstant();
+  } else if(page === 'stories') {
+    storyCats = storyCats.filter(c => c !== catId);
+    saveStoryCats();
+    renderStories();
+  } else if(page === 'emploi') {
+    emploiCats = emploiCats.filter(c => c !== catId);
+    saveEmploiCats();
+    renderEmploi();
+  } else if(page === 'concepts') {
+    conceptCats = conceptCats.filter(c => c !== catId);
+    saveConceptCats();
+    renderConcepts();
+  }
+  renderBadgesList();
+  showToast(`🗑️ Catégorie supprimée !`);
 }
 
 function updateBadgeColor(page, catId, color) {
@@ -840,7 +932,7 @@ function updateBadgeColor(page, catId, color) {
   else if(page === 'emploi') renderEmploi();
   else if(page === 'concepts') renderConcepts();
   renderBadgesList();
-  showToast(`🎨 Couleur du badge "${catId}" modifiée !`);
+  showToast(`🎨 Couleur du badge modifiée !`);
 }
 
 function getBadgeStyle(page, catId) {
@@ -880,6 +972,7 @@ function loginAdmin(){
     document.getElementById('admin-btn').classList.add('logged');
     document.getElementById('settings-icon-btn').style.display='flex';
     document.getElementById('tab-mails').style.display='flex';
+    document.getElementById('tab-drop-messages').style.display='flex';
     document.getElementById('drag-hint-instant').style.display='flex';
     document.getElementById('drag-hint-stories').style.display='flex';
     closeModal('admin-modal');
@@ -897,6 +990,7 @@ function logoutAdmin(){
   document.getElementById('admin-btn').classList.remove('logged');
   document.getElementById('settings-icon-btn').style.display='none';
   document.getElementById('tab-mails').style.display='none';
+  document.getElementById('tab-drop-messages').style.display='none';
   document.getElementById('drag-hint-instant').style.display='none';
   document.getElementById('drag-hint-stories').style.display='none';
   renderAll();
@@ -922,19 +1016,39 @@ function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, page
   bar.innerHTML+=`<button class="add-cat-btn" onclick="addCategory('${catCtx}')">+ Catégorie</button>`;
 }
 
+function setMediaType(type) {
+  currentMediaType = type;
+  document.querySelectorAll('.media-type-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === type);
+  });
+  const uploadZone = document.querySelector('#video-upload-group .upload-zone');
+  if(type === 'video') {
+    uploadZone.innerHTML = '📹 Uploader une vidéo<input type="file" id="vm-file" accept="video/*" onchange="handleMediaFile(event)">';
+    document.getElementById('vm-file').accept = 'video/*';
+  } else {
+    uploadZone.innerHTML = '🖼️ Uploader une image<input type="file" id="vm-file" accept="image/*" onchange="handleMediaFile(event)">';
+    document.getElementById('vm-file').accept = 'image/*';
+  }
+  document.getElementById('vm-preview').style.display = 'none';
+  document.getElementById('vm-file').value = '';
+}
+
 function renderInstant(){
   buildFilterBar('instant-filters',instantCats,'filterInstant',instantFilter,'instant','instant');
   const filtered = instantFilter==='tout' ? [...videos] : videos.filter(v=>v.cat===instantFilter);
   const grid = document.getElementById('instant-grid');
   grid.innerHTML = filtered.map(v=>{
     const badgeStyle = getBadgeStyle('instant', v.cat);
+    const mediaDisplay = v.mediaType === 'image' && v.src ? 
+      `<img src="${v.src}" style="width:100%;height:100%;object-fit:cover;">` :
+      (v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">${v.mediaType === 'image' ? '🖼️' : '▶'}</div><div style="font-size:12px">Aucun média</div></div>`);
     return `
     <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
          ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
-      <div class="video-thumb" onclick="playVideo(${v.id})">
-        ${v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">▶</div><div style="font-size:12px">Aucune vidéo</div></div>`}
+      <div class="video-thumb" onclick="playMedia(${v.id})">
+        ${mediaDisplay}
         <div class="video-badge" style="${badgeStyle}">${getCatLabel(v.cat,instantCats)}</div>
-        <div class="play-overlay"><div class="play-circle">▶</div></div>
+        <div class="play-overlay"><div class="play-circle">${v.mediaType === 'image' ? '👁' : '▶'}</div></div>
         ${isAdmin?`<div class="card-admin-actions">
           <button class="action-btn" onclick="event.stopPropagation();editVideo(${v.id})">✏️</button>
           <button class="action-btn del" onclick="event.stopPropagation();deleteVideo(${v.id})">🗑️</button>
@@ -962,61 +1076,88 @@ function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(
 
 function toggleLike(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
-  v.liked=!v.liked;v.likes+=v.liked?1:-1;
+  v.liked=!v.liked;
+  v.likes+=v.liked?1:-1;
   saveVideos();
   renderInstant();
 }
 
-function playVideo(id){
+function playMedia(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   v.views++;
   saveVideos();
-  if(!v.src){showToast('ℹ️ Aucune vidéo uploadée pour ce post.');renderInstant();return;}
+  if(!v.src){showToast('ℹ️ Aucun média uploadé pour ce post.');renderInstant();return;}
   document.getElementById('vplayer-title').textContent=v.title;
-  document.getElementById('vplayer-el').src=v.src;
-  document.getElementById('vplayer-el').play();
+  const container = document.getElementById('vplayer-container');
+  if(v.mediaType === 'image') {
+    container.innerHTML = `<img src="${v.src}" style="width:100%;max-height:70vh;object-fit:contain;background:#000;">`;
+    document.getElementById('vplayer-el')?.remove();
+  } else {
+    container.innerHTML = `<video id="vplayer-el" src="${v.src}" controls style="width:100%;max-height:70vh;"></video>`;
+  }
   document.getElementById('vplayer-overlay').classList.add('open');
   renderInstant();
 }
 
 function closeVPlayer(e){
   if(e&&e.target!==document.getElementById('vplayer-overlay'))return;
-  document.getElementById('vplayer-el').pause();
+  const video = document.getElementById('vplayer-el');
+  if(video) video.pause();
   document.getElementById('vplayer-overlay').classList.remove('open');
 }
 
 function openVideoModal(id=null){
   editingId=id;
   const v=id?videos.find(x=>x.id===id):null;
-  document.getElementById('vm-modal-title').textContent=id?'Modifier la vidéo':'Ajouter une vidéo';
+  document.getElementById('vm-modal-title').textContent=id?'Modifier le post':'Ajouter un post';
   document.getElementById('vm-title').value=v?v.title:'';
   document.getElementById('vm-desc').value=v?v.desc:'';
   document.getElementById('vm-cat').innerHTML=instantCats.map(c=>`<option value="${c.id}"${v&&v.cat===c.id?' selected':''}>${c.label}</option>`).join('');
   document.getElementById('vm-preview').style.display='none';
   document.getElementById('vm-file').value='';delete document.getElementById('vm-file').dataset.url;
+  if(v && v.mediaType) {
+    currentMediaType = v.mediaType;
+    document.querySelectorAll('.media-type-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === v.mediaType);
+    });
+  } else {
+    currentMediaType = 'video';
+    document.querySelector('.media-type-btn[data-type="video"]').classList.add('active');
+    document.querySelector('.media-type-btn[data-type="image"]').classList.remove('active');
+  }
+  const uploadZone = document.querySelector('#video-upload-group .upload-zone');
+  if(currentMediaType === 'video') {
+    uploadZone.innerHTML = '📹 Uploader une vidéo<input type="file" id="vm-file" accept="video/*" onchange="handleMediaFile(event)">';
+  } else {
+    uploadZone.innerHTML = '🖼️ Uploader une image<input type="file" id="vm-file" accept="image/*" onchange="handleMediaFile(event)">';
+  }
   openModal('video-modal');
 }
 
-function handleVideoFile(e){
+function handleMediaFile(e){
   const f=e.target.files[0];if(!f)return;
   const url=URL.createObjectURL(f);e.target.dataset.url=url;
   const p=document.getElementById('vm-preview');p.style.display='flex';
-  p.innerHTML=`<video src="${url}" style="width:100px;height:60px;border-radius:4px" muted></video><span>${f.name}</span>`;
+  if(currentMediaType === 'video') {
+    p.innerHTML=`<video src="${url}" style="width:100px;height:60px;border-radius:4px" muted></video><span>${f.name}</span>`;
+  } else {
+    p.innerHTML=`<img src="${url}" style="width:80px;height:60px;border-radius:4px;object-fit:cover;"><span>${f.name}</span>`;
+  }
 }
 
 function saveVideo(){
   const t=document.getElementById('vm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
   const fi=document.getElementById('vm-file');
   const src=fi.dataset.url||(editingId?videos.find(v=>v.id===editingId)?.src:null);
-  const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src};
+  const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src,mediaType:currentMediaType};
   if(editingId){const i=videos.findIndex(v=>v.id===editingId);videos[i]={...videos[i],...d};}
   else{videos.push({id:vidSeq++,...d,views:0,likes:0,liked:false});}
   saveVideos();
-  closeModal('video-modal');renderInstant();showToast(editingId?'✅ Vidéo modifiée !':'✅ Vidéo ajoutée !');editingId=null;
+  closeModal('video-modal');renderInstant();showToast(editingId?'✅ Post modifié !':'✅ Post ajouté !');editingId=null;
 }
 
 function editVideo(id){openVideoModal(id);}
-function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);saveVideos();renderInstant();showToast('🗑️ Supprimée');}
+function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);saveVideos();renderInstant();showToast('🗑️ Supprimé');}
 
 function renderStories(){
   buildFilterBar('stories-filters',storyCats.map(c=>({id:c,label:c})),'filterStories',storiesFilter,'stories','stories');
@@ -1222,8 +1363,8 @@ function submitCandidature(){
   showToast('📨 Candidature envoyée !');
 }
 function switchEmploi(tab,btn){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.emploi-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('#page-emploi .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#page-emploi .emploi-section').forEach(s=>s.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('emploi-'+tab).classList.add('active');
   if(tab==='mails')renderMails();
@@ -1254,6 +1395,51 @@ function openMail(id){
 }
 function clearMails(){if(!confirm('Effacer tout ?'))return;mailbox=[];saveMailbox();renderMails();showToast('🗑️ Boîte vidée');}
 
+// ========== DROPBOX ==========
+function switchDropbox(tab,btn){
+  document.querySelectorAll('#page-dropbox .tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#page-dropbox .emploi-section').forEach(s=>s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dropbox-'+tab).classList.add('active');
+  if(tab==='messages')renderDropMessages();
+}
+function submitDrop(){
+  const title=document.getElementById('drop-title').value.trim();
+  const body=document.getElementById('drop-body').value.trim();
+  if(!title||!body){showToast('⚠️ Remplis le titre et le message.');return;}
+  dropMessages.unshift({id:Date.now(),title,body,category:document.getElementById('drop-cat').value,time:new Date().toLocaleString('fr-FR'),read:false});
+  saveDropbox();
+  document.getElementById('drop-title').value='';
+  document.getElementById('drop-body').value='';
+  showToast('📨 Signalement envoyé anonymement !');
+}
+function renderDropMessages(){
+  document.getElementById('drop-count').textContent=`${dropMessages.length} signalement(s) reçu(s)`;
+  const list=document.getElementById('drop-messages-list');
+  if(!dropMessages.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><p>Aucun signalement.</p></div>`;return;}
+  list.innerHTML=dropMessages.map(m=>`
+    <div class="drop-item${m.read?'':' unread'}" onclick="openDropMessage(${m.id})">
+      <div class="drop-item-hd"><span class="drop-from">${escapeHtml(m.title)}</span><span class="drop-time">${m.time}</span></div>
+      <div class="drop-category">${escapeHtml(m.category)}</div>
+      <div class="drop-preview">${escapeHtml(m.body.substring(0,100))}${m.body.length>100?'...':''}</div>
+      ${!m.read?'<div class="drop-tag">Nouveau</div>':''}
+    </div>
+  `).join('');
+}
+function openDropMessage(id){
+  const m=dropMessages.find(x=>x.id===id);if(!m)return;
+  m.read=true;saveDropbox();renderDropMessages();
+  document.getElementById('drop-detail').innerHTML=`
+    <div class="drop-detail-field"><label>Titre</label><p>${escapeHtml(m.title)}</p></div>
+    <div class="drop-detail-field"><label>Catégorie</label><p>${escapeHtml(m.category)}</p></div>
+    <div class="drop-detail-field"><label>Date</label><p>${m.time}</p></div>
+    <div class="drop-detail-field"><label>Message</label><p style="white-space:pre-wrap;">${escapeHtml(m.body)}</p></div>
+  `;
+  openModal('drop-modal');
+}
+function clearDropMessages(){if(!confirm('Effacer tous les signalements ?'))return;dropMessages=[];saveDropbox();renderDropMessages();showToast('🗑️ Signalements vidés');}
+
+// ========== RADAR ==========
 function renderRadar(){
   const hype=radarSpots.filter(s=>s.status==='hype');
   const other=radarSpots.filter(s=>s.status!=='hype');
@@ -1261,22 +1447,20 @@ function renderRadar(){
   document.getElementById('radar-other-grid').innerHTML=other.map(renderRadarCard).join('');
 }
 function renderRadarCard(s){
-  const bCls={hype:'radar-hype',chill:'radar-chill',business:'radar-business',danger:'radar-danger'};
-  const bLbl={hype:'HYPE',chill:'CHILL',business:'BUSINESS',danger:'DANGER'};
+  const ambiance = radarAmbiances.find(a=>a.id===s.status) || radarAmbiances[0];
   const bars=Array.from({length:5},(_,i)=>`<div class="crowd-bar${i<s.crowd?(s.status==='hype'?' hype filled':' filled'):''}"></div>`).join('');
   return `<div class="radar-card">
     <div class="radar-card-left">
-      <div class="radar-name">${escapeHtml(s.name)} <span class="radar-badge ${bCls[s.status]}">${bLbl[s.status]}</span></div>
+      <div class="radar-name">${escapeHtml(s.name)} <span class="radar-badge" style="background:${ambiance.color}20;color:${ambiance.color};border-color:${ambiance.color}40;">${ambiance.label}</span></div>
       <div class="radar-location">📍 ${escapeHtml(s.loc)}</div>
-      <div class="radar-desc" id="rdesc-${s.id}">${escapeHtml(s.desc)}</div>
+      <div class="radar-desc">${escapeHtml(s.desc)}</div>
       ${isAdmin?`<div class="radar-admin-controls">
         <div style="font-size:11px;color:var(--text3)">Affluence</div>
         <div style="display:flex;gap:8px;align-items:center">
-          <input type="range" min="1" max="5" value="${s.crowd}" class="crowd-slider" style="flex:1" oninput="updateRadarCrowd(${s.id},this.value)" id="rslider-${s.id}">
+          <input type="range" min="1" max="5" value="${s.crowd}" class="crowd-slider" style="flex:1" oninput="updateRadarCrowd(${s.id},this.value)" onchange="updateRadarCrowd(${s.id},this.value)">
           <span class="crowd-value" id="rcval-${s.id}">${s.crowd}</span>
         </div>
-        <input class="form-input" style="font-size:11px;padding:6px 10px" placeholder="Modifier description..." onchange="updateRadarDesc(${s.id},this.value)">
-        <div style="display:flex;gap:6px">
+        <div style="display:flex;gap:6px;margin-top:8px">
           <button class="action-btn" onclick="editRadar(${s.id})">✏️ Modifier</button>
           <button class="action-btn del" onclick="deleteRadar(${s.id})">🗑️ Supprimer</button>
         </div>
@@ -1284,6 +1468,7 @@ function renderRadarCard(s){
     </div>
     <div class="radar-right">
       <div class="crowd-meter" id="rmeter-${s.id}">${bars}</div>
+      <div class="crowd-label">👥 Crowd</div>
     </div>
   </div>`;
 }
@@ -1295,28 +1480,24 @@ function updateRadarCrowd(id,val){
   const m=document.getElementById('rmeter-'+id);
   if(m)m.querySelectorAll('.crowd-bar').forEach((b,i)=>{b.className='crowd-bar'+(i<s.crowd?(s.status==='hype'?' hype filled':' filled'):'');});
 }
-function updateRadarDesc(id,val){
-  if(!val.trim())return;
-  const s=radarSpots.find(x=>x.id===id);if(!s)return;
-  s.desc=val.trim();
-  saveRadar();
-  const el=document.getElementById('rdesc-'+id);if(el)el.textContent=val.trim();
-  showToast('✅ Description mise à jour !');
-}
 function openRadarModal(id=null){
   editingId=id;const s=id?radarSpots.find(x=>x.id===id):null;
   document.getElementById('rm-modal-title').textContent=id?'Modifier le spot':'Ajouter un spot';
   document.getElementById('rm-name').value=s?s.name:'';
   document.getElementById('rm-loc').value=s?s.loc:'';
   document.getElementById('rm-desc').value=s?s.desc:'';
-  document.getElementById('rm-status').value=s?s.status:'hype';
-  document.getElementById('rm-crowd').value=s?s.crowd:3;
-  document.getElementById('rm-cv').textContent=s?s.crowd:3;
+  const statusSelect = document.getElementById('rm-status');
+  statusSelect.innerHTML = radarAmbiances.map(a=>`<option value="${a.id}"${s&&s.status===a.id?' selected':''}>${a.label}</option>`).join('');
   openModal('radar-modal');
 }
 function saveRadar(){
   const n=document.getElementById('rm-name').value.trim();if(!n){showToast('⚠️ Nom requis');return;}
-  const d={name:n,loc:document.getElementById('rm-loc').value,desc:document.getElementById('rm-desc').value,status:document.getElementById('rm-status').value,crowd:parseInt(document.getElementById('rm-crowd').value)};
+  let crowdValue = 3;
+  if(editingId) {
+    const existingSpot = radarSpots.find(s=>s.id===editingId);
+    crowdValue = existingSpot ? existingSpot.crowd : 3;
+  }
+  const d={name:n,loc:document.getElementById('rm-loc').value,desc:document.getElementById('rm-desc').value,status:document.getElementById('rm-status').value,crowd:crowdValue};
   if(editingId){const i=radarSpots.findIndex(s=>s.id===editingId);radarSpots[i]={...radarSpots[i],...d};}
   else{radarSpots.push({id:radarSeq++,...d});}
   saveRadar();
@@ -1324,6 +1505,20 @@ function saveRadar(){
 }
 function editRadar(id){openRadarModal(id);}
 function deleteRadar(id){if(!confirm('Supprimer ?'))return;radarSpots=radarSpots.filter(s=>s.id!==id);saveRadar();renderRadar();showToast('🗑️ Supprimé');}
+function openAddAmbianceModal(){openModal('add-ambiance-modal');}
+function confirmAddAmbiance(){
+  const name=document.getElementById('add-ambiance-name').value.trim().toUpperCase();
+  const color=document.getElementById('add-ambiance-color').value;
+  if(!name){showToast('⚠️ Donne un nom à l\'ambiance');return;}
+  const id = name.toLowerCase().replace(/\s+/g,'-');
+  if(radarAmbiances.find(a=>a.id===id)){showToast('⚠️ Cette ambiance existe déjà');return;}
+  radarAmbiances.push({id,label:name,color});
+  saveRadarAmbiances();
+  closeModal('add-ambiance-modal');
+  document.getElementById('add-ambiance-name').value='';
+  renderRadar();
+  showToast(`✅ Ambiance "${name}" créée !`);
+}
 
 function addCategory(ctx){pendingCatCtx=ctx;document.getElementById('addcat-name').value='';openModal('addcat-modal');}
 function confirmAddCat(){
@@ -1371,7 +1566,6 @@ function dropItem(e,type){
   showToast('✅ Ordre mis à jour !');
 }
 
-function submitDrop(){showToast('📨 Envoyé anonymement !');document.getElementById('drop-title').value='';document.getElementById('drop-body').value='';}
 function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
   clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000);
