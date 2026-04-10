@@ -22,12 +22,15 @@
     --nav-bg:#c9a84c;--nav-text:#ffffff;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;display:flex;flex-direction:column;}
+
+  /* ===== MAIN CONTENT ===== */
+  .main-content{flex:1;}
 
   /* ===== NAV ===== */
   nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
-  .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:60px;}
-  .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;width:280px;}
+  .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
+  .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
   .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
   .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
   .nav-btn:hover{color:var(--text);background:var(--bg3);}
@@ -45,7 +48,7 @@
   body.admin-mode .admin-bar{display:flex;}
 
   /* ===== SETTINGS PANEL ===== */
-  .settings-panel{position:fixed;top:60px;right:-380px;width:380px;height:calc(100% - 60px);background:var(--bg2);border-left:1px solid var(--border);z-index:150;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,.3);}
+  .settings-panel{position:fixed;top:70px;right:-380px;width:380px;height:calc(100% - 70px);background:var(--bg2);border-left:1px solid var(--border);z-index:150;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,.3);}
   .settings-panel.open{right:0;}
   .settings-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:700;font-size:18px;}
   .settings-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--text2);}
@@ -122,7 +125,7 @@
   .story-featured-img{width:100%;height:280px;background:linear-gradient(135deg,#1a1a2e,#2d2d2d);display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;overflow:hidden;}
   .story-featured-img img{width:100%;height:100%;object-fit:cover;}
   .story-featured-body{padding:20px 24px;}
-  .story-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:8px;}
+  .story-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:inline-block;padding:3px 8px;border-radius:4px;}
   .story-featured-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;}
   .story-featured-sub{color:var(--text2);font-size:14px;margin-bottom:12px;}
   .story-time{color:var(--text3);font-size:12px;display:flex;align-items:center;gap:6px;}
@@ -134,7 +137,7 @@
   .story-item.drag-over,.story-featured.drag-over{border:2px solid var(--gold2);background:rgba(201,168,76,.08);}
   .story-item-img{width:80px;height:60px;border-radius:6px;background:var(--bg3);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;}
   .story-item-img img{width:100%;height:100%;object-fit:cover;}
-  .story-item-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);background:rgba(212,71,42,.15);padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:6px;}
+  .story-item-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:6px;}
   .story-item-title{font-size:14px;font-weight:600;margin-bottom:4px;}
   .story-item-time{color:var(--text3);font-size:12px;}
 
@@ -279,10 +282,15 @@
   .mail-detail-field p{font-size:13px;color:var(--text);background:var(--bg3);padding:10px 14px;border-radius:8px;line-height:1.6;}
   .toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--green);color:var(--text);border-radius:8px;padding:12px 20px;font-size:13px;z-index:600;display:none;animation:fadeInUp .3s ease;}
   @keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-  footer{background:var(--bg2);border-top:1px solid var(--border);padding:20px 24px;}
-  .footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
-  .footer-text{font-size:12px;color:var(--text3);}
-  @media(max-width:768px){.nav-links{display:none;}.video-grid{grid-template-columns:1fr 1fr;}}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 32px;margin-top:auto;}
+  .footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  .footer-left{display:flex;align-items:center;gap:12px;}
+  .footer-logo{width:32px;height:32px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;font-weight:700;color:var(--bg);}
+  .footer-text{font-size:13px;color:var(--text2);}
+  .footer-right .footer-text{color:var(--text3);font-size:12px;}
+  @media(max-width:768px){.footer-inner{flex-direction:column;text-align:center;}.nav-links{display:none;}.video-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
@@ -316,29 +324,37 @@
 
 <nav>
   <div class="nav-inner">
+    <!-- NOUVEAU LOGO - Version propre et professionnelle -->
     <div class="logo-svg-wrap">
-      <svg width="280" height="48" viewBox="0 0 280 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="260" height="50" viewBox="0 0 260 50" fill="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id="logoGradMain" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stop-color="#e8c96e"/>
             <stop offset="50%" stop-color="#c9a84c"/>
             <stop offset="100%" stop-color="#a0812e"/>
           </linearGradient>
-          <linearGradient id="bgLogoGrad" x1="0" y1="0" x2="0" y2="1">
+          <linearGradient id="logoBgGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#1c1710"/>
             <stop offset="100%" stop-color="#0e0c08"/>
           </linearGradient>
         </defs>
-        <rect width="280" height="48" rx="8" fill="url(#bgLogoGrad)" stroke="url(#logoGrad)" stroke-width="1.5"/>
-        <polygon points="20,24 26,14 32,24 26,34" fill="url(#logoGrad)" opacity="0.9"/>
-        <polygon points="24,24 26,20 28,24 26,28" fill="#0e0c08" opacity="0.5"/>
-        <line x1="44" y1="12" x2="44" y2="36" stroke="url(#logoGrad)" stroke-width="1" opacity="0.5"/>
-        <text x="58" y="30" font-family="'Playfair Display', Georgia, serif" font-size="20" font-weight="800" fill="url(#logoGrad)" letter-spacing="1">LatInvader</text>
-        <line x1="168" y1="14" x2="168" y2="34" stroke="url(#logoGrad)" stroke-width="0.8" opacity="0.4"/>
-        <text x="180" y="20" font-family="'DM Sans', sans-serif" font-size="8" font-weight="700" fill="url(#logoGrad)" letter-spacing="1.5" opacity="0.9">ON MET</text>
-        <text x="180" y="29" font-family="'DM Sans', sans-serif" font-size="8" font-weight="700" fill="url(#logoGrad)" letter-spacing="1.5" opacity="0.9">L'ACCENT</text>
-        <text x="180" y="38" font-family="'DM Sans', sans-serif" font-size="8" font-weight="700" fill="url(#logoGrad)" letter-spacing="1.5" opacity="0.9">SUR L'ACTU</text>
-        <text x="268" y="18" font-size="10" fill="url(#logoGrad)" opacity="0.7">✦</text>
+        <!-- Fond -->
+        <rect width="260" height="50" rx="8" fill="url(#logoBgGrad)" stroke="url(#logoGradMain)" stroke-width="1.5"/>
+        <!-- Élément décoratif losange -->
+        <polygon points="18,25 24,15 30,25 24,35" fill="url(#logoGradMain)" opacity="0.9"/>
+        <polygon points="22,25 24,21 26,25 24,29" fill="#0e0c08" opacity="0.5"/>
+        <!-- Séparateur -->
+        <line x1="42" y1="12" x2="42" y2="38" stroke="url(#logoGradMain)" stroke-width="1" opacity="0.5"/>
+        <!-- Texte principal LatInvader -->
+        <text x="56" y="30" font-family="'Playfair Display', Georgia, serif" font-size="18" font-weight="800" fill="url(#logoGradMain)" letter-spacing="1">LatInvader</text>
+        <!-- Séparateur -->
+        <line x1="162" y1="14" x2="162" y2="36" stroke="url(#logoGradMain)" stroke-width="0.8" opacity="0.4"/>
+        <!-- Slogan -->
+        <text x="174" y="21" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="700" fill="url(#logoGradMain)" letter-spacing="1.2" opacity="0.9">ON MET</text>
+        <text x="174" y="30" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="700" fill="url(#logoGradMain)" letter-spacing="1.2" opacity="0.9">L'ACCENT</text>
+        <text x="174" y="39" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="700" fill="url(#logoGradMain)" letter-spacing="1.2" opacity="0.9">SUR L'ACTU</text>
+        <!-- Étoile décorative -->
+        <text x="250" y="18" font-size="10" fill="url(#logoGradMain)" opacity="0.7">✦</text>
       </svg>
     </div>
     <div class="nav-links">
@@ -357,6 +373,7 @@
   </div>
 </nav>
 
+<main class="main-content">
 <!-- ============ L'INSTANT ============ -->
 <div class="page active" id="page-instant">
   <div class="page-header">
@@ -489,14 +506,18 @@
     <div class="radar-grid" id="radar-other-grid"></div>
   </div>
 </div>
+</main>
 
+<!-- ============ FOOTER ============ -->
 <footer>
   <div class="footer-inner">
-    <div style="display:flex;align-items:center;gap:10px">
-      <svg width="28" height="28" viewBox="0 0 28 28"><rect width="28" height="28" rx="4" fill="#c9a84c"/><text x="14" y="20" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#100e09">L</text></svg>
+    <div class="footer-left">
+      <div class="footer-logo">L</div>
       <span class="footer-text">© LatInvader — On met l'accent sur l'actualité</span>
     </div>
-    <span class="footer-text">Le média n°1 de Los Santos</span>
+    <div class="footer-right">
+      <span class="footer-text">Le média n°1 de Los Santos</span>
+    </div>
   </div>
 </footer>
 
