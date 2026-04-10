@@ -688,7 +688,6 @@ const STORAGE_KEYS = {
   DROPBOX: 'latinvader_dropbox',
   BADGE_COLORS: 'latinvader_badge_colors',
   RADAR_AMBIANCES: 'latinvader_radar_ambiances',
-  LIKES: 'latinvader_likes',
   USER_LIKES: 'latinvader_user_likes'
 };
 
@@ -700,7 +699,7 @@ let currentStars = 3;
 let badgeColors = {};
 let currentMediaType = 'video';
 
-// Générer un identifiant unique pour l'utilisateur (basé sur localStorage + session)
+// Générer un identifiant unique pour l'utilisateur
 let userId = localStorage.getItem('latinvader_user_id');
 if(!userId) {
   userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -1081,9 +1080,9 @@ function renderInstant(){
       <div class="video-stats">
         <div class="stat-item">
           <button class="like-btn${hasLiked?' liked':''}" onclick="toggleLike(${v.id})" title="J'aime">${hasLiked?'❤️':'🤍'}</button>
-          <span>${v.likes}</span>
+          <span id="like-count-${v.id}">${v.likes}</span>
         </div>
-        <div class="stat-item"><span class="view-icon">👁</span><span>${formatNum(v.views)}</span></div>
+        <div class="stat-item"><span class="view-icon">👁</span><span id="view-count-${v.id}">${formatNum(v.views)}</span></div>
       </div>
     </div>
   `}).join('');
@@ -1098,24 +1097,37 @@ function toggleLike(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   if(!userLikes[userId]) userLikes[userId] = {};
   if(userLikes[userId][id]) {
-    // Déjà liké, on enlève le like
     delete userLikes[userId][id];
     v.likes--;
   } else {
-    // Pas liké, on ajoute
     userLikes[userId][id] = true;
     v.likes++;
   }
   saveVideos();
   saveUserLikes();
-  renderInstant();
+  // Mettre à jour l'affichage
+  const likeSpan = document.getElementById(`like-count-${id}`);
+  if(likeSpan) likeSpan.textContent = v.likes;
+  // Mettre à jour le style du bouton
+  const likeBtn = document.querySelector(`.video-card[data-id="${id}"] .like-btn`);
+  if(likeBtn) {
+    if(userLikes[userId][id]) {
+      likeBtn.classList.add('liked');
+      likeBtn.innerHTML = '❤️';
+    } else {
+      likeBtn.classList.remove('liked');
+      likeBtn.innerHTML = '🤍';
+    }
+  }
 }
 
 function playMedia(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   v.views++;
   saveVideos();
-  if(!v.src){showToast('ℹ️ Aucun média uploadé pour ce post.');renderInstant();return;}
+  const viewSpan = document.getElementById(`view-count-${id}`);
+  if(viewSpan) viewSpan.textContent = formatNum(v.views);
+  if(!v.src){showToast('ℹ️ Aucun média uploadé pour ce post.');return;}
   document.getElementById('vplayer-title').textContent=v.title;
   const container = document.getElementById('vplayer-container');
   if(v.mediaType === 'image') {
@@ -1125,7 +1137,6 @@ function playMedia(id){
     container.innerHTML = `<video id="vplayer-el" src="${v.src}" controls style="width:100%;max-height:70vh;"></video>`;
   }
   document.getElementById('vplayer-overlay').classList.add('open');
-  renderInstant();
 }
 
 function closeVPlayer(e){
