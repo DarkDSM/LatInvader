@@ -24,13 +24,12 @@
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;display:flex;flex-direction:column;}
 
-  /* ===== MAIN CONTENT ===== */
   .main-content{flex:1;}
 
-  /* ===== NAV ===== */
   nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
   .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
+  .logo-svg-wrap img{height:48px;width:auto;display:block;}
   .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
   .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
   .nav-btn:hover{color:var(--text);background:var(--bg3);}
@@ -43,11 +42,9 @@
   .admin-btn{position:relative;}
   .admin-btn.logged .admin-dot{display:block;}
 
-  /* ===== ADMIN BAR ===== */
   .admin-bar{background:rgba(76,175,125,.1);border-bottom:1px solid rgba(76,175,125,.3);padding:6px 24px;display:none;align-items:center;gap:12px;font-size:12px;color:var(--green);}
   body.admin-mode .admin-bar{display:flex;}
 
-  /* ===== SETTINGS PANEL ===== */
   .settings-panel{position:fixed;top:70px;right:-380px;width:380px;height:calc(100% - 70px);background:var(--bg2);border-left:1px solid var(--border);z-index:150;transition:right .3s ease;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,.3);}
   .settings-panel.open{right:0;}
   .settings-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-weight:700;font-size:18px;}
@@ -66,14 +63,12 @@
   .color-input{width:80px;border:1px solid var(--border);border-radius:4px;padding:4px;background:var(--bg);color:var(--text);font-size:12px;}
   .badge-example{padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-left:8px;}
 
-  /* ===== PAGES ===== */
   .page{display:none;max-width:1400px;margin:0 auto;padding:32px 24px 80px;}
   .page.active{display:block;}
   .page-header{margin-bottom:28px;}
   .page-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:6px;}
   .page-sub{color:var(--text2);font-size:14px;}
 
-  /* ===== FILTER BAR ===== */
   .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;align-items:center;}
   .filter-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;}
   .filter-btn:hover{color:var(--text);border-color:var(--text3);}
@@ -82,7 +77,6 @@
   .add-cat-btn:hover{color:var(--gold);border-color:var(--gold);}
   body.admin-mode .add-cat-btn{display:flex;}
 
-  /* ===== VIDEO GRID ===== */
   .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
   .video-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:transform .2s,border-color .2s;position:relative;}
   .video-card:hover{transform:translateY(-3px);border-color:var(--gold);}
@@ -119,7 +113,6 @@
   .sec-btn:hover{opacity:.85;}
   .sec-btn-hint{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;padding:8px 14px;border-radius:8px;display:flex;align-items:center;gap:6px;}
 
-  /* ===== STORYTELLING ===== */
   .story-featured{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;position:relative;transition:border-color .2s;cursor:pointer;}
   .story-featured:hover{border-color:var(--gold);}
   .story-featured-img{width:100%;height:280px;background:linear-gradient(135deg,#1a1a2e,#2d2d2d);display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;overflow:hidden;}
@@ -141,7 +134,6 @@
   .story-item-title{font-size:14px;font-weight:600;margin-bottom:4px;}
   .story-item-time{color:var(--text3);font-size:12px;}
 
-  /* ===== RICH TEXT EDITOR ===== */
   .rich-editor{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2);}
   .editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--bg3);border-bottom:1px solid var(--border);}
   .tool-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:4px;cursor:pointer;font-size:13px;transition:all .2s;}
@@ -153,7 +145,6 @@
   .editor-content b{font-weight:700;}
   .editor-content i{font-style:italic;}
 
-  /* ===== STORY MODAL READ ===== */
   .story-read-modal .modal{width:700px;max-width:90vw;}
   .story-read-content{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.7;color:var(--text);}
   .story-read-content img{max-width:100%;height:auto;border-radius:8px;margin:16px 0;}
@@ -161,7 +152,6 @@
   .story-read-content h2{font-family:'Syne',sans-serif;font-size:20px;margin:16px 0 8px;}
   .story-read-meta{display:flex;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);color:var(--text2);font-size:12px;}
 
-  /* ===== OTHER SECTIONS ===== */
   .emploi-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
   .tab-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;padding:8px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;}
   .tab-btn:hover{color:var(--text);}
@@ -283,7 +273,6 @@
   .toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--green);color:var(--text);border-radius:8px;padding:12px 20px;font-size:13px;z-index:600;display:none;animation:fadeInUp .3s ease;}
   @keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-  /* ===== FOOTER ===== */
   footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 32px;margin-top:auto;}
   .footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
   .footer-left{display:flex;align-items:center;gap:12px;}
@@ -299,7 +288,6 @@
   <span>🛡️ <strong>Mode Admin actif</strong> — Modifie en temps réel · Glisse les blocs pour les réordonner</span>
 </div>
 
-<!-- SETTINGS PANEL -->
 <div class="settings-panel" id="settings-panel">
   <div class="settings-header">
     <span>⚙️ Paramètres Admin</span>
@@ -324,38 +312,9 @@
 
 <nav>
   <div class="nav-inner">
-    <!-- NOUVEAU LOGO - Version propre et professionnelle -->
+    <!-- LOGO - Remplacez le chemin "votre-logo.png" par le chemin de votre image -->
     <div class="logo-svg-wrap">
-      <svg width="260" height="50" viewBox="0 0 260 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="logoGradMain" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#e8c96e"/>
-            <stop offset="50%" stop-color="#c9a84c"/>
-            <stop offset="100%" stop-color="#a0812e"/>
-          </linearGradient>
-          <linearGradient id="logoBgGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#1c1710"/>
-            <stop offset="100%" stop-color="#0e0c08"/>
-          </linearGradient>
-        </defs>
-        <!-- Fond -->
-        <rect width="260" height="50" rx="8" fill="url(#logoBgGrad)" stroke="url(#logoGradMain)" stroke-width="1.5"/>
-        <!-- Élément décoratif losange -->
-        <polygon points="18,25 24,15 30,25 24,35" fill="url(#logoGradMain)" opacity="0.9"/>
-        <polygon points="22,25 24,21 26,25 24,29" fill="#0e0c08" opacity="0.5"/>
-        <!-- Séparateur -->
-        <line x1="42" y1="12" x2="42" y2="38" stroke="url(#logoGradMain)" stroke-width="1" opacity="0.5"/>
-        <!-- Texte principal LatInvader -->
-        <text x="56" y="30" font-family="'Playfair Display', Georgia, serif" font-size="18" font-weight="800" fill="url(#logoGradMain)" letter-spacing="1">LatInvader</text>
-        <!-- Séparateur -->
-        <line x1="162" y1="14" x2="162" y2="36" stroke="url(#logoGradMain)" stroke-width="0.8" opacity="0.4"/>
-        <!-- Slogan -->
-        <text x="174" y="21" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="700" fill="url(#logoGradMain)" letter-spacing="1.2" opacity="0.9">ON MET</text>
-        <text x="174" y="30" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="700" fill="url(#logoGradMain)" letter-spacing="1.2" opacity="0.9">L'ACCENT</text>
-        <text x="174" y="39" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="700" fill="url(#logoGradMain)" letter-spacing="1.2" opacity="0.9">SUR L'ACTU</text>
-        <!-- Étoile décorative -->
-        <text x="250" y="18" font-size="10" fill="url(#logoGradMain)" opacity="0.7">✦</text>
-      </svg>
+      <img src="votre-logo.png" alt="LatInvader" style="height:48px; width:auto; max-width:280px;">
     </div>
     <div class="nav-links">
       <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant">🎬 L'Instant</button>
@@ -374,7 +333,6 @@
 </nav>
 
 <main class="main-content">
-<!-- ============ L'INSTANT ============ -->
 <div class="page active" id="page-instant">
   <div class="page-header">
     <div class="page-title">🎬 L'Instant</div>
@@ -388,7 +346,6 @@
   <div class="video-grid" id="instant-grid"></div>
 </div>
 
-<!-- ============ STORYTELLING ============ -->
 <div class="page" id="page-stories">
   <div class="page-header">
     <div class="page-title">✍️ Storytelling</div>
@@ -402,7 +359,6 @@
   <div id="stories-container"></div>
 </div>
 
-<!-- ============ HUB EMPLOI ============ -->
 <div class="page" id="page-emploi">
   <div class="page-header">
     <div class="page-title">💼 Hub Emploi</div>
@@ -449,7 +405,6 @@
   </div>
 </div>
 
-<!-- ============ CONCEPTS ============ -->
 <div class="page" id="page-concepts">
   <div class="page-header">
     <div class="page-title">💡 Concepts Originaux</div>
@@ -460,7 +415,6 @@
   <div class="concepts-grid" id="concepts-grid"></div>
 </div>
 
-<!-- ============ DROP BOX ============ -->
 <div class="page" id="page-dropbox">
   <div class="page-header">
     <div class="page-title">📬 Drop Box</div>
@@ -490,7 +444,6 @@
   </div>
 </div>
 
-<!-- ============ RADAR ============ -->
 <div class="page" id="page-radar">
   <div class="page-header">
     <div class="page-title">📡 Le Radar</div>
@@ -508,7 +461,6 @@
 </div>
 </main>
 
-<!-- ============ FOOTER ============ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-left">
@@ -521,7 +473,7 @@
   </div>
 </footer>
 
-<!-- MODAL: ADMIN LOGIN -->
+<!-- MODALS (contenu identique à avant) -->
 <div class="modal-overlay" id="admin-modal">
   <div class="modal">
     <div class="modal-avatar">🧍</div>
@@ -534,7 +486,6 @@
   </div>
 </div>
 
-<!-- MODAL: VIDEO ADD/EDIT -->
 <div class="modal-overlay" id="video-modal">
   <div class="modal" style="width:480px">
     <div class="modal-title" id="vm-modal-title">Ajouter une vidéo</div>
@@ -550,7 +501,6 @@
   </div>
 </div>
 
-<!-- MODAL: STORY ADD/EDIT avec éditeur enrichi -->
 <div class="modal-overlay" id="story-modal">
   <div class="modal" style="width:700px;max-width:95vw;">
     <div class="modal-title" id="sm-modal-title">Ajouter un article</div>
@@ -580,7 +530,6 @@
   </div>
 </div>
 
-<!-- MODAL: STORY READ -->
 <div class="modal-overlay story-read-modal" id="story-read-modal">
   <div class="modal" style="width:700px;max-width:90vw;">
     <div class="modal-title" id="read-title"></div>
@@ -590,7 +539,6 @@
   </div>
 </div>
 
-<!-- MODAL: CONCEPT ADD/EDIT -->
 <div class="modal-overlay" id="concept-modal">
   <div class="modal" style="width:480px">
     <div class="modal-title" id="cm-modal-title">Ajouter un concept</div>
@@ -608,7 +556,6 @@
   </div>
 </div>
 
-<!-- MODAL: EMPLOI ADD/EDIT -->
 <div class="modal-overlay" id="emploi-modal">
   <div class="modal" style="width:480px">
     <div class="modal-title" id="em-modal-title">Ajouter une offre</div>
@@ -630,7 +577,6 @@
   </div>
 </div>
 
-<!-- MODAL: RADAR ADD/EDIT -->
 <div class="modal-overlay" id="radar-modal">
   <div class="modal" style="width:480px">
     <div class="modal-title" id="rm-modal-title">Ajouter un spot</div>
@@ -649,7 +595,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD CATEGORY -->
 <div class="modal-overlay" id="addcat-modal">
   <div class="modal">
     <div class="modal-title">Nouvelle catégorie</div>
@@ -659,7 +604,6 @@
   </div>
 </div>
 
-<!-- MODAL: MAIL DETAIL -->
 <div class="modal-overlay" id="mail-modal">
   <div class="modal" style="width:500px">
     <div class="modal-title">📨 Candidature</div>
@@ -669,7 +613,6 @@
   </div>
 </div>
 
-<!-- MODAL: VIDEO PLAYER -->
 <div class="vplayer-overlay" id="vplayer-overlay" onclick="closeVPlayer(event)">
   <div class="vplayer-box">
     <div class="vplayer-header">
@@ -698,17 +641,13 @@ const STORAGE_KEYS = {
   BADGE_COLORS: 'latinvader_badge_colors'
 };
 
-// ========== STATE ==========
 let isAdmin = false;
 const ADMIN_PASS = "21032001";
 let editingId = null;
 let pendingCatCtx = '';
 let currentStars = 3;
-
-// Couleurs des badges sur les posts (par catégorie)
 let badgeColors = {};
 
-// ========== DATA ==========
 let videos = [];
 let vidSeq = 1;
 let instantCats = [];
@@ -733,7 +672,6 @@ let conceptsFilter = 'tout';
 let radarSpots = [];
 let radarSeq = 1;
 
-// ========== INITIALISATION / CHARGEMENT DES DONNÉES ==========
 function loadData() {
   const savedVideos = localStorage.getItem(STORAGE_KEYS.VIDEOS);
   if(savedVideos) {
@@ -842,7 +780,6 @@ function saveRadar() { localStorage.setItem(STORAGE_KEYS.RADAR, JSON.stringify(r
 function saveMailbox() { localStorage.setItem(STORAGE_KEYS.MAILBOX, JSON.stringify(mailbox)); }
 function saveBadgeColors() { localStorage.setItem(STORAGE_KEYS.BADGE_COLORS, JSON.stringify(badgeColors)); }
 
-// ========== SETTINGS PANEL ==========
 let currentSettingsPage = 'instant';
 
 function openSettingsPanel() {
@@ -912,7 +849,6 @@ function getBadgeStyle(page, catId) {
   return '';
 }
 
-// ========== NAV ==========
 function showPage(p) {
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -921,6 +857,7 @@ function showPage(p) {
   const renders = {instant:renderInstant,stories:renderStories,concepts:renderConcepts,emploi:renderEmploi,radar:renderRadar};
   if(renders[p]) renders[p]();
 }
+
 function toggleTheme(){
   const h=document.documentElement;
   const d=h.getAttribute('data-theme')==='dark';
@@ -928,7 +865,6 @@ function toggleTheme(){
   document.getElementById('theme-btn').textContent=d?'☀️':'🌙';
 }
 
-// ========== ADMIN ==========
 function openAdminModal(){
   if(isAdmin){logoutAdmin();return;}
   document.getElementById('admin-password').value='';
@@ -936,6 +872,7 @@ function openAdminModal(){
   openModal('admin-modal');
   setTimeout(()=>document.getElementById('admin-password').focus(),100);
 }
+
 function loginAdmin(){
   if(document.getElementById('admin-password').value===ADMIN_PASS){
     isAdmin=true;
@@ -953,6 +890,7 @@ function loginAdmin(){
     document.getElementById('admin-password').value='';
   }
 }
+
 function logoutAdmin(){
   isAdmin=false;
   document.body.classList.remove('admin-mode');
@@ -965,17 +903,14 @@ function logoutAdmin(){
   showToast('👎 Déconnecté');
 }
 
-// ========== MODALS ==========
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(m=>{
   m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
 });
 
-// ========== RENDER ALL ==========
 function renderAll(){renderInstant();renderStories();renderConcepts();renderEmploi();renderRadar();}
 
-// ========== FILTER BAR BUILDER ==========
 function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, pageId) {
   const bar = document.getElementById(containerId);
   bar.innerHTML = `<button class="filter-btn${currentFilter==='tout'?' active':''}" onclick="${filterFn}('tout',this)">TOUT</button>`;
@@ -987,7 +922,6 @@ function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, page
   bar.innerHTML+=`<button class="add-cat-btn" onclick="addCategory('${catCtx}')">+ Catégorie</button>`;
 }
 
-// ========== INSTANT ==========
 function renderInstant(){
   buildFilterBar('instant-filters',instantCats,'filterInstant',instantFilter,'instant','instant');
   const filtered = instantFilter==='tout' ? [...videos] : videos.filter(v=>v.cat===instantFilter);
@@ -1020,16 +954,19 @@ function renderInstant(){
     </div>
   `}).join('');
 }
+
 function filterInstant(cat,btn){instantFilter=cat;renderInstant();}
 function getCatLabel(id,arr){const c=arr.find(x=>(typeof x==='object'?x.id:x)===id);return c?(typeof c==='object'?c.label:c):id;}
 function formatNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
 function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;});}
+
 function toggleLike(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   v.liked=!v.liked;v.likes+=v.liked?1:-1;
   saveVideos();
   renderInstant();
 }
+
 function playVideo(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   v.views++;
@@ -1041,11 +978,13 @@ function playVideo(id){
   document.getElementById('vplayer-overlay').classList.add('open');
   renderInstant();
 }
+
 function closeVPlayer(e){
   if(e&&e.target!==document.getElementById('vplayer-overlay'))return;
   document.getElementById('vplayer-el').pause();
   document.getElementById('vplayer-overlay').classList.remove('open');
 }
+
 function openVideoModal(id=null){
   editingId=id;
   const v=id?videos.find(x=>x.id===id):null;
@@ -1057,12 +996,14 @@ function openVideoModal(id=null){
   document.getElementById('vm-file').value='';delete document.getElementById('vm-file').dataset.url;
   openModal('video-modal');
 }
+
 function handleVideoFile(e){
   const f=e.target.files[0];if(!f)return;
   const url=URL.createObjectURL(f);e.target.dataset.url=url;
   const p=document.getElementById('vm-preview');p.style.display='flex';
   p.innerHTML=`<video src="${url}" style="width:100px;height:60px;border-radius:4px" muted></video><span>${f.name}</span>`;
 }
+
 function saveVideo(){
   const t=document.getElementById('vm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
   const fi=document.getElementById('vm-file');
@@ -1073,10 +1014,10 @@ function saveVideo(){
   saveVideos();
   closeModal('video-modal');renderInstant();showToast(editingId?'✅ Vidéo modifiée !':'✅ Vidéo ajoutée !');editingId=null;
 }
+
 function editVideo(id){openVideoModal(id);}
 function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);saveVideos();renderInstant();showToast('🗑️ Supprimée');}
 
-// ========== STORYTELLING ==========
 function renderStories(){
   buildFilterBar('stories-filters',storyCats.map(c=>({id:c,label:c})),'filterStories',storiesFilter,'stories','stories');
   const filtered=storiesFilter==='tout'?[...stories]:stories.filter(s=>s.cat===storiesFilter);
@@ -1174,7 +1115,6 @@ function saveStory(){
 function editStory(id){openStoryModal(id);}
 function deleteStory(id){if(!confirm('Supprimer ?'))return;stories=stories.filter(s=>s.id!==id);saveStories();renderStories();showToast('🗑️ Supprimé');}
 
-// ========== CONCEPTS ==========
 function renderConcepts(){
   buildFilterBar('concepts-filters',conceptCats.map(c=>({id:c,label:c})),'filterConcepts',conceptsFilter,'concepts','concepts');
   const filtered=conceptsFilter==='tout'?concepts:concepts.filter(c=>c.cat===conceptsFilter);
@@ -1226,7 +1166,6 @@ function saveConcept(){
 function editConcept(id){openConceptModal(id);}
 function deleteConcept(id){if(!confirm('Supprimer ?'))return;concepts=concepts.filter(c=>c.id!==id);saveConcepts();renderConcepts();showToast('🗑️ Supprimé');}
 
-// ========== EMPLOI ==========
 function renderEmploi(){
   buildFilterBar('emploi-filters',emploiCats.map(c=>({id:c,label:c.toUpperCase()})),'filterEmploy',emploiFilter,'emploi','emploi');
   const filtered=emploiFilter==='tout'?emplois:emplois.filter(e=>e.cat===emploiFilter);
@@ -1315,7 +1254,6 @@ function openMail(id){
 }
 function clearMails(){if(!confirm('Effacer tout ?'))return;mailbox=[];saveMailbox();renderMails();showToast('🗑️ Boîte vidée');}
 
-// ========== RADAR ==========
 function renderRadar(){
   const hype=radarSpots.filter(s=>s.status==='hype');
   const other=radarSpots.filter(s=>s.status!=='hype');
@@ -1388,7 +1326,6 @@ function saveRadar(){
 function editRadar(id){openRadarModal(id);}
 function deleteRadar(id){if(!confirm('Supprimer ?'))return;radarSpots=radarSpots.filter(s=>s.id!==id);saveRadar();renderRadar();showToast('🗑️ Supprimé');}
 
-// ========== ADD CATEGORY ==========
 function addCategory(ctx){pendingCatCtx=ctx;document.getElementById('addcat-name').value='';openModal('addcat-modal');}
 function confirmAddCat(){
   const name=document.getElementById('addcat-name').value.trim();if(!name){showToast('⚠️ Nom requis');return;}
@@ -1399,7 +1336,6 @@ function confirmAddCat(){
   closeModal('addcat-modal');showToast(`✅ Catégorie "${name}" créée !`);
 }
 
-// ========== IMAGE PREVIEW ==========
 function previewImg(e,previewId){
   const f=e.target.files[0];if(!f)return;
   const url=URL.createObjectURL(f);e.target.dataset.url=url;
@@ -1407,7 +1343,6 @@ function previewImg(e,previewId){
   p.innerHTML=`<img src="${url}"><span>${f.name}</span>`;
 }
 
-// ========== DRAG & DROP ==========
 let dragSrcId=null;
 let dragType=null;
 function dragStart(e,type){
@@ -1437,14 +1372,12 @@ function dropItem(e,type){
   showToast('✅ Ordre mis à jour !');
 }
 
-// ========== MISC ==========
 function submitDrop(){showToast('📨 Envoyé anonymement !');document.getElementById('drop-title').value='';document.getElementById('drop-body').value='';}
 function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
   clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000);
 }
 
-// ========== INIT ==========
 loadData();
 renderAll();
 </script>
