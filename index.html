@@ -55,12 +55,13 @@
   .page-selector{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .page-selector button{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;}
   .page-selector button.active{background:var(--gold);color:var(--bg);border-color:var(--gold);}
-  .filters-list{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;}
-  .filter-color-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
-  .filter-color-item:last-child{border-bottom:none;}
-  .filter-name{font-size:13px;font-weight:500;}
+  .badges-list{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;}
+  .badge-color-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);}
+  .badge-color-item:last-child{border-bottom:none;}
+  .badge-name{font-size:13px;font-weight:500;}
   .color-preview{width:24px;height:24px;border-radius:4px;margin-right:8px;border:1px solid var(--border);}
   .color-input{width:80px;border:1px solid var(--border);border-radius:4px;padding:4px;background:var(--bg);color:var(--text);font-size:12px;}
+  .badge-example{padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-left:8px;}
 
   /* ===== PAGES ===== */
   .page{display:none;max-width:1400px;margin:0 auto;padding:32px 24px 80px;}
@@ -93,11 +94,6 @@
   .video-card:hover .play-overlay{opacity:1;}
   .play-circle{width:52px;height:52px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;}
   .video-badge{position:absolute;top:10px;left:10px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;z-index:3;}
-  .badge-red{background:var(--accent);color:#fff;}
-  .badge-purple{background:var(--purple);color:#fff;}
-  .badge-blue{background:var(--blue);color:#fff;}
-  .badge-gold{background:var(--gold);color:var(--bg);}
-  .badge-green{background:var(--green);color:#fff;}
   .video-stats{display:flex;align-items:center;gap:12px;padding:8px 12px 0;border-top:1px solid var(--border);margin-top:8px;}
   .stat-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3);}
   .like-btn{background:none;border:none;cursor:pointer;font-size:16px;line-height:1;transition:transform .15s;padding:0;}
@@ -293,7 +289,6 @@
 
 <div class="admin-bar">
   <span>🛡️ <strong>Mode Admin actif</strong> — Modifie en temps réel · Glisse les blocs pour les réordonner</span>
-  <button class="sec-btn" style="background:var(--bg3);color:var(--gold);padding:4px 12px;" onclick="openSettingsPanel()">⚙️ Paramètres</button>
 </div>
 
 <!-- SETTINGS PANEL -->
@@ -312,9 +307,9 @@
         <button data-page="concepts" onclick="selectSettingsPage('concepts')">💡 Concepts</button>
       </div>
     </div>
-    <div class="settings-section" id="filters-section">
-      <div class="settings-label">Couleur des filtres (boutons)</div>
-      <div id="filters-list-container" class="filters-list"></div>
+    <div class="settings-section" id="badges-section">
+      <div class="settings-label">Couleur des badges sur les posts</div>
+      <div id="badges-list-container" class="badges-list"></div>
     </div>
   </div>
 </div>
@@ -679,7 +674,7 @@ const STORAGE_KEYS = {
   CONCEPT_CATS: 'latinvader_concept_cats',
   RADAR: 'latinvader_radar',
   MAILBOX: 'latinvader_mailbox',
-  FILTER_COLORS: 'latinvader_filter_colors'
+  BADGE_COLORS: 'latinvader_badge_colors'
 };
 
 // ========== STATE ==========
@@ -689,10 +684,10 @@ let editingId = null;
 let pendingCatCtx = '';
 let currentStars = 3;
 
-// Couleurs des filtres par page
-let filterColors = { instant: {}, stories: {}, emploi: {}, concepts: {} };
+// Couleurs des badges sur les posts (par catégorie)
+let badgeColors = {};
 
-// ========== DATA (avec valeurs par défaut) ==========
+// ========== DATA ==========
 let videos = [];
 let vidSeq = 1;
 let instantCats = [];
@@ -719,7 +714,6 @@ let radarSeq = 1;
 
 // ========== INITIALISATION / CHARGEMENT DES DONNÉES ==========
 function loadData() {
-  // Videos
   const savedVideos = localStorage.getItem(STORAGE_KEYS.VIDEOS);
   if(savedVideos) {
     videos = JSON.parse(savedVideos);
@@ -811,8 +805,8 @@ function loadData() {
   const savedMailbox = localStorage.getItem(STORAGE_KEYS.MAILBOX);
   if(savedMailbox) mailbox = JSON.parse(savedMailbox);
   
-  const savedColors = localStorage.getItem(STORAGE_KEYS.FILTER_COLORS);
-  if(savedColors) filterColors = JSON.parse(savedColors);
+  const savedBadgeColors = localStorage.getItem(STORAGE_KEYS.BADGE_COLORS);
+  if(savedBadgeColors) badgeColors = JSON.parse(savedBadgeColors);
 }
 
 function saveVideos() { localStorage.setItem(STORAGE_KEYS.VIDEOS, JSON.stringify(videos)); }
@@ -825,7 +819,7 @@ function saveConcepts() { localStorage.setItem(STORAGE_KEYS.CONCEPTS, JSON.strin
 function saveConceptCats() { localStorage.setItem(STORAGE_KEYS.CONCEPT_CATS, JSON.stringify(conceptCats)); }
 function saveRadar() { localStorage.setItem(STORAGE_KEYS.RADAR, JSON.stringify(radarSpots)); }
 function saveMailbox() { localStorage.setItem(STORAGE_KEYS.MAILBOX, JSON.stringify(mailbox)); }
-function saveFilterColors() { localStorage.setItem(STORAGE_KEYS.FILTER_COLORS, JSON.stringify(filterColors)); }
+function saveBadgeColors() { localStorage.setItem(STORAGE_KEYS.BADGE_COLORS, JSON.stringify(badgeColors)); }
 
 // ========== SETTINGS PANEL ==========
 let currentSettingsPage = 'instant';
@@ -845,10 +839,10 @@ function selectSettingsPage(page) {
   document.querySelectorAll('#page-selector-settings button').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.page === page);
   });
-  renderFiltersList();
+  renderBadgesList();
 }
 
-function renderFiltersList() {
+function renderBadgesList() {
   let cats = [];
   let page = currentSettingsPage;
   if(page === 'instant') cats = instantCats.map(c => ({id: c.id, label: c.label}));
@@ -856,41 +850,44 @@ function renderFiltersList() {
   else if(page === 'emploi') cats = emploiCats.map(c => ({id: c, label: c.toUpperCase()}));
   else if(page === 'concepts') cats = conceptCats.map(c => ({id: c, label: c}));
   
-  const container = document.getElementById('filters-list-container');
+  const container = document.getElementById('badges-list-container');
   if(!cats.length) {
-    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3)">Aucun filtre pour cette page.</div>';
+    container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text3)">Aucune catégorie pour cette page.</div>';
     return;
   }
   
   container.innerHTML = cats.map(cat => {
-    const currentColor = filterColors[page]?.[cat.id] || '';
+    const currentColor = badgeColors[page]?.[cat.id] || '';
     return `
-      <div class="filter-color-item">
-        <span class="filter-name">${cat.label}</span>
+      <div class="badge-color-item">
         <div style="display:flex;align-items:center;gap:8px;">
-          <div class="color-preview" style="background-color: ${currentColor || '#c9a84c'}; border:1px solid var(--border);"></div>
-          <input type="color" class="color-input" value="${currentColor || '#c9a84c'}" onchange="updateFilterColor('${page}', '${cat.id}', this.value)">
+          <span class="badge-name">${cat.label}</span>
+          <div class="badge-example" style="background-color: ${currentColor || '#d4472a'}; color: white;">Exemple</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="color-preview" style="background-color: ${currentColor || '#d4472a'};"></div>
+          <input type="color" class="color-input" value="${currentColor || '#d4472a'}" onchange="updateBadgeColor('${page}', '${cat.id}', this.value)">
         </div>
       </div>
     `;
   }).join('');
 }
 
-function updateFilterColor(page, catId, color) {
-  if(!filterColors[page]) filterColors[page] = {};
-  filterColors[page][catId] = color;
-  saveFilterColors();
+function updateBadgeColor(page, catId, color) {
+  if(!badgeColors[page]) badgeColors[page] = {};
+  badgeColors[page][catId] = color;
+  saveBadgeColors();
   if(page === 'instant') renderInstant();
   else if(page === 'stories') renderStories();
   else if(page === 'emploi') renderEmploi();
   else if(page === 'concepts') renderConcepts();
-  renderFiltersList();
-  showToast(`🎨 Couleur du filtre modifiée !`);
+  renderBadgesList();
+  showToast(`🎨 Couleur du badge "${catId}" modifiée !`);
 }
 
-function getFilterStyle(page, catId) {
-  const color = filterColors[page]?.[catId];
-  if(color) return `background:${color};border-color:${color};color:${page==='instant'?'var(--bg)':'var(--bg)'};`;
+function getBadgeStyle(page, catId) {
+  const color = badgeColors[page]?.[catId];
+  if(color) return `background:${color};border-color:${color};color:#fff;`;
   return '';
 }
 
@@ -964,8 +961,7 @@ function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, page
   cats.forEach(c=>{
     const id=typeof c==='object'?c.id:c;
     const lbl=typeof c==='object'?c.label:c;
-    const style = getFilterStyle(pageId, id);
-    bar.innerHTML+=`<button class="filter-btn${currentFilter===id?' active':''}" style="${style}" onclick="${filterFn}('${id}',this)">${lbl}</button>`;
+    bar.innerHTML+=`<button class="filter-btn${currentFilter===id?' active':''}" onclick="${filterFn}('${id}',this)">${lbl}</button>`;
   });
   bar.innerHTML+=`<button class="add-cat-btn" onclick="addCategory('${catCtx}')">+ Catégorie</button>`;
 }
@@ -975,12 +971,14 @@ function renderInstant(){
   buildFilterBar('instant-filters',instantCats,'filterInstant',instantFilter,'instant','instant');
   const filtered = instantFilter==='tout' ? [...videos] : videos.filter(v=>v.cat===instantFilter);
   const grid = document.getElementById('instant-grid');
-  grid.innerHTML = filtered.map(v=>`
+  grid.innerHTML = filtered.map(v=>{
+    const badgeStyle = getBadgeStyle('instant', v.cat);
+    return `
     <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
          ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
       <div class="video-thumb" onclick="playVideo(${v.id})">
         ${v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">▶</div><div style="font-size:12px">Aucune vidéo</div></div>`}
-        <div class="video-badge badge-red">${getCatLabel(v.cat,instantCats)}</div>
+        <div class="video-badge" style="${badgeStyle}">${getCatLabel(v.cat,instantCats)}</div>
         <div class="play-overlay"><div class="play-circle">▶</div></div>
         ${isAdmin?`<div class="card-admin-actions">
           <button class="action-btn" onclick="event.stopPropagation();editVideo(${v.id})">✏️</button>
@@ -999,7 +997,7 @@ function renderInstant(){
         <div class="stat-item"><span class="view-icon">👁</span><span>${formatNum(v.views)}</span></div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 function filterInstant(cat,btn){instantFilter=cat;renderInstant();}
 function getCatLabel(id,arr){const c=arr.find(x=>(typeof x==='object'?x.id:x)===id);return c?(typeof c==='object'?c.label:c):id;}
@@ -1068,7 +1066,7 @@ function renderStories(){
     <div class="story-featured" data-id="${feat.id}" onclick="openStoryRead(${feat.id})">
       <div class="story-featured-img">${feat.img?`<img src="${feat.img}">`:'🔫'}</div>
       <div class="story-featured-body">
-        <div class="story-cat">⚡ ${feat.cat}</div>
+        <div class="story-cat" style="${getBadgeStyle('stories', feat.cat)}">⚡ ${feat.cat}</div>
         <div class="story-featured-title">${escapeHtml(feat.title)}</div>
         <div class="story-featured-sub">${escapeHtml(feat.sub)}</div>
         <div class="story-time">🕐 ${feat.time}</div>
@@ -1083,7 +1081,7 @@ function renderStories(){
         <div class="story-item" data-id="${s.id}" onclick="openStoryRead(${s.id})">
           <div class="story-item-img">${s.img?`<img src="${s.img}">`:'📰'}</div>
           <div style="flex:1">
-            <div class="story-item-cat">${s.cat}</div>
+            <div class="story-item-cat" style="${getBadgeStyle('stories', s.cat)}">${s.cat}</div>
             <div class="story-item-title">${escapeHtml(s.title)}</div>
             <div class="story-item-time">🕐 ${s.time}</div>
           </div>
@@ -1163,7 +1161,7 @@ function renderConcepts(){
     <div class="concept-card">
       <div class="concept-img">
         ${c.img?`<img src="${c.img}">`:catEmoji(c.cat)}
-        <div class="concept-badge"><span class="video-badge badge-gold">${c.cat}</span></div>
+        <div class="concept-badge"><span class="video-badge" style="${getBadgeStyle('concepts', c.cat)}">${c.cat}</span></div>
         ${isAdmin?`<div class="card-admin-actions">
           <button class="action-btn" onclick="editConcept(${c.id})">✏️</button>
           <button class="action-btn del" onclick="deleteConcept(${c.id})">🗑️</button>
