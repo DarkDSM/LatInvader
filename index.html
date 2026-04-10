@@ -5,310 +5,354 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LatInvader — On met l'accent sur l'actu</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@700;800&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root[data-theme="dark"] {
-    --bg: #100e09; --bg2: #1a1610; --bg3: #221e15; --card: #1e1a12; --card2: #252015;
-    --border: #2e2820; --text: #e8dfc8; --text2: #9a8f78; --text3: #5c5444;
-    --gold: #c9a84c; --gold2: #e8c96e; --accent: #d4472a; --accent2: #e05a3a;
-    --green: #4caf7d; --purple: #9b59b6; --blue: #3d8bcd;
-    --nav-active-bg: #c9a84c; --nav-active-text: #100e09;
+    --bg:#100e09;--bg2:#1a1610;--bg3:#221e15;--card:#1e1a12;--card2:#252015;
+    --border:#2e2820;--text:#e8dfc8;--text2:#9a8f78;--text3:#5c5444;
+    --gold:#c9a84c;--gold2:#e8c96e;--accent:#d4472a;--accent2:#e05a3a;
+    --green:#4caf7d;--purple:#9b59b6;--blue:#3d8bcd;
+    --nav-bg:#c9a84c;--nav-text:#100e09;
   }
   :root[data-theme="light"] {
-    --bg: #f5f0e8; --bg2: #ede6d6; --bg3: #e4dac6; --card: #ffffff; --card2: #f8f3e8;
-    --border: #d4c9b0; --text: #1a1610; --text2: #5c5444; --text3: #9a8f78;
-    --gold: #b8922e; --gold2: #d4a83e; --accent: #c43520; --accent2: #d4462e;
-    --green: #2e8a5c; --purple: #7d3ea0; --blue: #2a6fa0;
-    --nav-active-bg: #c9a84c; --nav-active-text: #ffffff;
+    --bg:#f5f0e8;--bg2:#ede6d6;--bg3:#e4dac6;--card:#ffffff;--card2:#f8f3e8;
+    --border:#d4c9b0;--text:#1a1610;--text2:#5c5444;--text3:#9a8f78;
+    --gold:#b8922e;--gold2:#d4a83e;--accent:#c43520;--accent2:#d4462e;
+    --green:#2e8a5c;--purple:#7d3ea0;--blue:#2a6fa0;
+    --nav-bg:#c9a84c;--nav-text:#ffffff;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .3s,color .3s;}
 
-  /* NAV */
-  nav { background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-  .nav-inner { max-width: 1400px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 16px; height: 56px; }
-  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; cursor: pointer; }
-  .logo-img { height: 38px; width: auto; object-fit: contain; display: block; }
-  .logo-img-placeholder { background: var(--gold); color: var(--bg); font-family: 'Bebas Neue', sans-serif; font-size: 22px; padding: 4px 10px; letter-spacing: 1px; border-radius: 4px; }
-  .logo-upload-hint { font-size: 10px; color: var(--text3); display: none; }
-  body.admin-mode .logo-upload-hint { display: block; }
-  .nav-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
-  .nav-btn { background: none; border: none; color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; white-space: nowrap; }
-  .nav-btn:hover { color: var(--text); background: var(--bg3); }
-  .nav-btn.active { background: var(--nav-active-bg); color: var(--nav-active-text); font-weight: 600; }
-  .nav-right { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
-  .theme-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s; }
-  .theme-btn:hover { color: var(--gold); border-color: var(--gold); }
-  .admin-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: all 0.2s; position: relative; }
-  .admin-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .admin-btn.logged { border-color: var(--green); color: var(--green); }
-  .admin-dot { position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: none; }
-  .admin-btn.logged .admin-dot { display: block; }
+  /* ===== NAV ===== */
+  nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
+  .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:60px;}
+  .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
+  .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
+  .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
+  .nav-btn:hover{color:var(--text);background:var(--bg3);}
+  .nav-btn.active{background:var(--nav-bg);color:var(--nav-text);font-weight:600;}
+  .nav-right{display:flex;align-items:center;gap:8px;margin-left:8px;}
+  .icon-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .2s;}
+  .icon-btn:hover{color:var(--gold);border-color:var(--gold);}
+  .admin-btn.logged{border-color:var(--green);color:var(--green);}
+  .admin-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--green);display:none;}
+  .admin-btn{position:relative;}
+  .admin-btn.logged .admin-dot{display:block;}
 
-  /* PAGES */
-  .page { display: none; max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
-  .page.active { display: block; }
-  .page-header { margin-bottom: 28px; }
-  .page-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .page-sub { color: var(--text2); font-size: 14px; }
+  /* ===== ADMIN BAR ===== */
+  .admin-bar{background:rgba(76,175,125,.1);border-bottom:1px solid rgba(76,175,125,.3);padding:6px 24px;display:none;align-items:center;gap:8px;font-size:12px;color:var(--green);}
+  body.admin-mode .admin-bar{display:flex;}
 
-  /* FILTER BAR */
-  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; align-items: center; }
-  .filter-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s; }
-  .filter-btn:hover { color: var(--text); border-color: var(--text3); }
-  .filter-btn.active { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
-  .add-cat-btn { background: none; border: 1px dashed var(--border); color: var(--text3); cursor: pointer; font-size: 12px; padding: 6px 14px; border-radius: 20px; transition: all 0.2s; display: none; align-items: center; gap: 4px; }
-  .add-cat-btn:hover { color: var(--gold); border-color: var(--gold); }
-  body.admin-mode .add-cat-btn { display: flex; }
+  /* ===== PAGES ===== */
+  .page{display:none;max-width:1400px;margin:0 auto;padding:32px 24px 80px;}
+  .page.active{display:block;}
+  .page-header{margin-bottom:28px;}
+  .page-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .page-sub{color:var(--text2);font-size:14px;}
 
-  /* VIDEO / INSTANT GRID */
-  .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-  .video-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; }
-  .video-card:hover { transform: translateY(-3px); border-color: var(--gold); }
-  .video-thumb { width: 100%; aspect-ratio: 16/10; background: var(--bg3); position: relative; overflow: hidden; }
-  .video-thumb video { width: 100%; height: 100%; object-fit: cover; }
-  .video-thumb-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--bg3) 0%, var(--card2) 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: var(--text3); }
-  .play-icon { font-size: 40px; opacity: 0.6; }
-  .video-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; z-index: 2; }
-  .badge-red { background: var(--accent); color: #fff; }
-  .badge-purple { background: var(--purple); color: #fff; }
-  .badge-green { background: var(--green); color: #fff; }
-  .badge-blue { background: var(--blue); color: #fff; }
-  .badge-gold { background: var(--gold); color: var(--bg); }
-  .video-info { padding: 12px; }
-  .video-info-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
-  .video-info-sub { font-size: 12px; color: var(--text2); }
-  .video-play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.4); opacity: 0; transition: opacity 0.2s; z-index: 1; }
-  .video-card:hover .video-play-btn { opacity: 1; }
-  .video-play-btn span { width: 52px; height: 52px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .admin-actions { position: absolute; top: 8px; right: 8px; display: none; gap: 4px; z-index: 10; }
-  body.admin-mode .admin-actions { display: flex; }
-  .action-btn { background: var(--bg); border: 1px solid var(--border); color: var(--text2); border-radius: 6px; padding: 4px 8px; font-size: 11px; cursor: pointer; transition: all 0.2s; white-space: nowrap; }
-  .action-btn:hover { background: var(--gold); color: var(--bg); border-color: var(--gold); }
-  .action-btn.del:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  /* ===== FILTER BAR ===== */
+  .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;align-items:center;}
+  .filter-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;padding:6px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;}
+  .filter-btn:hover{color:var(--text);border-color:var(--text3);}
+  .filter-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);font-weight:700;}
+  .add-cat-btn{background:none;border:1px dashed var(--border);color:var(--text3);cursor:pointer;font-size:12px;padding:6px 14px;border-radius:20px;transition:all .2s;display:none;align-items:center;gap:4px;}
+  .add-cat-btn:hover{color:var(--gold);border-color:var(--gold);}
+  body.admin-mode .add-cat-btn{display:flex;}
 
-  /* ADD CARD */
-  .add-card { background: var(--card); border: 2px dashed var(--border); border-radius: 10px; cursor: pointer; display: none; align-items: center; justify-content: center; flex-direction: column; gap: 8px; min-height: 180px; color: var(--text3); transition: all 0.2s; }
-  .add-card:hover { border-color: var(--gold); color: var(--gold); }
-  .add-card span { font-size: 12px; }
-  body.admin-mode .add-card { display: flex; }
+  /* ===== VIDEO GRID ===== */
+  .video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+  .video-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:transform .2s,border-color .2s;position:relative;}
+  .video-card:hover{transform:translateY(-3px);border-color:var(--gold);}
+  /* drag mode */
+  body.admin-mode .video-card{cursor:grab;}
+  body.admin-mode .video-card:active{cursor:grabbing;}
+  .video-card.dragging{opacity:.4;border:2px dashed var(--gold);}
+  .video-card.drag-over{border:2px solid var(--gold2);background:rgba(201,168,76,.08);}
 
-  /* STORYTELLING */
-  .story-featured { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; cursor: pointer; transition: border-color 0.2s; position: relative; }
-  .story-featured:hover { border-color: var(--gold); }
-  .story-featured-img { width: 100%; height: 280px; background: linear-gradient(135deg, #1a1a2e, #2d2d2d); display: flex; align-items: center; justify-content: center; font-size: 64px; position: relative; overflow: hidden; }
-  .story-featured-img img { width: 100%; height: 100%; object-fit: cover; }
-  .story-featured-body { padding: 20px 24px; }
-  .story-cat { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; }
-  .story-featured-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-  .story-featured-sub { color: var(--text2); font-size: 14px; margin-bottom: 12px; }
-  .story-time { color: var(--text3); font-size: 12px; display: flex; align-items: center; gap: 6px; }
-  .stories-list { display: flex; flex-direction: column; gap: 12px; }
-  .story-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; gap: 16px; cursor: pointer; transition: border-color 0.2s; align-items: flex-start; position: relative; }
-  .story-item:hover { border-color: var(--gold); }
-  .story-item-img { width: 80px; height: 60px; border-radius: 6px; background: var(--bg3); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 24px; }
-  .story-item-img img { width: 100%; height: 100%; object-fit: cover; }
-  .story-item-cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent2); background: rgba(212,71,42,0.15); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
-  .story-item-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-  .story-item-time { color: var(--text3); font-size: 12px; }
+  .video-thumb{width:100%;aspect-ratio:16/10;background:var(--bg3);position:relative;overflow:hidden;}
+  .video-thumb video{width:100%;height:100%;object-fit:cover;}
+  .video-thumb-placeholder{width:100%;height:100%;background:linear-gradient(135deg,var(--bg3) 0%,var(--card2) 100%);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--text3);}
+  .play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);opacity:0;transition:opacity .2s;cursor:pointer;z-index:2;}
+  .video-card:hover .play-overlay{opacity:1;}
+  .play-circle{width:52px;height:52px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .video-badge{position:absolute;top:10px;left:10px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;z-index:3;}
+  .badge-red{background:var(--accent);color:#fff;}
+  .badge-purple{background:var(--purple);color:#fff;}
+  .badge-blue{background:var(--blue);color:#fff;}
+  .badge-gold{background:var(--gold);color:var(--bg);}
+  .badge-green{background:var(--green);color:#fff;}
 
-  /* HUB EMPLOI */
-  .emploi-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-  .tab-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); cursor: pointer; padding: 8px 20px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; transition: all 0.2s; }
-  .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { background: var(--gold); color: var(--bg); border-color: var(--gold); }
-  .emploi-section { display: none; }
-  .emploi-section.active { display: block; }
-  .emploi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
-  .emploi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; gap: 14px; align-items: flex-start; transition: border-color 0.2s; position: relative; }
-  .emploi-card:hover { border-color: var(--gold); }
-  .emploi-card.inactive { opacity: 0.45; filter: grayscale(0.8); }
-  .emploi-icon { width: 44px; height: 44px; border-radius: 8px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; overflow: hidden; }
-  .emploi-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-  .emploi-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .emploi-company { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
-  .emploi-desc { font-size: 12px; color: var(--text3); }
-  .emploi-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; letter-spacing: 0.5px; }
-  .badge-legal { background: rgba(76,175,125,0.2); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
-  .badge-service { background: rgba(61,139,205,0.2); color: var(--blue); border: 1px solid rgba(61,139,205,0.3); }
-  .badge-passion { background: rgba(155,89,182,0.2); color: var(--purple); border: 1px solid rgba(155,89,182,0.3); }
-  .badge-illegal { background: rgba(212,71,42,0.2); color: var(--accent); border: 1px solid rgba(212,71,42,0.3); }
-  .badge-closed { background: rgba(100,100,100,0.2); color: #888; border: 1px solid rgba(100,100,100,0.3); }
+  /* stats bar */
+  .video-stats{display:flex;align-items:center;gap:12px;padding:8px 12px 0;border-top:1px solid var(--border);margin-top:8px;}
+  .stat-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3);}
+  .like-btn{background:none;border:none;cursor:pointer;font-size:16px;line-height:1;transition:transform .15s;padding:0;}
+  .like-btn:hover{transform:scale(1.3);}
+  .like-btn.liked{animation:heartPop .25s ease;}
+  @keyframes heartPop{0%{transform:scale(1);}50%{transform:scale(1.5);}100%{transform:scale(1);}}
+  .view-icon{font-size:13px;}
+  .video-info{padding:10px 12px 12px;}
+  .video-info-title{font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text);}
+  .video-info-sub{font-size:12px;color:var(--text2);}
 
-  /* FORM */
-  .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 28px; max-width: 560px; }
-  .form-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-  .form-sub { color: var(--text2); font-size: 13px; margin-bottom: 24px; }
-  .form-group { margin-bottom: 16px; }
-  .form-label { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-input, .form-select, .form-textarea { width: 100%; background: var(--bg2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; transition: border-color 0.2s; outline: none; }
-  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
-  .form-select { appearance: none; cursor: pointer; }
-  .form-textarea { resize: vertical; min-height: 90px; }
-  .btn-submit { background: var(--gold); color: var(--bg); border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 12px 24px; border-radius: 8px; cursor: pointer; width: 100%; letter-spacing: 0.5px; transition: opacity 0.2s; }
-  .btn-submit:hover { opacity: 0.85; }
-  .btn-danger { background: var(--accent); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 8px; cursor: pointer; letter-spacing: 0.5px; transition: opacity 0.2s; }
-  .btn-danger:hover { opacity: 0.85; }
-  .btn-secondary { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+  /* admin card actions */
+  .card-admin-actions{position:absolute;top:8px;right:8px;display:none;gap:4px;z-index:10;}
+  body.admin-mode .card-admin-actions{display:flex;}
+  .action-btn{background:rgba(16,14,9,.8);border:1px solid var(--border);color:var(--text2);border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+  .action-btn:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);}
+  .action-btn.del:hover{background:var(--accent);border-color:var(--accent);color:#fff;}
 
-  /* CONCEPTS */
-  .concepts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-  .concept-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: transform 0.2s, border-color 0.2s; position: relative; }
-  .concept-card:hover { transform: translateY(-3px); border-color: var(--gold); }
-  .concept-img { width: 100%; height: 180px; background: var(--bg3); display: flex; align-items: center; justify-content: center; font-size: 40px; position: relative; overflow: hidden; }
-  .concept-img img { width: 100%; height: 100%; object-fit: cover; }
-  .concept-badge { position: absolute; top: 10px; left: 10px; }
-  .concept-body { padding: 14px; }
-  .concept-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .concept-meta { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
-  .stars { color: var(--gold); font-size: 13px; margin-bottom: 6px; }
-  .concept-desc { font-size: 12px; color: var(--text3); }
+  /* drag handle indicator in admin */
+  body.admin-mode .video-card::before{content:'⠿';position:absolute;bottom:8px;right:8px;color:var(--text3);font-size:14px;z-index:4;pointer-events:none;}
 
-  /* DROP BOX */
-  .dropbox-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
-  @media (max-width: 900px) { .dropbox-grid { grid-template-columns: 1fr; } }
-  .dropbox-sidebar { display: flex; flex-direction: column; gap: 16px; }
-  .info-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-  .info-card-title { font-size: 15px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .info-list { list-style: disc; padding-left: 20px; }
-  .info-list li { font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+  /* ===== SECTION ADMIN BAR ===== */
+  .sec-admin{display:none;justify-content:flex-end;margin-bottom:16px;gap:8px;}
+  body.admin-mode .sec-admin{display:flex;}
+  .sec-btn{background:var(--gold);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;padding:8px 18px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .2s;}
+  .sec-btn:hover{opacity:.85;}
+  .sec-btn-hint{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;padding:8px 14px;border-radius:8px;display:flex;align-items:center;gap:6px;}
 
-  /* RADAR */
-  .radar-section { margin-bottom: 32px; }
-  .radar-section-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text2); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-  .radar-live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.3); } }
-  .radar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
-  .radar-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; position: relative; }
-  .radar-card-left { flex: 1; }
-  .radar-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .radar-location { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
-  .radar-desc { font-size: 12px; color: var(--text3); }
-  .radar-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-  .crowd-meter { display: flex; gap: 3px; }
-  .crowd-bar { width: 6px; height: 20px; border-radius: 3px; background: var(--bg3); transition: background 0.3s; }
-  .crowd-bar.filled { background: var(--gold); }
-  .crowd-bar.hype { background: var(--accent); }
-  .crowd-label { font-size: 11px; color: var(--text2); display: flex; align-items: center; gap: 4px; }
-  .radar-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .radar-hype { background: rgba(212,71,42,0.15); color: var(--accent); border: 1px solid rgba(212,71,42,0.3); }
-  .radar-chill { background: rgba(61,139,205,0.15); color: var(--blue); border: 1px solid rgba(61,139,205,0.3); }
-  .radar-business { background: rgba(76,175,125,0.15); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
-  .radar-danger { background: rgba(212,71,42,0.2); color: var(--accent2); border: 1px solid rgba(212,71,42,0.4); }
+  /* ===== STORYTELLING ===== */
+  .story-featured{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;position:relative;transition:border-color .2s;}
+  .story-featured:hover{border-color:var(--gold);}
+  .story-featured-img{width:100%;height:280px;background:linear-gradient(135deg,#1a1a2e,#2d2d2d);display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;overflow:hidden;}
+  .story-featured-img img{width:100%;height:100%;object-fit:cover;}
+  .story-featured-body{padding:20px 24px;}
+  .story-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:8px;}
+  .story-featured-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;}
+  .story-featured-sub{color:var(--text2);font-size:14px;margin-bottom:12px;}
+  .story-time{color:var(--text3);font-size:12px;display:flex;align-items:center;gap:6px;}
+  .stories-list{display:flex;flex-direction:column;gap:12px;}
+  .story-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;gap:16px;align-items:flex-start;position:relative;transition:border-color .2s;}
+  .story-item:hover{border-color:var(--gold);}
+  /* story drag */
+  body.admin-mode .story-item,.story-featured{cursor:default;}
+  body.admin-mode .story-item::before{content:'⠿';position:absolute;top:10px;right:10px;color:var(--text3);font-size:14px;pointer-events:none;}
+  .story-item.dragging,.story-featured.dragging{opacity:.4;border:2px dashed var(--gold);}
+  .story-item.drag-over,.story-featured.drag-over{border:2px solid var(--gold2);background:rgba(201,168,76,.08);}
+  .story-item-img{width:80px;height:60px;border-radius:6px;background:var(--bg3);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;}
+  .story-item-img img{width:100%;height:100%;object-fit:cover;}
+  .story-item-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent2);background:rgba(212,71,42,.15);padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:6px;}
+  .story-item-title{font-size:14px;font-weight:600;margin-bottom:4px;}
+  .story-item-time{color:var(--text3);font-size:12px;}
 
-  /* ADMIN RADAR CONTROLS */
-  .radar-admin-controls { margin-top: 10px; display: none; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--border); }
-  body.admin-mode .radar-admin-controls { display: flex; }
-  .radar-crowd-edit { display: flex; gap: 6px; align-items: center; }
-  .crowd-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: var(--bg3); border-radius: 2px; outline: none; }
-  .crowd-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); cursor: pointer; }
-  .crowd-value { font-size: 11px; color: var(--gold); font-weight: 700; min-width: 14px; text-align: center; }
+  /* ===== HUB EMPLOI ===== */
+  .emploi-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+  .tab-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;padding:8px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;}
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);}
+  .emploi-section{display:none;}
+  .emploi-section.active{display:block;}
+  .emploi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;}
+  .emploi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;gap:14px;align-items:flex-start;transition:border-color .2s;position:relative;}
+  .emploi-card:hover{border-color:var(--gold);}
+  .emploi-card.inactive{opacity:.45;filter:grayscale(.8);}
+  .emploi-icon{width:44px;height:44px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden;}
+  .emploi-icon img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
+  .emploi-title{font-size:15px;font-weight:700;margin-bottom:4px;}
+  .emploi-company{font-size:12px;color:var(--text2);margin-bottom:6px;}
+  .emploi-desc{font-size:12px;color:var(--text3);}
+  .emploi-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:6px;letter-spacing:.5px;}
+  .badge-legal{background:rgba(76,175,125,.2);color:var(--green);border:1px solid rgba(76,175,125,.3);}
+  .badge-service{background:rgba(61,139,205,.2);color:var(--blue);border:1px solid rgba(61,139,205,.3);}
+  .badge-passion{background:rgba(155,89,182,.2);color:var(--purple);border:1px solid rgba(155,89,182,.3);}
+  .badge-illegal{background:rgba(212,71,42,.2);color:var(--accent);border:1px solid rgba(212,71,42,.3);}
+  .badge-closed{background:rgba(100,100,100,.2);color:#888;border:1px solid rgba(100,100,100,.3);}
 
-  /* VIDEO MODAL */
-  .video-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 500; display: none; align-items: center; justify-content: center; }
-  .video-modal-overlay.open { display: flex; }
-  .video-modal { width: 90vw; max-width: 900px; background: var(--bg2); border-radius: 12px; overflow: hidden; position: relative; }
-  .video-modal video { width: 100%; max-height: 70vh; display: block; background: #000; }
-  .video-modal-header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; }
-  .video-modal-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
-  .video-modal-close { background: var(--bg3); border: 1px solid var(--border); color: var(--text2); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  /* ===== FORM ===== */
+  .form-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:560px;}
+  .form-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px;}
+  .form-sub{color:var(--text2);font-size:13px;margin-bottom:24px;}
+  .form-group{margin-bottom:16px;}
+  .form-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.5px;}
+  .form-input,.form-select,.form-textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;transition:border-color .2s;outline:none;}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold);}
+  .form-select{appearance:none;cursor:pointer;}
+  .form-textarea{resize:vertical;min-height:90px;}
+  .btn-submit{background:var(--gold);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;cursor:pointer;width:100%;letter-spacing:.5px;transition:opacity .2s;}
+  .btn-submit:hover{opacity:.85;}
+  .btn-secondary{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 20px;border-radius:8px;cursor:pointer;}
 
-  /* GENERIC MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 32px; width: 420px; max-width: 96vw; max-height: 90vh; overflow-y: auto; animation: slideUp 0.25s ease; }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-  .modal-title { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; margin-bottom: 6px; text-align: center; }
-  .modal-sub { color: var(--text2); font-size: 13px; text-align: center; margin-bottom: 24px; }
-  .modal-avatar { font-size: 48px; text-align: center; margin-bottom: 16px; }
-  .modal-error { color: var(--accent); font-size: 12px; text-align: center; margin-top: 8px; display: none; }
-  .modal-btns { display: flex; gap: 8px; margin-top: 4px; }
-  .modal-btns button { flex: 1; }
+  /* ===== CONCEPTS ===== */
+  .concepts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+  .concept-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:transform .2s,border-color .2s;position:relative;}
+  .concept-card:hover{transform:translateY(-3px);border-color:var(--gold);}
+  .concept-img{width:100%;height:180px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;overflow:hidden;}
+  .concept-img img{width:100%;height:100%;object-fit:cover;}
+  .concept-badge{position:absolute;top:10px;left:10px;}
+  .concept-body{padding:14px;}
+  .concept-title{font-size:15px;font-weight:700;margin-bottom:4px;}
+  .concept-meta{font-size:12px;color:var(--text2);margin-bottom:8px;}
+  .stars{color:var(--gold);font-size:13px;margin-bottom:6px;}
+  .concept-desc{font-size:12px;color:var(--text3);}
 
-  /* MAIL INBOX */
-  .mail-list { display: flex; flex-direction: column; gap: 10px; }
-  .mail-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; cursor: pointer; transition: border-color 0.2s; }
-  .mail-item:hover { border-color: var(--gold); }
-  .mail-item.unread { border-left: 3px solid var(--gold); }
-  .mail-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-  .mail-from { font-size: 14px; font-weight: 700; }
-  .mail-time { font-size: 11px; color: var(--text3); }
-  .mail-domain { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-  .mail-preview { font-size: 12px; color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .mail-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); margin-top: 4px; }
-  .empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
-  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
-  .empty-state p { font-size: 14px; }
+  /* ===== DROP BOX ===== */
+  .dropbox-grid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;}
+  @media(max-width:900px){.dropbox-grid{grid-template-columns:1fr;}}
+  .dropbox-sidebar{display:flex;flex-direction:column;gap:16px;}
+  .info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+  .info-card-title{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .info-list{list-style:disc;padding-left:20px;}
+  .info-list li{font-size:13px;color:var(--text2);margin-bottom:6px;}
+
+  /* ===== RADAR ===== */
+  .radar-section{margin-bottom:32px;}
+  .radar-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .radar-live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.3);}}
+  .radar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+  .radar-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative;}
+  .radar-card-left{flex:1;}
+  .radar-name{font-size:15px;font-weight:700;margin-bottom:4px;}
+  .radar-location{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;margin-bottom:8px;}
+  .radar-desc{font-size:12px;color:var(--text3);}
+  .radar-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+  .crowd-meter{display:flex;gap:3px;}
+  .crowd-bar{width:6px;height:20px;border-radius:3px;background:var(--bg3);transition:background .3s;}
+  .crowd-bar.filled{background:var(--gold);}
+  .crowd-bar.hype{background:var(--accent);}
+  .crowd-label{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px;}
+  .radar-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;}
+  .radar-hype{background:rgba(212,71,42,.15);color:var(--accent);border:1px solid rgba(212,71,42,.3);}
+  .radar-chill{background:rgba(61,139,205,.15);color:var(--blue);border:1px solid rgba(61,139,205,.3);}
+  .radar-business{background:rgba(76,175,125,.15);color:var(--green);border:1px solid rgba(76,175,125,.3);}
+  .radar-danger{background:rgba(212,71,42,.2);color:var(--accent2);border:1px solid rgba(212,71,42,.4);}
+  .radar-admin-controls{margin-top:10px;display:none;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--border);}
+  body.admin-mode .radar-admin-controls{display:flex;}
+  .crowd-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--bg3);border-radius:2px;outline:none;}
+  .crowd-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;}
+  .crowd-value{font-size:11px;color:var(--gold);font-weight:700;min-width:14px;text-align:center;}
+
+  /* ===== MODALS ===== */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:32px;width:440px;max-width:96vw;max-height:90vh;overflow-y:auto;animation:slideUp .25s ease;}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .modal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;text-align:center;}
+  .modal-sub{color:var(--text2);font-size:13px;text-align:center;margin-bottom:24px;}
+  .modal-avatar{font-size:48px;text-align:center;margin-bottom:16px;}
+  .modal-error{color:var(--accent);font-size:12px;text-align:center;margin-top:8px;display:none;}
+  .modal-btns{display:flex;gap:8px;margin-top:4px;}
+  .modal-btns button{flex:1;}
+
+  /* VIDEO PLAYER MODAL */
+  .vplayer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;align-items:center;justify-content:center;}
+  .vplayer-overlay.open{display:flex;}
+  .vplayer-box{width:90vw;max-width:900px;background:var(--bg2);border-radius:12px;overflow:hidden;position:relative;}
+  .vplayer-box video{width:100%;max-height:70vh;display:block;background:#000;}
+  .vplayer-header{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+  .vplayer-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
+  .vplayer-close{background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
 
   /* UPLOAD ZONE */
-  .upload-zone { border: 2px dashed var(--border); border-radius: 8px; padding: 20px; text-align: center; color: var(--text3); cursor: pointer; transition: all 0.2s; font-size: 13px; }
-  .upload-zone:hover { border-color: var(--gold); color: var(--gold); }
-  .upload-zone input { display: none; }
-  .upload-preview { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text2); margin-top: 6px; }
-  .upload-preview img { width: 48px; height: 36px; object-fit: cover; border-radius: 4px; }
-  .upload-preview video { width: 80px; height: 48px; object-fit: cover; border-radius: 4px; }
+  .upload-zone{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text3);cursor:pointer;transition:all .2s;font-size:13px;}
+  .upload-zone:hover{border-color:var(--gold);color:var(--gold);}
+  .upload-zone input{display:none;}
+  .upload-preview{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text2);margin-top:8px;}
+  .upload-preview img{width:56px;height:40px;object-fit:cover;border-radius:4px;}
+  .upload-preview video{width:90px;height:54px;object-fit:cover;border-radius:4px;}
 
   /* STAR RATING */
-  .star-input { display: flex; gap: 4px; }
-  .star-input span { font-size: 22px; cursor: pointer; color: var(--bg3); transition: color 0.1s; }
-  .star-input span.lit { color: var(--gold); }
+  .star-input{display:flex;gap:4px;}
+  .star-input span{font-size:24px;cursor:pointer;color:var(--bg3);transition:color .1s;}
+  .star-input span.lit{color:var(--gold);}
 
-  /* ADMIN BAR */
-  .admin-bar { background: rgba(76,175,125,0.1); border-bottom: 1px solid rgba(76,175,125,0.3); padding: 6px 24px; display: none; align-items: center; gap: 8px; font-size: 12px; color: var(--green); }
-  body.admin-mode .admin-bar { display: flex; }
+  /* MAIL */
+  .mail-list{display:flex;flex-direction:column;gap:10px;}
+  .mail-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .2s;}
+  .mail-item:hover{border-color:var(--gold);}
+  .mail-item.unread{border-left:3px solid var(--gold);}
+  .mail-item-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .mail-from{font-size:14px;font-weight:700;}
+  .mail-time{font-size:11px;color:var(--text3);}
+  .mail-domain{font-size:12px;color:var(--text2);margin-bottom:4px;}
+  .mail-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .mail-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(201,168,76,.2);color:var(--gold);border:1px solid rgba(201,168,76,.3);margin-top:4px;}
+  .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
+  .empty-icon{font-size:48px;margin-bottom:12px;}
+  .mail-detail-field{margin-bottom:12px;}
+  .mail-detail-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);display:block;margin-bottom:4px;}
+  .mail-detail-field p{font-size:13px;color:var(--text);background:var(--bg3);padding:10px 14px;border-radius:8px;line-height:1.6;}
 
   /* TOAST */
-  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--card); border: 1px solid var(--green); color: var(--text); border-radius: 8px; padding: 12px 20px; font-size: 13px; z-index: 600; display: none; animation: fadeInUp 0.3s ease; }
-  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--green);color:var(--text);border-radius:8px;padding:12px 20px;font-size:13px;z-index:600;display:none;animation:fadeInUp .3s ease;}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
-  footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 20px 24px; }
-  .footer-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-  .footer-text { font-size: 12px; color: var(--text3); }
+  footer{background:var(--bg2);border-top:1px solid var(--border);padding:20px 24px;}
+  .footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+  .footer-text{font-size:12px;color:var(--text3);}
 
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-    .video-grid { grid-template-columns: 1fr 1fr; }
-  }
-
-  .section-admin-bar { display: none; justify-content: flex-end; margin-bottom: 16px; }
-  body.admin-mode .section-admin-bar { display: flex; }
-  .section-admin-btn { background: var(--gold); color: var(--bg); border: none; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 18px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
-  .section-admin-btn:hover { opacity: 0.85; }
-
-  /* MAIL DETAIL MODAL */
-  .mail-detail { padding: 4px 0; }
-  .mail-detail-field { margin-bottom: 12px; }
-  .mail-detail-field label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); display: block; margin-bottom: 4px; }
-  .mail-detail-field p { font-size: 13px; color: var(--text); background: var(--bg3); padding: 10px 14px; border-radius: 8px; line-height: 1.6; }
+  @media(max-width:768px){.nav-links{display:none;}.video-grid{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
 
-<div class="admin-bar">
-  <span>🛡️</span>
-  <span><strong>Mode Admin actif</strong> — Modifie le contenu en temps réel</span>
-</div>
+<div class="admin-bar">🛡️ <strong>Mode Admin actif</strong> — Modifie en temps réel · Glisse les blocs pour les réordonner</div>
 
 <nav>
   <div class="nav-inner">
-    <div class="logo" onclick="handleLogoClick()">
-      <div id="logo-display">
-        <span class="logo-img-placeholder">LatInvader</span>
-      </div>
-      <span class="logo-upload-hint">🖼️ Changer logo</span>
-      <input type="file" id="logo-file" accept="image/png,image/jpeg,image/svg+xml,image/webp" style="display:none" onchange="changeLogo(event)">
+    <!-- LOGO SVG inline reproduit fidèlement l'original -->
+    <div class="logo-svg-wrap">
+      <svg width="220" height="44" viewBox="0 0 220 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="frameGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d4b86a"/>
+            <stop offset="40%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="#8a6a1e"/>
+          </linearGradient>
+          <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1c1710"/>
+            <stop offset="100%" stop-color="#0e0c08"/>
+          </linearGradient>
+          <linearGradient id="iconGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c9a84c"/>
+            <stop offset="100%" stop-color="#8a6a1e"/>
+          </linearGradient>
+        </defs>
+        <!-- outer frame -->
+        <rect x="0.5" y="0.5" width="107" height="43" rx="5.5" fill="url(#bgGrad)" stroke="url(#frameGrad)" stroke-width="1.5"/>
+        <!-- corner accents -->
+        <rect x="1" y="1" width="8" height="1.5" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <rect x="1" y="1" width="1.5" height="8" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <rect x="100" y="1" width="8" height="1.5" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <rect x="106.5" y="1" width="1.5" height="8" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <rect x="1" y="41.5" width="8" height="1.5" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <rect x="1" y="35" width="1.5" height="8" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <rect x="100" y="41.5" width="8" height="1.5" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <rect x="106.5" y="35" width="1.5" height="8" rx=".75" fill="url(#frameGrad)" opacity=".8"/>
+        <!-- figure icon silhouette -->
+        <g transform="translate(7, 5)">
+          <!-- head -->
+          <ellipse cx="11" cy="8" rx="5" ry="5.5" fill="url(#iconGrad)" opacity=".9"/>
+          <!-- hair accent -->
+          <path d="M6.5 6 C7 2 15 2 15.5 6" fill="#8a6a1e" opacity=".7"/>
+          <!-- body / shoulders -->
+          <path d="M4 32 C4 22 7 18 11 17 C15 18 18 22 18 32 Z" fill="url(#iconGrad)" opacity=".85"/>
+          <!-- neckline detail -->
+          <path d="M9 16 L11 20 L13 16" fill="none" stroke="#c9a84c" stroke-width=".8" opacity=".6"/>
+        </g>
+        <!-- vertical separator line -->
+        <line x1="29" y1="6" x2="29" y2="38" stroke="url(#frameGrad)" stroke-width=".8" opacity=".5"/>
+        <!-- LatInvader text -->
+        <text x="35" y="28" font-family="'Playfair Display', Georgia, serif" font-size="17" font-weight="700" fill="url(#frameGrad)" letter-spacing=".5">LatInvader</text>
+        <!-- tagline separator + text -->
+        <line x1="116" y1="10" x2="116" y2="34" stroke="url(#frameGrad)" stroke-width=".8" opacity=".4"/>
+        <text x="122" y="18" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="600" fill="#c9a84c" letter-spacing="1.5" opacity=".9">ON MET</text>
+        <text x="122" y="27" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="600" fill="#c9a84c" letter-spacing="1.5" opacity=".9">L'ACCENT</text>
+        <text x="122" y="36" font-family="'DM Sans', sans-serif" font-size="7.5" font-weight="600" fill="#c9a84c" letter-spacing="1.5" opacity=".9">SUR L'ACTU</text>
+      </svg>
     </div>
     <div class="nav-links">
-      <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant"><span>🎬</span> L'Instant</button>
-      <button class="nav-btn" onclick="showPage('stories')" id="nav-stories"><span>✍️</span> Storytelling</button>
-      <button class="nav-btn" onclick="showPage('emploi')" id="nav-emploi"><span>💼</span> Hub Emploi</button>
-      <button class="nav-btn" onclick="showPage('concepts')" id="nav-concepts"><span>💡</span> Concepts</button>
-      <button class="nav-btn" onclick="showPage('dropbox')" id="nav-dropbox"><span>📬</span> Drop Box</button>
-      <button class="nav-btn" onclick="showPage('radar')" id="nav-radar"><span>📡</span> Le Radar</button>
+      <button class="nav-btn active" onclick="showPage('instant')" id="nav-instant">🎬 L'Instant</button>
+      <button class="nav-btn" onclick="showPage('stories')" id="nav-stories">✍️ Storytelling</button>
+      <button class="nav-btn" onclick="showPage('emploi')" id="nav-emploi">💼 Hub Emploi</button>
+      <button class="nav-btn" onclick="showPage('concepts')" id="nav-concepts">💡 Concepts</button>
+      <button class="nav-btn" onclick="showPage('dropbox')" id="nav-dropbox">📬 Drop Box</button>
+      <button class="nav-btn" onclick="showPage('radar')" id="nav-radar">📡 Le Radar</button>
     </div>
     <div class="nav-right">
-      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
-      <button class="admin-btn" onclick="openAdminModal()" id="admin-btn" title="Admin">🧍<div class="admin-dot"></div></button>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
+      <button class="icon-btn admin-btn" onclick="openAdminModal()" id="admin-btn" title="Admin">🧍<div class="admin-dot"></div></button>
     </div>
   </div>
 </nav>
@@ -319,19 +363,12 @@
     <div class="page-title">🎬 L'Instant</div>
     <div class="page-sub">Un instant de vie capturé pour l'éternité.</div>
   </div>
-  <div class="section-admin-bar">
-    <button class="section-admin-btn" onclick="openVideoModal()">➕ Ajouter une vidéo</button>
+  <div class="sec-admin">
+    <button class="sec-btn" onclick="openVideoModal()">➕ Ajouter une vidéo</button>
+    <div class="sec-btn-hint" id="drag-hint-instant" style="display:none">🤚 Glisse les cartes pour les réordonner</div>
   </div>
-  <div class="filter-bar" id="instant-filters">
-    <button class="filter-btn active" onclick="filterInstant('tout', this)">TOUT</button>
-    <button class="filter-btn" onclick="filterInstant('60s', this)">60 SECONDES D'ACTU</button>
-    <button class="filter-btn" onclick="filterInstant('micro', this)">MICRO-TROTTOIR</button>
-    <button class="filter-btn" onclick="filterInstant('colors', this)">COLORS STYLE</button>
-    <button class="add-cat-btn" onclick="addCategory('instant')">+ Catégorie</button>
-  </div>
-  <div class="video-grid" id="instant-grid">
-    <!-- JS rendered -->
-  </div>
+  <div class="filter-bar" id="instant-filters"></div>
+  <div class="video-grid" id="instant-grid"></div>
 </div>
 
 <!-- ============ STORYTELLING ============ -->
@@ -340,16 +377,11 @@
     <div class="page-title">✍️ Storytelling</div>
     <div class="page-sub">On dit tout haut ce que vous pensez tout bas.</div>
   </div>
-  <div class="section-admin-bar">
-    <button class="section-admin-btn" onclick="openStoryModal()">➕ Ajouter un article</button>
+  <div class="sec-admin">
+    <button class="sec-btn" onclick="openStoryModal()">➕ Ajouter un article</button>
+    <div class="sec-btn-hint" id="drag-hint-stories" style="display:none">🤚 Glisse les articles pour les réordonner</div>
   </div>
-  <div class="filter-bar" id="stories-filters">
-    <button class="filter-btn active" onclick="filterStories('tout', this)">TOUT</button>
-    <button class="filter-btn" onclick="filterStories('POTINS', this)">POTINS</button>
-    <button class="filter-btn" onclick="filterStories('BREAKING', this)">BREAKING</button>
-    <button class="filter-btn" onclick="filterStories('FAITS DIVERS', this)">FAITS DIVERS</button>
-    <button class="add-cat-btn" onclick="addCategory('stories')">+ Catégorie</button>
-  </div>
+  <div class="filter-bar" id="stories-filters"></div>
   <div id="stories-container"></div>
 </div>
 
@@ -359,44 +391,25 @@
     <div class="page-title">💼 Hub Emploi</div>
     <div class="page-sub">Le cabinet de recrutement n°1 de Los Santos.</div>
   </div>
-  <div class="emploi-tabs" id="emploi-tabs">
-    <button class="tab-btn active" onclick="switchEmploi('recrute', this)">On Recrute</button>
-    <button class="tab-btn" onclick="switchEmploi('cherche', this)">Je Cherche</button>
-    <button class="tab-btn" id="tab-mails" style="display:none" onclick="switchEmploi('mails', this)">📨 Mails reçus</button>
+  <div class="emploi-tabs">
+    <button class="tab-btn active" onclick="switchEmploi('recrute',this)">On Recrute</button>
+    <button class="tab-btn" onclick="switchEmploi('cherche',this)">Je Cherche</button>
+    <button class="tab-btn" id="tab-mails" style="display:none" onclick="switchEmploi('mails',this)">📨 Mails reçus</button>
   </div>
-
   <div class="emploi-section active" id="emploi-recrute">
-    <div class="section-admin-bar">
-      <button class="section-admin-btn" onclick="openEmploiModal()">➕ Ajouter une offre</button>
-    </div>
-    <div class="filter-bar" id="emploi-filters">
-      <button class="filter-btn active" onclick="filterEmploy('tout', this)">TOUT</button>
-      <button class="filter-btn" onclick="filterEmploy('service public', this)">SERVICE PUBLIC</button>
-      <button class="filter-btn" onclick="filterEmploy('boîte de nuit', this)">BOÎTE DE NUIT</button>
-      <button class="filter-btn" onclick="filterEmploy('mécano', this)">MÉCANO</button>
-      <button class="filter-btn" onclick="filterEmploy('restaurant', this)">RESTAURANT</button>
-      <button class="filter-btn" onclick="filterEmploy('media', this)">MÉDIA</button>
-      <button class="add-cat-btn" onclick="addCategory('emploi')">+ Catégorie</button>
-    </div>
+    <div class="sec-admin"><button class="sec-btn" onclick="openEmploiModal()">➕ Ajouter une offre</button></div>
+    <div class="filter-bar" id="emploi-filters"></div>
     <div class="emploi-grid" id="emploi-grid"></div>
   </div>
-
   <div class="emploi-section" id="emploi-cherche">
     <div class="form-card">
       <div class="form-title">📩 Dépose ta candidature</div>
       <div class="form-sub">On te recontacte quand une entreprise cherche dans ton domaine.</div>
-      <div class="form-group">
-        <label class="form-label">Ton prénom RP</label>
-        <input type="text" class="form-input" id="cand-name" placeholder="Ex: Marcus Reyes">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Numéro RP</label>
-        <input type="text" class="form-input" id="cand-num" placeholder="Ex: #4821">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Domaine recherché</label>
+      <div class="form-group"><label class="form-label">Prénom RP</label><input type="text" class="form-input" id="cand-name" placeholder="Ex: Marcus Reyes"></div>
+      <div class="form-group"><label class="form-label">Numéro RP</label><input type="text" class="form-input" id="cand-num" placeholder="Ex: #4821"></div>
+      <div class="form-group"><label class="form-label">Domaine</label>
         <select class="form-select" id="cand-domain">
-          <option value="">Sélectionner un domaine...</option>
+          <option value="">Sélectionner...</option>
           <option>Service public (LSMC, LSPD, LSFD...)</option>
           <option>Boîte de nuit / Entertainment</option>
           <option>Mécanique / Customs</option>
@@ -406,18 +419,14 @@
           <option>Autre</option>
         </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Précisions (optionnel)</label>
-        <textarea class="form-textarea" id="cand-note" placeholder="Expérience, disponibilités, envies..."></textarea>
-      </div>
-      <button class="btn-submit" onclick="submitCandidature()">📨 Envoyer ma candidature</button>
+      <div class="form-group"><label class="form-label">Précisions</label><textarea class="form-textarea" id="cand-note" placeholder="Expérience, disponibilités..."></textarea></div>
+      <button class="btn-submit" onclick="submitCandidature()">📨 Envoyer</button>
     </div>
   </div>
-
   <div class="emploi-section" id="emploi-mails">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-size:14px;color:var(--text2)" id="mail-count">Chargement...</div>
-      <button class="section-admin-btn" onclick="clearMails()">🗑️ Tout effacer</button>
+      <div style="font-size:14px;color:var(--text2)" id="mail-count">0 candidature(s)</div>
+      <button class="sec-btn" onclick="clearMails()">🗑️ Tout effacer</button>
     </div>
     <div class="mail-list" id="mail-list"></div>
   </div>
@@ -429,16 +438,8 @@
     <div class="page-title">💡 Concepts Originaux</div>
     <div class="page-sub">Fast & Food, Outfits, Le Switch — nos formats uniques.</div>
   </div>
-  <div class="section-admin-bar">
-    <button class="section-admin-btn" onclick="openConceptModal()">➕ Ajouter un concept</button>
-  </div>
-  <div class="filter-bar" id="concepts-filters">
-    <button class="filter-btn active" onclick="filterConcepts('tout', this)">TOUT</button>
-    <button class="filter-btn" onclick="filterConcepts('FAST & FOOD', this)">🍔 FAST & FOOD</button>
-    <button class="filter-btn" onclick="filterConcepts('OUTFITS', this)">👗 OUTFITS</button>
-    <button class="filter-btn" onclick="filterConcepts('LE SWITCH', this)">🔀 LE SWITCH</button>
-    <button class="add-cat-btn" onclick="addCategory('concepts')">+ Catégorie</button>
-  </div>
+  <div class="sec-admin"><button class="sec-btn" onclick="openConceptModal()">➕ Ajouter un concept</button></div>
+  <div class="filter-bar" id="concepts-filters"></div>
   <div class="concepts-grid" id="concepts-grid"></div>
 </div>
 
@@ -446,20 +447,13 @@
 <div class="page" id="page-dropbox">
   <div class="page-header">
     <div class="page-title">📬 Drop Box</div>
-    <div class="page-sub">Tu as une info, une vidéo, une preuve ? Balance tout ici, c'est 100% anonyme.</div>
+    <div class="page-sub">Balance tout ici, c'est 100% anonyme.</div>
   </div>
   <div class="dropbox-grid">
     <div class="form-card" style="max-width:100%">
-      <div class="form-group">
-        <label class="form-label">Titre (optionnel)</label>
-        <input type="text" class="form-input" id="drop-title" placeholder="Donne un titre à ton info...">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Ton info</label>
-        <textarea class="form-textarea" style="min-height:140px" id="drop-body" placeholder="Décris ce que tu as vu, entendu..."></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Catégorie</label>
+      <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="drop-title" placeholder="Titre..."></div>
+      <div class="form-group"><label class="form-label">Ton info</label><textarea class="form-textarea" style="min-height:140px" id="drop-body" placeholder="Décris ce que tu as vu..."></textarea></div>
+      <div class="form-group"><label class="form-label">Catégorie</label>
         <select class="form-select" id="drop-cat">
           <option>Bavure policière / Abus de pouvoir</option>
           <option>Activité illégale</option>
@@ -471,19 +465,9 @@
       <button class="btn-submit" onclick="submitDrop()">📨 Envoyer anonymement</button>
     </div>
     <div class="dropbox-sidebar">
-      <div class="info-card">
-        <div class="info-card-title">🛡️ 100% Anonyme</div>
-        <p style="font-size:13px;color:var(--text2)">Ton identité est protégée. Seule la rédaction de LatInvader a accès aux envois.</p>
-      </div>
-      <div class="info-card">
-        <div class="info-card-title">🎯 Ce qu'on recherche</div>
-        <ul class="info-list">
-          <li>Bavures policières ou abus de pouvoir</li>
-          <li>Activités illégales flagrantes</li>
-          <li>Scoops et infos exclusives</li>
-          <li>Vidéos de courses-poursuites ou événements</li>
-          <li>Potins sur des personnalités de la ville</li>
-        </ul>
+      <div class="info-card"><div class="info-card-title">🛡️ 100% Anonyme</div><p style="font-size:13px;color:var(--text2)">Seule la rédaction de LatInvader a accès aux envois.</p></div>
+      <div class="info-card"><div class="info-card-title">🎯 Ce qu'on recherche</div>
+        <ul class="info-list"><li>Bavures policières</li><li>Activités illégales</li><li>Scoops exclusifs</li><li>Vidéos d'événements</li><li>Potins sur des personnalités</li></ul>
       </div>
     </div>
   </div>
@@ -495,9 +479,7 @@
     <div class="page-title">📡 Le Radar</div>
     <div class="page-sub">Où ça bouge ce soir à Los Santos ?</div>
   </div>
-  <div class="section-admin-bar">
-    <button class="section-admin-btn" onclick="openRadarModal()">➕ Ajouter un spot</button>
-  </div>
+  <div class="sec-admin"><button class="sec-btn" onclick="openRadarModal()">➕ Ajouter un spot</button></div>
   <div class="radar-section">
     <div class="radar-section-title"><div class="radar-live-dot"></div> SPOTS HYPE — MAINTENANT</div>
     <div class="radar-grid" id="radar-hype-grid"></div>
@@ -511,632 +493,446 @@
 <footer>
   <div class="footer-inner">
     <div style="display:flex;align-items:center;gap:10px">
-      <div style="width:28px;height:28px;background:var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--bg)">L</div>
+      <svg width="28" height="28" viewBox="0 0 28 28"><rect width="28" height="28" rx="4" fill="#c9a84c"/><text x="14" y="20" text-anchor="middle" font-family="'Bebas Neue',sans-serif" font-size="16" fill="#100e09">L</text></svg>
       <span class="footer-text">© LatInvader — On met l'accent sur l'actualité</span>
     </div>
     <span class="footer-text">Le média n°1 de Los Santos</span>
   </div>
 </footer>
 
-<!-- ===== MODAL: ADMIN LOGIN ===== -->
+<!-- MODAL: ADMIN LOGIN -->
 <div class="modal-overlay" id="admin-modal">
   <div class="modal">
     <div class="modal-avatar">🧍</div>
     <div class="modal-title">Connexion Admin</div>
     <div class="modal-sub">Entre ton mot de passe pour accéder au mode édition.</div>
-    <div class="form-group">
-      <label class="form-label">Mot de passe</label>
-      <input type="password" class="form-input" id="admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()">
-    </div>
+    <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" class="form-input" id="admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()"></div>
     <button class="btn-submit" onclick="loginAdmin()">Se connecter</button>
     <div class="modal-error" id="admin-error">Mot de passe incorrect.</div>
-    <div style="margin-top:12px;text-align:center">
-      <button style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;" onclick="closeModal('admin-modal')">Annuler</button>
-    </div>
+    <div style="margin-top:12px;text-align:center"><button style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer" onclick="closeModal('admin-modal')">Annuler</button></div>
   </div>
 </div>
 
-<!-- ===== MODAL: ADD/EDIT VIDEO ===== -->
+<!-- MODAL: VIDEO ADD/EDIT -->
 <div class="modal-overlay" id="video-modal">
   <div class="modal" style="width:480px">
-    <div class="modal-title" id="video-modal-title">Ajouter une vidéo</div>
-    <div style="margin-bottom:20px"></div>
-    <div class="form-group">
-      <label class="form-label">Titre</label>
-      <input type="text" class="form-input" id="vm-title" placeholder="Titre de la vidéo...">
+    <div class="modal-title" id="vm-modal-title">Ajouter une vidéo</div>
+    <div style="height:16px"></div>
+    <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="vm-title" placeholder="Titre..."></div>
+    <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="vm-desc" placeholder="Description..."></div>
+    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="vm-cat"></select></div>
+    <div class="form-group"><label class="form-label">Fichier vidéo</label>
+      <div class="upload-zone" onclick="document.getElementById('vm-file').click()">📹 Uploader une vidéo<input type="file" id="vm-file" accept="video/*" onchange="handleVideoFile(event)"></div>
+      <div id="vm-preview" class="upload-preview" style="display:none"></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <input type="text" class="form-input" id="vm-desc" placeholder="Description courte...">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Catégorie</label>
-      <select class="form-select" id="vm-cat">
-        <option value="60s">60 SECONDES D'ACTU</option>
-        <option value="micro">MICRO-TROTTOIR</option>
-        <option value="colors">COLORS STYLE</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Fichier vidéo</label>
-      <div class="upload-zone" onclick="document.getElementById('vm-file').click()">
-        📹 Cliquez pour uploader une vidéo
-        <input type="file" id="vm-file" accept="video/*" onchange="previewVideo(event)">
-      </div>
-      <div class="upload-preview" id="vm-preview" style="display:none"></div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn-submit" onclick="saveVideo()">✅ Enregistrer</button>
-      <button class="btn-secondary" onclick="closeModal('video-modal')">Annuler</button>
-    </div>
+    <div class="modal-btns"><button class="btn-submit" onclick="saveVideo()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('video-modal')">Annuler</button></div>
   </div>
 </div>
 
-<!-- ===== MODAL: VIDEO PLAYER ===== -->
-<div class="video-modal-overlay" id="video-player-overlay" onclick="closeVideoPlayer(event)">
-  <div class="video-modal" id="video-modal-box">
-    <div class="video-modal-header">
-      <span class="video-modal-title" id="vplayer-title">Vidéo</span>
-      <button class="video-modal-close" onclick="closeVideoPlayer()">✕</button>
+<!-- MODAL: VIDEO PLAYER -->
+<div class="vplayer-overlay" id="vplayer-overlay" onclick="closeVPlayer(event)">
+  <div class="vplayer-box">
+    <div class="vplayer-header">
+      <span class="vplayer-title" id="vplayer-title">Vidéo</span>
+      <button class="vplayer-close" onclick="closeVPlayer()">✕</button>
     </div>
     <video id="vplayer-el" controls></video>
   </div>
 </div>
 
-<!-- ===== MODAL: ADD/EDIT CONCEPT ===== -->
+<!-- MODAL: CONCEPT ADD/EDIT -->
 <div class="modal-overlay" id="concept-modal">
   <div class="modal" style="width:480px">
-    <div class="modal-title" id="concept-modal-title">Ajouter un concept</div>
-    <div style="margin-bottom:20px"></div>
-    <div class="form-group">
-      <label class="form-label">Titre</label>
-      <input type="text" class="form-input" id="cm-title" placeholder="Titre...">
+    <div class="modal-title" id="cm-modal-title">Ajouter un concept</div>
+    <div style="height:16px"></div>
+    <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="cm-title"></div>
+    <div class="form-group"><label class="form-label">Lieu / Sous-titre</label><input type="text" class="form-input" id="cm-meta"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="cm-desc"></textarea></div>
+    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="cm-cat"></select></div>
+    <div class="form-group"><label class="form-label">Note</label><div class="star-input" id="cm-stars"><span onclick="setStars(1)">★</span><span onclick="setStars(2)">★</span><span onclick="setStars(3)">★</span><span onclick="setStars(4)">★</span><span onclick="setStars(5)">★</span></div></div>
+    <div class="form-group"><label class="form-label">Image (PNG/JPG)</label>
+      <div class="upload-zone" onclick="document.getElementById('cm-file').click()">🖼️ Uploader une image<input type="file" id="cm-file" accept="image/*" onchange="previewImg(event,'cm-preview')"></div>
+      <div id="cm-preview" class="upload-preview" style="display:none"></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Lieu / Sous-titre</label>
-      <input type="text" class="form-input" id="cm-meta" placeholder="Ex: Burger Shot — Vespucci">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <textarea class="form-textarea" id="cm-desc" placeholder="Description..."></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Catégorie</label>
-      <select class="form-select" id="cm-cat">
-        <option value="FAST & FOOD">🍔 FAST & FOOD</option>
-        <option value="OUTFITS">👗 OUTFITS</option>
-        <option value="LE SWITCH">🔀 LE SWITCH</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Note (étoiles)</label>
-      <div class="star-input" id="cm-stars">
-        <span onclick="setStars(1)">★</span>
-        <span onclick="setStars(2)">★</span>
-        <span onclick="setStars(3)">★</span>
-        <span onclick="setStars(4)">★</span>
-        <span onclick="setStars(5)">★</span>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Image (PNG/JPG)</label>
-      <div class="upload-zone" onclick="document.getElementById('cm-file').click()">
-        🖼️ Cliquez pour uploader une image
-        <input type="file" id="cm-file" accept="image/*" onchange="previewImage(event, 'cm-preview')">
-      </div>
-      <div class="upload-preview" id="cm-preview" style="display:none"></div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn-submit" onclick="saveConcept()">✅ Enregistrer</button>
-      <button class="btn-secondary" onclick="closeModal('concept-modal')">Annuler</button>
-    </div>
+    <div class="modal-btns"><button class="btn-submit" onclick="saveConcept()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('concept-modal')">Annuler</button></div>
   </div>
 </div>
 
-<!-- ===== MODAL: ADD/EDIT EMPLOI ===== -->
+<!-- MODAL: EMPLOI ADD/EDIT -->
 <div class="modal-overlay" id="emploi-modal">
   <div class="modal" style="width:480px">
-    <div class="modal-title" id="emploi-modal-title">Ajouter une offre</div>
-    <div style="margin-bottom:20px"></div>
-    <div class="form-group">
-      <label class="form-label">Titre du poste</label>
-      <input type="text" class="form-input" id="em-title" placeholder="Ex: Ambulancier">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Entreprise</label>
-      <input type="text" class="form-input" id="em-company" placeholder="Ex: Los Santos Medical Center">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <textarea class="form-textarea" id="em-desc" placeholder="Description du poste..."></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Catégorie</label>
-      <select class="form-select" id="em-cat">
-        <option value="service public">Service public</option>
-        <option value="boîte de nuit">Boîte de nuit</option>
-        <option value="mécano">Mécano</option>
-        <option value="restaurant">Restaurant</option>
-        <option value="media">Média</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Statut</label>
+    <div class="modal-title" id="em-modal-title">Ajouter une offre</div>
+    <div style="height:16px"></div>
+    <div class="form-group"><label class="form-label">Titre du poste</label><input type="text" class="form-input" id="em-title"></div>
+    <div class="form-group"><label class="form-label">Entreprise</label><input type="text" class="form-input" id="em-company"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="em-desc"></textarea></div>
+    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="em-cat"></select></div>
+    <div class="form-group"><label class="form-label">Statut</label>
       <select class="form-select" id="em-status">
-        <option value="legal">Légal</option>
-        <option value="service">Service</option>
-        <option value="passion">Passion</option>
-        <option value="illegal">Illégal</option>
-        <option value="closed">Ne recrute plus</option>
+        <option value="legal">Légal</option><option value="service">Service</option><option value="passion">Passion</option><option value="illegal">Illégal</option><option value="closed">Ne recrute plus</option>
       </select>
     </div>
-    <div class="form-group">
-      <label class="form-label">Icône / Logo (PNG)</label>
-      <div class="upload-zone" onclick="document.getElementById('em-file').click()">
-        🏢 Cliquez pour uploader une image
-        <input type="file" id="em-file" accept="image/*" onchange="previewImage(event, 'em-preview')">
-      </div>
-      <div class="upload-preview" id="em-preview" style="display:none"></div>
+    <div class="form-group"><label class="form-label">Logo (PNG)</label>
+      <div class="upload-zone" onclick="document.getElementById('em-file').click()">🏢 Uploader un logo<input type="file" id="em-file" accept="image/*" onchange="previewImg(event,'em-preview')"></div>
+      <div id="em-preview" class="upload-preview" style="display:none"></div>
     </div>
-    <div class="modal-btns">
-      <button class="btn-submit" onclick="saveEmploi()">✅ Enregistrer</button>
-      <button class="btn-secondary" onclick="closeModal('emploi-modal')">Annuler</button>
-    </div>
+    <div class="modal-btns"><button class="btn-submit" onclick="saveEmploi()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('emploi-modal')">Annuler</button></div>
   </div>
 </div>
 
-<!-- ===== MODAL: ADD/EDIT RADAR ===== -->
+<!-- MODAL: RADAR ADD/EDIT -->
 <div class="modal-overlay" id="radar-modal">
   <div class="modal" style="width:480px">
-    <div class="modal-title" id="radar-modal-title">Ajouter un spot</div>
-    <div style="margin-bottom:20px"></div>
-    <div class="form-group">
-      <label class="form-label">Nom du spot</label>
-      <input type="text" class="form-input" id="rm-name" placeholder="Ex: Vanilla Unicorn">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Quartier / Localisation</label>
-      <input type="text" class="form-input" id="rm-loc" placeholder="Ex: Strawberry">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Description</label>
-      <textarea class="form-textarea" id="rm-desc" placeholder="Ce qui se passe là-bas..."></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Ambiance</label>
-      <select class="form-select" id="rm-status">
-        <option value="hype">HYPE</option>
-        <option value="chill">CHILL</option>
-        <option value="business">BUSINESS</option>
-        <option value="danger">DANGER</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Affluence (1-5)</label>
-      <input type="range" min="1" max="5" value="3" id="rm-crowd" class="crowd-slider" oninput="document.getElementById('rm-crowd-val').textContent=this.value">
-      <div style="display:flex;justify-content:space-between;margin-top:4px">
-        <span style="font-size:11px;color:var(--text3)">Vide</span>
-        <span style="font-size:12px;color:var(--gold);font-weight:700" id="rm-crowd-val">3</span>
-        <span style="font-size:11px;color:var(--text3)">Blindé</span>
-      </div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn-submit" onclick="saveRadar()">✅ Enregistrer</button>
-      <button class="btn-secondary" onclick="closeModal('radar-modal')">Annuler</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MODAL: MAIL DETAIL ===== -->
-<div class="modal-overlay" id="mail-modal">
-  <div class="modal" style="width:500px">
-    <div class="modal-title">📨 Candidature</div>
+    <div class="modal-title" id="rm-modal-title">Ajouter un spot</div>
     <div style="height:16px"></div>
-    <div class="mail-detail" id="mail-detail-content"></div>
-    <div style="margin-top:16px">
-      <button class="btn-secondary" style="width:100%" onclick="closeModal('mail-modal')">Fermer</button>
+    <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="rm-name"></div>
+    <div class="form-group"><label class="form-label">Quartier</label><input type="text" class="form-input" id="rm-loc"></div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="rm-desc"></textarea></div>
+    <div class="form-group"><label class="form-label">Ambiance</label>
+      <select class="form-select" id="rm-status"><option value="hype">HYPE</option><option value="chill">CHILL</option><option value="business">BUSINESS</option><option value="danger">DANGER</option></select>
     </div>
+    <div class="form-group"><label class="form-label">Affluence</label>
+      <input type="range" min="1" max="5" value="3" id="rm-crowd" class="crowd-slider" oninput="document.getElementById('rm-cv').textContent=this.value">
+      <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="font-size:11px;color:var(--text3)">Vide</span><span style="font-size:12px;color:var(--gold);font-weight:700" id="rm-cv">3</span><span style="font-size:11px;color:var(--text3)">Blindé</span></div>
+    </div>
+    <div class="modal-btns"><button class="btn-submit" onclick="saveRadar()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('radar-modal')">Annuler</button></div>
   </div>
 </div>
 
-<!-- ===== MODAL: ADD CATEGORY ===== -->
+<!-- MODAL: ADD CATEGORY -->
 <div class="modal-overlay" id="addcat-modal">
   <div class="modal">
     <div class="modal-title">Nouvelle catégorie</div>
     <div class="modal-sub">Donne un nom à ta catégorie.</div>
-    <div class="form-group">
-      <label class="form-label">Nom</label>
-      <input type="text" class="form-input" id="addcat-name" placeholder="Ex: Interviews">
-    </div>
-    <div class="modal-btns">
-      <button class="btn-submit" onclick="confirmAddCategory()">✅ Créer</button>
-      <button class="btn-secondary" onclick="closeModal('addcat-modal')">Annuler</button>
-    </div>
+    <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="addcat-name" placeholder="Ex: Interviews"></div>
+    <div class="modal-btns"><button class="btn-submit" onclick="confirmAddCat()">✅ Créer</button><button class="btn-secondary" onclick="closeModal('addcat-modal')">Annuler</button></div>
   </div>
 </div>
 
-<!-- ===== MODAL: STORY ===== -->
+<!-- MODAL: STORY ADD/EDIT -->
 <div class="modal-overlay" id="story-modal">
   <div class="modal" style="width:480px">
-    <div class="modal-title" id="story-modal-title">Ajouter un article</div>
-    <div style="margin-bottom:20px"></div>
-    <div class="form-group">
-      <label class="form-label">Titre</label>
-      <input type="text" class="form-input" id="sm-title" placeholder="Titre de l'article...">
+    <div class="modal-title" id="sm-modal-title">Ajouter un article</div>
+    <div style="height:16px"></div>
+    <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="sm-title"></div>
+    <div class="form-group"><label class="form-label">Sous-titre</label><input type="text" class="form-input" id="sm-sub"></div>
+    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="sm-cat"></select></div>
+    <div class="form-group"><label class="form-label">Heure</label><input type="text" class="form-input" id="sm-time" placeholder="Ex: Il y a 2 heures"></div>
+    <div class="form-group"><label class="form-label">Image</label>
+      <div class="upload-zone" onclick="document.getElementById('sm-file').click()">🖼️ Uploader une image<input type="file" id="sm-file" accept="image/*" onchange="previewImg(event,'sm-preview')"></div>
+      <div id="sm-preview" class="upload-preview" style="display:none"></div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Sous-titre</label>
-      <input type="text" class="form-input" id="sm-sub" placeholder="Sous-titre...">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Catégorie</label>
-      <select class="form-select" id="sm-cat">
-        <option>BREAKING</option>
-        <option>POTINS</option>
-        <option>FAITS DIVERS</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Heure de publication</label>
-      <input type="text" class="form-input" id="sm-time" placeholder="Ex: Il y a 2 heures">
-    </div>
-    <div class="form-group">
-      <label class="form-label">Image (optionnel)</label>
-      <div class="upload-zone" onclick="document.getElementById('sm-file').click()">
-        🖼️ Cliquez pour uploader une image
-        <input type="file" id="sm-file" accept="image/*" onchange="previewImage(event, 'sm-preview')">
-      </div>
-      <div class="upload-preview" id="sm-preview" style="display:none"></div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn-submit" onclick="saveStory()">✅ Enregistrer</button>
-      <button class="btn-secondary" onclick="closeModal('story-modal')">Annuler</button>
-    </div>
+    <div class="modal-btns"><button class="btn-submit" onclick="saveStory()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('story-modal')">Annuler</button></div>
   </div>
 </div>
 
-<div class="toast" id="toast">✅ Action effectuée !</div>
+<!-- MODAL: MAIL DETAIL -->
+<div class="modal-overlay" id="mail-modal">
+  <div class="modal" style="width:500px">
+    <div class="modal-title">📨 Candidature</div>
+    <div style="height:12px"></div>
+    <div id="mail-detail"></div>
+    <div style="margin-top:16px"><button class="btn-secondary" style="width:100%" onclick="closeModal('mail-modal')">Fermer</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
-// ===== STATE =====
+// ========== STATE ==========
 let isAdmin = false;
 const ADMIN_PASS = "21032001";
-let currentCatContext = '';
 let editingId = null;
+let pendingCatCtx = '';
 let currentStars = 3;
-let currentLogoSrc = null;
 
-// DATA STORES
+// ========== DATA ==========
 let videos = [
-  { id: 1, title: "Un monde de chien pour l'ouverture de la boutique", desc: "Notre reporter sur place", cat: "60s", videoSrc: null },
-  { id: 2, title: "Braquage au Fleeca Bank : 60 secondes chrono", desc: "Résumé ultra-rapide du braquage", cat: "60s", videoSrc: null },
-  { id: 3, title: "C'est quoi ton salaire à LS ?", desc: "On a posé la question qui fâche...", cat: "micro", videoSrc: null },
-  { id: 4, title: "Lil Smokey — Interview Colors", desc: "Le rappeur de Strawberry se confie...", cat: "colors", videoSrc: null },
-  { id: 5, title: "Course-poursuite sur l'autoroute", desc: "La LSPD en action ce matin à 6h", cat: "60s", videoSrc: null },
+  {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,views:142,likes:38,liked:false},
+  {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,views:89,likes:21,liked:false},
+  {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,views:211,likes:54,liked:false},
+  {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,views:75,likes:19,liked:false},
+  {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,views:304,likes:67,liked:false},
 ];
-let videoIdSeq = 6;
-let instantCats = [
-  { id: '60s', label: '60 SECONDES D\'ACTU' },
-  { id: 'micro', label: 'MICRO-TROTTOIR' },
-  { id: 'colors', label: 'COLORS STYLE' },
-];
-let currentInstantFilter = 'tout';
+let vidSeq = 6;
+let instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS STYLE'}];
+let instantFilter = 'tout';
 
 let stories = [
-  { id: 1, title: "BREAKING : Fusillade au Unicorn, 3 blessés", sub: "Les secours sont sur place, la police boucle le quartier", cat: "BREAKING", time: "Il y a 16 heures", img: null, featured: true },
-  { id: 2, title: "Qui est la mystérieuse femme du maire ?", sub: "", cat: "POTINS", time: "Il y a 16 heures", img: null, featured: false },
-  { id: 3, title: "Un dealer arrêté en plein deal à Strawberry", sub: "", cat: "FAITS DIVERS", time: "Il y a 2 heures", img: null, featured: false },
-  { id: 4, title: "Le Diamond Casino racheté ? Les rumeurs s'intensifient", sub: "", cat: "POTINS", time: "Il y a 1 jour", img: null, featured: false },
+  {id:1,title:"BREAKING : Fusillade au Unicorn, 3 blessés",sub:"Les secours sont sur place",cat:"BREAKING",time:"Il y a 16 heures",img:null},
+  {id:2,title:"Qui est la mystérieuse femme du maire ?",sub:"",cat:"POTINS",time:"Il y a 16 heures",img:null},
+  {id:3,title:"Un dealer arrêté en plein deal à Strawberry",sub:"",cat:"FAITS DIVERS",time:"Il y a 2 heures",img:null},
+  {id:4,title:"Le Diamond Casino racheté ? Les rumeurs s'intensifient",sub:"",cat:"POTINS",time:"Il y a 1 jour",img:null},
 ];
-let storyIdSeq = 5;
-let storyCats = ['BREAKING', 'POTINS', 'FAITS DIVERS'];
-let currentStoriesFilter = 'tout';
+let storySeq = 5;
+let storyCats = ['BREAKING','POTINS','FAITS DIVERS'];
+let storiesFilter = 'tout';
 
 let emplois = [
-  { id: 1, title: "Ambulancier", company: "Los Santos Medical Center", desc: "On cherche des ambulanciers motivés.", cat: "service public", status: "legal", img: null },
-  { id: 2, title: "Barman / DJ", company: "Bahama Mamas", desc: "Le club le plus hype de LS recrute.", cat: "boîte de nuit", status: "passion", img: null },
-  { id: 3, title: "Mécanicien", company: "LS Customs", desc: "Tu sais tourner une clé ? On a besoin de toi.", cat: "mécano", status: "service", img: null },
-  { id: 4, title: "Caméraman", company: "Weazel News", desc: "Oui, même la concurrence recrute.", cat: "media", status: "legal", img: null },
-  { id: 5, title: "Serveur", company: "Burger Shot — Vespucci", desc: "Le rush du midi, ça te connaît ?", cat: "restaurant", status: "service", img: null },
+  {id:1,title:"Ambulancier",company:"Los Santos Medical Center",desc:"Ambulanciers motivés pour les urgences de nuit.",cat:"service public",status:"legal",img:null},
+  {id:2,title:"Barman / DJ",company:"Bahama Mamas",desc:"Le club le plus hype de LS recrute.",cat:"boîte de nuit",status:"passion",img:null},
+  {id:3,title:"Mécanicien",company:"LS Customs",desc:"Tu sais tourner une clé ? On a besoin de toi.",cat:"mécano",status:"service",img:null},
+  {id:4,title:"Caméraman",company:"Weazel News",desc:"Oui, même la concurrence recrute.",cat:"media",status:"legal",img:null},
+  {id:5,title:"Serveur",company:"Burger Shot — Vespucci",desc:"Le rush du midi, ça te connaît ?",cat:"restaurant",status:"service",img:null},
 ];
-let emploiIdSeq = 6;
-let emploiCats = ['service public', 'boîte de nuit', 'mécano', 'restaurant', 'media'];
-let currentEmploiFilter = 'tout';
+let emploiSeq = 6;
+let emploiCats = ['service public','boîte de nuit','mécano','restaurant','media'];
+let emploiFilter = 'tout';
 let mailbox = [];
 
 let concepts = [
-  { id: 1, title: "Le Mega Burger du Burger Shot", meta: "Burger Shot — Vespucci", desc: "C'est gras, c'est cheap, mais ça cale.", cat: "FAST & FOOD", stars: 2, img: null },
-  { id: 2, title: "L'outfit à 50k$ de Marcus", meta: "Ponsonbys — Rockford Hills", desc: "Marcus nous a montré sa tenue complète. Le drip est réel.", cat: "OUTFITS", stars: 5, img: null },
-  { id: 3, title: "24h dans la peau d'un dépanneur", meta: "LS Roads — Davis", desc: "On a suivi un dépanneur pendant 24h. C'est un métier de fou.", cat: "LE SWITCH", stars: 3, img: null },
+  {id:1,title:"Le Mega Burger du Burger Shot",meta:"Burger Shot — Vespucci",desc:"C'est gras, c'est cheap, mais ça cale.",cat:"FAST & FOOD",stars:2,img:null},
+  {id:2,title:"L'outfit à 50k$ de Marcus",meta:"Ponsonbys — Rockford Hills",desc:"Marcus nous a montré sa tenue. Le drip est réel.",cat:"OUTFITS",stars:5,img:null},
+  {id:3,title:"24h dans la peau d'un dépanneur",meta:"LS Roads — Davis",desc:"On a suivi un dépanneur 24h. C'est un métier de fou.",cat:"LE SWITCH",stars:3,img:null},
 ];
-let conceptIdSeq = 4;
-let conceptCats = ['FAST & FOOD', 'OUTFITS', 'LE SWITCH'];
-let currentConceptsFilter = 'tout';
+let conceptSeq = 4;
+let conceptCats = ['FAST & FOOD','OUTFITS','LE SWITCH'];
+let conceptsFilter = 'tout';
 
 let radarSpots = [
-  { id: 1, name: "Vanilla Unicorn", loc: "Strawberry", desc: "La soirée bat son plein, DJ set live ce soir.", status: "hype", crowd: 5 },
-  { id: 2, name: "Bahama Mamas", loc: "Downtown LS", desc: "Soirée open bar + contest DJ. Ça va être chaud.", status: "hype", crowd: 4 },
-  { id: 3, name: "Del Perro Pier", loc: "Del Perro Beach", desc: "Chill au bord de l'eau, quelques groupes tranquilles.", status: "chill", crowd: 3 },
-  { id: 4, name: "Diamond Casino & Resort", loc: "Vinewood", desc: "Les gros joueurs sont là ce soir. Ambiance feutrée.", status: "business", crowd: 4 },
-  { id: 5, name: "Grove Street", loc: "Davis", desc: "Tensions ce soir, restez prudents dans le coin.", status: "danger", crowd: 2 },
+  {id:1,name:"Vanilla Unicorn",loc:"Strawberry",desc:"La soirée bat son plein, DJ set live.",status:"hype",crowd:5},
+  {id:2,name:"Bahama Mamas",loc:"Downtown LS",desc:"Soirée open bar + contest DJ.",status:"hype",crowd:4},
+  {id:3,name:"Del Perro Pier",loc:"Del Perro Beach",desc:"Chill au bord de l'eau.",status:"chill",crowd:3},
+  {id:4,name:"Diamond Casino & Resort",loc:"Vinewood",desc:"Les gros joueurs sont là ce soir.",status:"business",crowd:4},
+  {id:5,name:"Grove Street",loc:"Davis",desc:"Tensions ce soir, restez prudents.",status:"danger",crowd:2},
 ];
-let radarIdSeq = 6;
+let radarSeq = 6;
 
-// ===== NAVIGATION =====
-function showPage(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.getElementById('nav-' + page).classList.add('active');
-  if (page === 'instant') renderInstant();
-  if (page === 'stories') renderStories();
-  if (page === 'concepts') renderConcepts();
-  if (page === 'emploi') renderEmploi();
-  if (page === 'radar') renderRadar();
+// ========== NAV ==========
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('nav-'+p).classList.add('active');
+  const renders = {instant:renderInstant,stories:renderStories,concepts:renderConcepts,emploi:renderEmploi,radar:renderRadar};
+  if(renders[p]) renders[p]();
+}
+function toggleTheme(){
+  const h=document.documentElement;
+  const d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('theme-btn').textContent=d?'☀️':'🌙';
 }
 
-// ===== THEME =====
-function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('theme-btn').textContent = isDark ? '☀️' : '🌙';
-}
-
-// ===== LOGO =====
-function handleLogoClick() {
-  if (isAdmin) document.getElementById('logo-file').click();
-}
-function changeLogo(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  currentLogoSrc = url;
-  document.getElementById('logo-display').innerHTML = `<img src="${url}" class="logo-img" alt="LatInvader Logo">`;
-  showToast('🖼️ Logo mis à jour !');
-}
-
-// ===== ADMIN =====
-function openAdminModal() {
-  if (isAdmin) { logoutAdmin(); return; }
-  document.getElementById('admin-password').value = '';
-  document.getElementById('admin-error').style.display = 'none';
+// ========== ADMIN ==========
+function openAdminModal(){
+  if(isAdmin){logoutAdmin();return;}
+  document.getElementById('admin-password').value='';
+  document.getElementById('admin-error').style.display='none';
   openModal('admin-modal');
-  setTimeout(() => document.getElementById('admin-password').focus(), 100);
+  setTimeout(()=>document.getElementById('admin-password').focus(),100);
 }
-function loginAdmin() {
-  if (document.getElementById('admin-password').value === ADMIN_PASS) {
-    isAdmin = true;
+function loginAdmin(){
+  if(document.getElementById('admin-password').value===ADMIN_PASS){
+    isAdmin=true;
     document.body.classList.add('admin-mode');
     document.getElementById('admin-btn').classList.add('logged');
-    document.getElementById('tab-mails').style.display = 'flex';
+    document.getElementById('tab-mails').style.display='flex';
+    document.getElementById('drag-hint-instant').style.display='flex';
+    document.getElementById('drag-hint-stories').style.display='flex';
     closeModal('admin-modal');
     renderAll();
     showToast('🛡️ Mode admin activé !');
   } else {
-    document.getElementById('admin-error').style.display = 'block';
-    document.getElementById('admin-password').value = '';
+    document.getElementById('admin-error').style.display='block';
+    document.getElementById('admin-password').value='';
   }
 }
-function logoutAdmin() {
-  isAdmin = false;
+function logoutAdmin(){
+  isAdmin=false;
   document.body.classList.remove('admin-mode');
   document.getElementById('admin-btn').classList.remove('logged');
-  document.getElementById('tab-mails').style.display = 'none';
+  document.getElementById('tab-mails').style.display='none';
+  document.getElementById('drag-hint-instant').style.display='none';
+  document.getElementById('drag-hint-stories').style.display='none';
   renderAll();
-  showToast('👋 Déconnecté du mode admin');
+  showToast('👋 Déconnecté');
 }
 
-// ===== MODAL HELPERS =====
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-document.querySelectorAll('.modal-overlay').forEach(m => {
-  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+// ========== MODALS ==========
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});
 });
 
-// ===== RENDER ALL =====
-function renderAll() {
-  renderInstant();
-  renderStories();
-  renderConcepts();
-  renderEmploi();
-  renderRadar();
-}
+// ========== RENDER ALL ==========
+function renderAll(){renderInstant();renderStories();renderConcepts();renderEmploi();renderRadar();}
 
-// ===== CAT FILTER HELPER =====
-function buildFilterBar(containerId, cats, allLabel, filterFn, currentFilter, addCatCtx) {
+// ========== FILTER BAR BUILDER ==========
+function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx) {
   const bar = document.getElementById(containerId);
-  bar.innerHTML = `<button class="filter-btn${currentFilter==='tout'?' active':''}" onclick="${filterFn}('tout', this)">${allLabel}</button>`;
-  cats.forEach(c => {
-    const id = typeof c === 'object' ? c.id : c;
-    const label = typeof c === 'object' ? c.label : c;
-    bar.innerHTML += `<button class="filter-btn${currentFilter===id?' active':''}" onclick="${filterFn}('${id}', this)">${label}</button>`;
+  bar.innerHTML = `<button class="filter-btn${currentFilter==='tout'?' active':''}" onclick="${filterFn}('tout',this)">TOUT</button>`;
+  cats.forEach(c=>{
+    const id=typeof c==='object'?c.id:c;
+    const lbl=typeof c==='object'?c.label:c;
+    bar.innerHTML+=`<button class="filter-btn${currentFilter===id?' active':''}" onclick="${filterFn}('${id}',this)">${lbl}</button>`;
   });
-  bar.innerHTML += `<button class="add-cat-btn" onclick="addCategory('${addCatCtx}')">+ Catégorie</button>`;
+  bar.innerHTML+=`<button class="add-cat-btn" onclick="addCategory('${catCtx}')">+ Catégorie</button>`;
 }
 
-// ===== INSTANT / VIDEOS =====
-function renderInstant() {
-  buildFilterBar('instant-filters', instantCats, 'TOUT', 'filterInstant', currentInstantFilter, 'instant');
+// ========== INSTANT ==========
+function renderInstant(){
+  buildFilterBar('instant-filters',instantCats,'filterInstant',instantFilter,'instant');
+  const filtered = instantFilter==='tout' ? [...videos] : videos.filter(v=>v.cat===instantFilter);
   const grid = document.getElementById('instant-grid');
-  const filtered = currentInstantFilter === 'tout' ? videos : videos.filter(v => v.cat === currentInstantFilter);
-  grid.innerHTML = filtered.map(v => `
-    <div class="video-card" data-id="${v.id}" data-cat="${v.cat}">
+  grid.innerHTML = filtered.map(v=>`
+    <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
+         ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
       <div class="video-thumb" onclick="playVideo(${v.id})">
-        ${v.videoSrc ? `<video src="${v.videoSrc}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div class="play-icon">▶</div></div>`}
-        <div class="video-badge badge-red">${getCatLabel(v.cat, instantCats)}</div>
-        <div class="video-play-btn"><span>▶</span></div>
-        ${isAdmin ? `<div class="admin-actions">
-          <button class="action-btn" onclick="event.stopPropagation();editVideo(${v.id})">✏️ Modifier</button>
+        ${v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">▶</div><div style="font-size:12px">Aucune vidéo</div></div>`}
+        <div class="video-badge badge-red">${getCatLabel(v.cat,instantCats)}</div>
+        <div class="play-overlay"><div class="play-circle">▶</div></div>
+        ${isAdmin?`<div class="card-admin-actions">
+          <button class="action-btn" onclick="event.stopPropagation();editVideo(${v.id})">✏️</button>
           <button class="action-btn del" onclick="event.stopPropagation();deleteVideo(${v.id})">🗑️</button>
-        </div>` : ''}
+        </div>`:''}
       </div>
       <div class="video-info">
         <div class="video-info-title">${v.title}</div>
         <div class="video-info-sub">${v.desc}</div>
       </div>
+      <div class="video-stats">
+        <div class="stat-item">
+          <button class="like-btn${v.liked?' liked':''}" onclick="toggleLike(${v.id})" title="J'aime">${v.liked?'❤️':'🤍'}</button>
+          <span>${v.likes}</span>
+        </div>
+        <div class="stat-item"><span class="view-icon">👁</span><span>${formatNum(v.views)}</span></div>
+      </div>
     </div>
   `).join('');
 }
-function getCatLabel(id, catsArr) {
-  const c = catsArr.find(x => (typeof x === 'object' ? x.id : x) === id);
-  return c ? (typeof c === 'object' ? c.label : c) : id;
-}
-function filterInstant(cat, btn) {
-  currentInstantFilter = cat;
+function filterInstant(cat,btn){instantFilter=cat;renderInstant();}
+function getCatLabel(id,arr){const c=arr.find(x=>(typeof x==='object'?x.id:x)===id);return c?(typeof c==='object'?c.label:c):id;}
+function formatNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
+
+function toggleLike(id){
+  const v=videos.find(x=>x.id===id);if(!v)return;
+  v.liked=!v.liked;v.likes+=v.liked?1:-1;
   renderInstant();
 }
-function openVideoModal(id = null) {
-  editingId = id;
-  const v = id ? videos.find(x => x.id === id) : null;
-  document.getElementById('video-modal-title').textContent = id ? 'Modifier la vidéo' : 'Ajouter une vidéo';
-  document.getElementById('vm-title').value = v ? v.title : '';
-  document.getElementById('vm-desc').value = v ? v.desc : '';
-  document.getElementById('vm-cat').innerHTML = instantCats.map(c => `<option value="${c.id}"${v && v.cat===c.id?' selected':''}>${c.label}</option>`).join('');
-  document.getElementById('vm-preview').style.display = 'none';
-  document.getElementById('vm-file').value = '';
+function playVideo(id){
+  const v=videos.find(x=>x.id===id);if(!v)return;
+  v.views++;
+  if(!v.src){showToast('ℹ️ Aucune vidéo uploadée pour ce post.');renderInstant();return;}
+  document.getElementById('vplayer-title').textContent=v.title;
+  document.getElementById('vplayer-el').src=v.src;
+  document.getElementById('vplayer-el').play();
+  document.getElementById('vplayer-overlay').classList.add('open');
+  renderInstant();
+}
+function closeVPlayer(e){
+  if(e&&e.target!==document.getElementById('vplayer-overlay'))return;
+  document.getElementById('vplayer-el').pause();
+  document.getElementById('vplayer-overlay').classList.remove('open');
+}
+function openVideoModal(id=null){
+  editingId=id;
+  const v=id?videos.find(x=>x.id===id):null;
+  document.getElementById('vm-modal-title').textContent=id?'Modifier la vidéo':'Ajouter une vidéo';
+  document.getElementById('vm-title').value=v?v.title:'';
+  document.getElementById('vm-desc').value=v?v.desc:'';
+  document.getElementById('vm-cat').innerHTML=instantCats.map(c=>`<option value="${c.id}"${v&&v.cat===c.id?' selected':''}>${c.label}</option>`).join('');
+  document.getElementById('vm-preview').style.display='none';
+  document.getElementById('vm-file').value='';delete document.getElementById('vm-file').dataset.url;
   openModal('video-modal');
 }
-function previewVideo(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  e.target.dataset.url = url;
-  const prev = document.getElementById('vm-preview');
-  prev.style.display = 'flex';
-  prev.innerHTML = `<video src="${url}" style="width:120px;height:70px;border-radius:6px" muted></video><span>${file.name}</span>`;
+function handleVideoFile(e){
+  const f=e.target.files[0];if(!f)return;
+  const url=URL.createObjectURL(f);e.target.dataset.url=url;
+  const p=document.getElementById('vm-preview');p.style.display='flex';
+  p.innerHTML=`<video src="${url}" style="width:100px;height:60px;border-radius:4px" muted></video><span>${f.name}</span>`;
 }
-function saveVideo() {
-  const title = document.getElementById('vm-title').value.trim();
-  if (!title) { showToast('⚠️ Donne un titre !'); return; }
-  const fileInput = document.getElementById('vm-file');
-  const videoSrc = fileInput.dataset.url || (editingId ? videos.find(v=>v.id===editingId)?.videoSrc : null);
-  const data = { title, desc: document.getElementById('vm-desc').value, cat: document.getElementById('vm-cat').value, videoSrc };
-  if (editingId) {
-    const idx = videos.findIndex(v => v.id === editingId);
-    videos[idx] = { ...videos[idx], ...data };
-  } else {
-    videos.push({ id: videoIdSeq++, ...data });
-  }
-  closeModal('video-modal');
-  renderInstant();
-  showToast(editingId ? '✅ Vidéo modifiée !' : '✅ Vidéo ajoutée !');
-  editingId = null;
+function saveVideo(){
+  const t=document.getElementById('vm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
+  const fi=document.getElementById('vm-file');
+  const src=fi.dataset.url||(editingId?videos.find(v=>v.id===editingId)?.src:null);
+  const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src};
+  if(editingId){const i=videos.findIndex(v=>v.id===editingId);videos[i]={...videos[i],...d};}
+  else{videos.push({id:vidSeq++,...d,views:0,likes:0,liked:false});}
+  closeModal('video-modal');renderInstant();showToast(editingId?'✅ Vidéo modifiée !':'✅ Vidéo ajoutée !');editingId=null;
 }
-function editVideo(id) { openVideoModal(id); }
-function deleteVideo(id) {
-  if (!confirm('Supprimer cette vidéo ?')) return;
-  videos = videos.filter(v => v.id !== id);
-  renderInstant();
-  showToast('🗑️ Vidéo supprimée');
-}
-function playVideo(id) {
-  const v = videos.find(x => x.id === id);
-  if (!v || !v.videoSrc) { showToast('ℹ️ Aucune vidéo uploadée pour ce post.'); return; }
-  document.getElementById('vplayer-title').textContent = v.title;
-  const el = document.getElementById('vplayer-el');
-  el.src = v.videoSrc;
-  el.play();
-  document.getElementById('video-player-overlay').classList.add('open');
-}
-function closeVideoPlayer(e) {
-  if (e && e.target !== document.getElementById('video-player-overlay')) return;
-  document.getElementById('vplayer-el').pause();
-  document.getElementById('video-player-overlay').classList.remove('open');
-}
+function editVideo(id){openVideoModal(id);}
+function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);renderInstant();showToast('🗑️ Supprimée');}
 
-// ===== STORIES =====
-function renderStories() {
-  buildFilterBar('stories-filters', storyCats.map(c => ({id:c,label:c})), 'TOUT', 'filterStories', currentStoriesFilter, 'stories');
-  const container = document.getElementById('stories-container');
-  const filtered = currentStoriesFilter === 'tout' ? stories : stories.filter(s => s.cat === currentStoriesFilter);
-  const featured = filtered.find(s => s.featured) || filtered[0];
-  const list = filtered.filter(s => s !== featured);
-  let html = '';
-  if (featured) {
-    html += `<div class="story-featured" style="position:relative">
-      <div class="story-featured-img">${featured.img ? `<img src="${featured.img}">` : '🔫'}</div>
+// ========== STORYTELLING ==========
+function renderStories(){
+  buildFilterBar('stories-filters',storyCats.map(c=>({id:c,label:c})),'filterStories',storiesFilter,'stories');
+  const filtered=storiesFilter==='tout'?[...stories]:stories.filter(s=>s.cat===storiesFilter);
+  const c=document.getElementById('stories-container');
+  if(!filtered.length){c.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><p>Aucun article.</p></div>';return;}
+  const [feat,...rest]=filtered;
+  c.innerHTML=`
+    <div class="story-featured" draggable="${isAdmin}" data-id="${feat.id}"
+         ondragstart="dragStart(event,'story')" ondragover="dragOver(event)" ondrop="dropItem(event,'story')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
+      <div class="story-featured-img">${feat.img?`<img src="${feat.img}">`:'🔫'}</div>
       <div class="story-featured-body">
-        <div class="story-cat">⚡ ${featured.cat}</div>
-        <div class="story-featured-title">${featured.title}</div>
-        <div class="story-featured-sub">${featured.sub}</div>
-        <div class="story-time">🕐 ${featured.time}</div>
+        <div class="story-cat">⚡ ${feat.cat}</div>
+        <div class="story-featured-title">${feat.title}</div>
+        <div class="story-featured-sub">${feat.sub}</div>
+        <div class="story-time">🕐 ${feat.time}</div>
       </div>
-      ${isAdmin ? `<div class="admin-actions" style="top:12px;right:12px">
-        <button class="action-btn" onclick="editStory(${featured.id})">✏️</button>
-        <button class="action-btn del" onclick="deleteStory(${featured.id})">🗑️</button>
-      </div>` : ''}
-    </div>`;
-  }
-  html += `<div class="stories-list">`;
-  list.forEach(s => {
-    html += `<div class="story-item" style="position:relative">
-      <div class="story-item-img">${s.img ? `<img src="${s.img}">` : '📰'}</div>
-      <div>
-        <div class="story-item-cat">${s.cat}</div>
-        <div class="story-item-title">${s.title}</div>
-        <div class="story-item-time">🕐 ${s.time}</div>
-      </div>
-      ${isAdmin ? `<div class="admin-actions">
-        <button class="action-btn" onclick="editStory(${s.id})">✏️</button>
-        <button class="action-btn del" onclick="deleteStory(${s.id})">🗑️</button>
-      </div>` : ''}
-    </div>`;
-  });
-  html += `</div>`;
-  container.innerHTML = html;
+      ${isAdmin?`<div class="card-admin-actions" style="top:12px;right:12px">
+        <button class="action-btn" onclick="editStory(${feat.id})">✏️</button>
+        <button class="action-btn del" onclick="deleteStory(${feat.id})">🗑️</button>
+      </div>`:''}
+    </div>
+    <div class="stories-list" id="stories-list">
+      ${rest.map(s=>`
+        <div class="story-item" draggable="${isAdmin}" data-id="${s.id}"
+             ondragstart="dragStart(event,'story')" ondragover="dragOver(event)" ondrop="dropItem(event,'story')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
+          <div class="story-item-img">${s.img?`<img src="${s.img}">`:'📰'}</div>
+          <div style="flex:1">
+            <div class="story-item-cat">${s.cat}</div>
+            <div class="story-item-title">${s.title}</div>
+            <div class="story-item-time">🕐 ${s.time}</div>
+          </div>
+          ${isAdmin?`<div class="card-admin-actions" style="position:relative;top:0;right:0;margin-left:auto">
+            <button class="action-btn" onclick="editStory(${s.id})">✏️</button>
+            <button class="action-btn del" onclick="deleteStory(${s.id})">🗑️</button>
+          </div>`:''}
+        </div>
+      `).join('')}
+    </div>
+  `;
 }
-function filterStories(cat, btn) { currentStoriesFilter = cat; renderStories(); }
-function openStoryModal(id = null) {
-  editingId = id;
-  const s = id ? stories.find(x => x.id === id) : null;
-  document.getElementById('story-modal-title').textContent = id ? 'Modifier l\'article' : 'Ajouter un article';
-  document.getElementById('sm-title').value = s ? s.title : '';
-  document.getElementById('sm-sub').value = s ? s.sub : '';
-  document.getElementById('sm-cat').innerHTML = storyCats.map(c => `<option value="${c}"${s&&s.cat===c?' selected':''}>${c}</option>`).join('');
-  document.getElementById('sm-time').value = s ? s.time : 'Il y a quelques instants';
-  document.getElementById('sm-preview').style.display = 'none';
+function filterStories(cat){storiesFilter=cat;renderStories();}
+function openStoryModal(id=null){
+  editingId=id;const s=id?stories.find(x=>x.id===id):null;
+  document.getElementById('sm-modal-title').textContent=id?'Modifier l\'article':'Ajouter un article';
+  document.getElementById('sm-title').value=s?s.title:'';
+  document.getElementById('sm-sub').value=s?s.sub:'';
+  document.getElementById('sm-cat').innerHTML=storyCats.map(c=>`<option value="${c}"${s&&s.cat===c?' selected':''}>${c}</option>`).join('');
+  document.getElementById('sm-time').value=s?s.time:'Il y a quelques instants';
+  document.getElementById('sm-preview').style.display='none';
+  document.getElementById('sm-file').value='';delete document.getElementById('sm-file').dataset.url;
   openModal('story-modal');
 }
-function saveStory() {
-  const title = document.getElementById('sm-title').value.trim();
-  if (!title) { showToast('⚠️ Donne un titre !'); return; }
-  const fileInput = document.getElementById('sm-file');
-  const img = (fileInput.files[0] && fileInput.dataset.url) || (editingId ? stories.find(s=>s.id===editingId)?.img : null);
-  const data = { title, sub: document.getElementById('sm-sub').value, cat: document.getElementById('sm-cat').value, time: document.getElementById('sm-time').value || 'Il y a quelques instants', img, featured: false };
-  if (editingId) {
-    const idx = stories.findIndex(s => s.id === editingId);
-    stories[idx] = { ...stories[idx], ...data };
-  } else {
-    stories.push({ id: storyIdSeq++, ...data });
-  }
-  closeModal('story-modal');
-  renderStories();
-  showToast(editingId ? '✅ Article modifié !' : '✅ Article ajouté !');
-  editingId = null;
+function saveStory(){
+  const t=document.getElementById('sm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
+  const fi=document.getElementById('sm-file');
+  const img=fi.dataset.url||(editingId?stories.find(s=>s.id===editingId)?.img:null);
+  const d={title:t,sub:document.getElementById('sm-sub').value,cat:document.getElementById('sm-cat').value,time:document.getElementById('sm-time').value||'Il y a quelques instants',img};
+  if(editingId){const i=stories.findIndex(s=>s.id===editingId);stories[i]={...stories[i],...d};}
+  else{stories.push({id:storySeq++,...d});}
+  closeModal('story-modal');renderStories();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
-function editStory(id) { openStoryModal(id); }
-function deleteStory(id) {
-  if (!confirm('Supprimer cet article ?')) return;
-  stories = stories.filter(s => s.id !== id);
-  renderStories();
-  showToast('🗑️ Article supprimé');
-}
+function editStory(id){openStoryModal(id);}
+function deleteStory(id){if(!confirm('Supprimer ?'))return;stories=stories.filter(s=>s.id!==id);renderStories();showToast('🗑️ Supprimé');}
 
-// ===== CONCEPTS =====
-function renderConcepts() {
-  buildFilterBar('concepts-filters', conceptCats.map(c=>({id:c,label:c})), 'TOUT', 'filterConcepts', currentConceptsFilter, 'concepts');
-  const grid = document.getElementById('concepts-grid');
-  const filtered = currentConceptsFilter === 'tout' ? concepts : concepts.filter(c => c.cat === currentConceptsFilter);
-  grid.innerHTML = filtered.map(c => `
+// ========== CONCEPTS ==========
+function renderConcepts(){
+  buildFilterBar('concepts-filters',conceptCats.map(c=>({id:c,label:c})),'filterConcepts',conceptsFilter,'concepts');
+  const filtered=conceptsFilter==='tout'?concepts:concepts.filter(c=>c.cat===conceptsFilter);
+  document.getElementById('concepts-grid').innerHTML=filtered.map(c=>`
     <div class="concept-card">
       <div class="concept-img">
-        ${c.img ? `<img src="${c.img}">` : catEmoji(c.cat)}
+        ${c.img?`<img src="${c.img}">`:catEmoji(c.cat)}
         <div class="concept-badge"><span class="video-badge badge-gold">${c.cat}</span></div>
-        ${isAdmin ? `<div class="admin-actions">
+        ${isAdmin?`<div class="card-admin-actions">
           <button class="action-btn" onclick="editConcept(${c.id})">✏️</button>
           <button class="action-btn del" onclick="deleteConcept(${c.id})">🗑️</button>
-        </div>` : ''}
+        </div>`:''}
       </div>
       <div class="concept-body">
         <div class="concept-title">${c.title}</div>
@@ -1147,207 +943,149 @@ function renderConcepts() {
     </div>
   `).join('');
 }
-function catEmoji(cat) {
-  if (cat === 'FAST & FOOD') return '🍔';
-  if (cat === 'OUTFITS') return '👗';
-  if (cat === 'LE SWITCH') return '🔀';
-  return '💡';
+function catEmoji(cat){return{'FAST & FOOD':'🍔','OUTFITS':'👗','LE SWITCH':'🔀'}[cat]||'💡';}
+function filterConcepts(cat){conceptsFilter=cat;renderConcepts();}
+function openConceptModal(id=null){
+  editingId=id;const c=id?concepts.find(x=>x.id===id):null;
+  currentStars=c?c.stars:3;
+  document.getElementById('cm-modal-title').textContent=id?'Modifier':'Ajouter un concept';
+  document.getElementById('cm-title').value=c?c.title:'';
+  document.getElementById('cm-meta').value=c?c.meta:'';
+  document.getElementById('cm-desc').value=c?c.desc:'';
+  document.getElementById('cm-cat').innerHTML=conceptCats.map(cat=>`<option value="${cat}"${c&&c.cat===cat?' selected':''}>${cat}</option>`).join('');
+  document.getElementById('cm-preview').style.display='none';
+  document.getElementById('cm-file').value='';delete document.getElementById('cm-file').dataset.url;
+  renderStarInput();openModal('concept-modal');
 }
-function filterConcepts(cat, btn) { currentConceptsFilter = cat; renderConcepts(); }
-function openConceptModal(id = null) {
-  editingId = id;
-  const c = id ? concepts.find(x => x.id === id) : null;
-  currentStars = c ? c.stars : 3;
-  document.getElementById('concept-modal-title').textContent = id ? 'Modifier le concept' : 'Ajouter un concept';
-  document.getElementById('cm-title').value = c ? c.title : '';
-  document.getElementById('cm-meta').value = c ? c.meta : '';
-  document.getElementById('cm-desc').value = c ? c.desc : '';
-  document.getElementById('cm-cat').innerHTML = conceptCats.map(cat => `<option value="${cat}"${c&&c.cat===cat?' selected':''}>${cat}</option>`).join('');
-  document.getElementById('cm-preview').style.display = 'none';
-  document.getElementById('cm-file').value = '';
-  renderStars();
-  openModal('concept-modal');
+function setStars(n){currentStars=n;renderStarInput();}
+function renderStarInput(){document.querySelectorAll('#cm-stars span').forEach((el,i)=>el.classList.toggle('lit',i<currentStars));}
+function saveConcept(){
+  const t=document.getElementById('cm-title').value.trim();if(!t){showToast('⚠️ Titre requis');return;}
+  const fi=document.getElementById('cm-file');
+  const img=fi.dataset.url||(editingId?concepts.find(c=>c.id===editingId)?.img:null);
+  const d={title:t,meta:document.getElementById('cm-meta').value,desc:document.getElementById('cm-desc').value,cat:document.getElementById('cm-cat').value,stars:currentStars,img};
+  if(editingId){const i=concepts.findIndex(c=>c.id===editingId);concepts[i]={...concepts[i],...d};}
+  else{concepts.push({id:conceptSeq++,...d});}
+  closeModal('concept-modal');renderConcepts();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
-function setStars(n) { currentStars = n; renderStars(); }
-function renderStars() {
-  const els = document.querySelectorAll('#cm-stars span');
-  els.forEach((el, i) => el.classList.toggle('lit', i < currentStars));
-}
-function saveConcept() {
-  const title = document.getElementById('cm-title').value.trim();
-  if (!title) { showToast('⚠️ Donne un titre !'); return; }
-  const fileInput = document.getElementById('cm-file');
-  const img = fileInput.dataset.url || (editingId ? concepts.find(c=>c.id===editingId)?.img : null);
-  const data = { title, meta: document.getElementById('cm-meta').value, desc: document.getElementById('cm-desc').value, cat: document.getElementById('cm-cat').value, stars: currentStars, img };
-  if (editingId) {
-    const idx = concepts.findIndex(c => c.id === editingId);
-    concepts[idx] = { ...concepts[idx], ...data };
-  } else {
-    concepts.push({ id: conceptIdSeq++, ...data });
-  }
-  closeModal('concept-modal');
-  renderConcepts();
-  showToast(editingId ? '✅ Concept modifié !' : '✅ Concept ajouté !');
-  editingId = null;
-}
-function editConcept(id) { openConceptModal(id); }
-function deleteConcept(id) {
-  if (!confirm('Supprimer ce concept ?')) return;
-  concepts = concepts.filter(c => c.id !== id);
-  renderConcepts();
-  showToast('🗑️ Concept supprimé');
-}
+function editConcept(id){openConceptModal(id);}
+function deleteConcept(id){if(!confirm('Supprimer ?'))return;concepts=concepts.filter(c=>c.id!==id);renderConcepts();showToast('🗑️ Supprimé');}
 
-// ===== EMPLOI =====
-function renderEmploi() {
-  buildFilterBar('emploi-filters', emploiCats.map(c=>({id:c,label:c.toUpperCase()})), 'TOUT', 'filterEmploy', currentEmploiFilter, 'emploi');
-  const grid = document.getElementById('emploi-grid');
-  const filtered = currentEmploiFilter === 'tout' ? emplois : emplois.filter(e => e.cat === currentEmploiFilter);
-  grid.innerHTML = filtered.map(e => {
-    const badgeMap = { legal:'badge-legal', service:'badge-service', passion:'badge-passion', illegal:'badge-illegal', closed:'badge-closed' };
-    const badgeLabel = { legal:'LÉGAL', service:'SERVICE', passion:'PASSION', illegal:'ILLÉGAL', closed:'NE RECRUTE PLUS' };
-    const inactive = e.status === 'closed' ? ' inactive' : '';
-    return `<div class="emploi-card${inactive}" data-cat="${e.cat}">
-      <div class="emploi-icon">${e.img ? `<img src="${e.img}">` : '🏢'}</div>
+// ========== EMPLOI ==========
+function renderEmploi(){
+  buildFilterBar('emploi-filters',emploiCats.map(c=>({id:c,label:c.toUpperCase()})),'filterEmploy',emploiFilter,'emploi');
+  const filtered=emploiFilter==='tout'?emplois:emplois.filter(e=>e.cat===emploiFilter);
+  const badgeCls={legal:'badge-legal',service:'badge-service',passion:'badge-passion',illegal:'badge-illegal',closed:'badge-closed'};
+  const badgeLbl={legal:'LÉGAL',service:'SERVICE',passion:'PASSION',illegal:'ILLÉGAL',closed:'NE RECRUTE PLUS'};
+  document.getElementById('emploi-grid').innerHTML=filtered.map(e=>`
+    <div class="emploi-card${e.status==='closed'?' inactive':''}">
+      <div class="emploi-icon">${e.img?`<img src="${e.img}">`:'🏢'}</div>
       <div style="flex:1">
-        <div class="emploi-title">${e.title} <span class="emploi-badge ${badgeMap[e.status]||'badge-service'}">${badgeLabel[e.status]||e.status}</span></div>
+        <div class="emploi-title">${e.title} <span class="emploi-badge ${badgeCls[e.status]||'badge-service'}">${badgeLbl[e.status]||e.status}</span></div>
         <div class="emploi-company">${e.company}</div>
         <div class="emploi-desc">${e.desc}</div>
       </div>
-      ${isAdmin ? `<div class="admin-actions" style="position:relative;top:0;right:0;margin-left:auto">
+      ${isAdmin?`<div style="display:flex;flex-direction:column;gap:4px;margin-left:auto">
         <button class="action-btn" onclick="editEmploi(${e.id})">✏️</button>
         <button class="action-btn del" onclick="deleteEmploi(${e.id})">🗑️</button>
-      </div>` : ''}
-    </div>`;
-  }).join('');
-}
-function filterEmploy(cat, btn) { currentEmploiFilter = cat; renderEmploi(); }
-function openEmploiModal(id = null) {
-  editingId = id;
-  const e = id ? emplois.find(x => x.id === id) : null;
-  document.getElementById('emploi-modal-title').textContent = id ? 'Modifier l\'offre' : 'Ajouter une offre';
-  document.getElementById('em-title').value = e ? e.title : '';
-  document.getElementById('em-company').value = e ? e.company : '';
-  document.getElementById('em-desc').value = e ? e.desc : '';
-  document.getElementById('em-cat').innerHTML = emploiCats.map(c => `<option value="${c}"${e&&e.cat===c?' selected':''}>${c.toUpperCase()}</option>`).join('');
-  document.getElementById('em-status').value = e ? e.status : 'legal';
-  document.getElementById('em-preview').style.display = 'none';
-  document.getElementById('em-file').value = '';
-  openModal('emploi-modal');
-}
-function saveEmploi() {
-  const title = document.getElementById('em-title').value.trim();
-  if (!title) { showToast('⚠️ Donne un titre !'); return; }
-  const fileInput = document.getElementById('em-file');
-  const img = fileInput.dataset.url || (editingId ? emplois.find(e=>e.id===editingId)?.img : null);
-  const data = { title, company: document.getElementById('em-company').value, desc: document.getElementById('em-desc').value, cat: document.getElementById('em-cat').value, status: document.getElementById('em-status').value, img };
-  if (editingId) {
-    const idx = emplois.findIndex(e => e.id === editingId);
-    emplois[idx] = { ...emplois[idx], ...data };
-  } else {
-    emplois.push({ id: emploiIdSeq++, ...data });
-  }
-  closeModal('emploi-modal');
-  renderEmploi();
-  showToast(editingId ? '✅ Offre modifiée !' : '✅ Offre ajoutée !');
-  editingId = null;
-}
-function editEmploi(id) { openEmploiModal(id); }
-function deleteEmploi(id) {
-  if (!confirm('Supprimer cette offre ?')) return;
-  emplois = emplois.filter(e => e.id !== id);
-  renderEmploi();
-  showToast('🗑️ Offre supprimée');
-}
-function submitCandidature() {
-  const name = document.getElementById('cand-name').value.trim();
-  const num = document.getElementById('cand-num').value.trim();
-  const domain = document.getElementById('cand-domain').value;
-  const note = document.getElementById('cand-note').value.trim();
-  if (!name || !domain) { showToast('⚠️ Remplis les champs obligatoires.'); return; }
-  mailbox.unshift({ id: Date.now(), from: `${name} (${num})`, domain, note, time: new Date().toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}), read: false });
-  document.getElementById('cand-name').value = '';
-  document.getElementById('cand-num').value = '';
-  document.getElementById('cand-domain').value = '';
-  document.getElementById('cand-note').value = '';
-  showToast('📨 Candidature envoyée !');
-}
-function switchEmploi(tab, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.emploi-section').forEach(s => s.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('emploi-' + tab).classList.add('active');
-  if (tab === 'mails') renderMails();
-}
-function renderMails() {
-  const list = document.getElementById('mail-list');
-  document.getElementById('mail-count').textContent = `${mailbox.length} candidature(s) reçue(s)`;
-  if (mailbox.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>Aucune candidature reçue pour l'instant.</p></div>`;
-    return;
-  }
-  list.innerHTML = mailbox.map(m => `
-    <div class="mail-item${m.read ? '' : ' unread'}" onclick="openMail(${m.id})">
-      <div class="mail-item-header">
-        <span class="mail-from">${m.from}</span>
-        <span class="mail-time">${m.time}</span>
-      </div>
-      <div class="mail-domain">${m.domain}</div>
-      <div class="mail-preview">${m.note || '(pas de précisions)'}</div>
-      ${!m.read ? '<div class="mail-tag">Nouveau</div>' : ''}
+      </div>`:''}
     </div>
   `).join('');
 }
-function openMail(id) {
-  const m = mailbox.find(x => x.id === id);
-  if (!m) return;
-  m.read = true;
-  renderMails();
-  document.getElementById('mail-detail-content').innerHTML = `
+function filterEmploy(cat){emploiFilter=cat;renderEmploi();}
+function openEmploiModal(id=null){
+  editingId=id;const e=id?emplois.find(x=>x.id===id):null;
+  document.getElementById('em-modal-title').textContent=id?'Modifier':'Ajouter une offre';
+  document.getElementById('em-title').value=e?e.title:'';
+  document.getElementById('em-company').value=e?e.company:'';
+  document.getElementById('em-desc').value=e?e.desc:'';
+  document.getElementById('em-cat').innerHTML=emploiCats.map(c=>`<option value="${c}"${e&&e.cat===c?' selected':''}>${c.toUpperCase()}</option>`).join('');
+  document.getElementById('em-status').value=e?e.status:'legal';
+  document.getElementById('em-preview').style.display='none';
+  document.getElementById('em-file').value='';delete document.getElementById('em-file').dataset.url;
+  openModal('emploi-modal');
+}
+function saveEmploi(){
+  const t=document.getElementById('em-title').value.trim();if(!t){showToast('⚠️ Titre requis');return;}
+  const fi=document.getElementById('em-file');
+  const img=fi.dataset.url||(editingId?emplois.find(e=>e.id===editingId)?.img:null);
+  const d={title:t,company:document.getElementById('em-company').value,desc:document.getElementById('em-desc').value,cat:document.getElementById('em-cat').value,status:document.getElementById('em-status').value,img};
+  if(editingId){const i=emplois.findIndex(e=>e.id===editingId);emplois[i]={...emplois[i],...d};}
+  else{emplois.push({id:emploiSeq++,...d});}
+  closeModal('emploi-modal');renderEmploi();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
+}
+function editEmploi(id){openEmploiModal(id);}
+function deleteEmploi(id){if(!confirm('Supprimer ?'))return;emplois=emplois.filter(e=>e.id!==id);renderEmploi();showToast('🗑️ Supprimée');}
+function submitCandidature(){
+  const name=document.getElementById('cand-name').value.trim();
+  const domain=document.getElementById('cand-domain').value;
+  if(!name||!domain){showToast('⚠️ Remplis les champs requis.');return;}
+  mailbox.unshift({id:Date.now(),from:`${name} (${document.getElementById('cand-num').value.trim()})`,domain,note:document.getElementById('cand-note').value.trim(),time:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),read:false});
+  ['cand-name','cand-num','cand-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cand-domain').value='';
+  showToast('📨 Candidature envoyée !');
+}
+function switchEmploi(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.emploi-section').forEach(s=>s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('emploi-'+tab).classList.add('active');
+  if(tab==='mails')renderMails();
+}
+function renderMails(){
+  document.getElementById('mail-count').textContent=`${mailbox.length} candidature(s) reçue(s)`;
+  const list=document.getElementById('mail-list');
+  if(!mailbox.length){list.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div><p>Aucune candidature.</p></div>`;return;}
+  list.innerHTML=mailbox.map(m=>`
+    <div class="mail-item${m.read?'':' unread'}" onclick="openMail(${m.id})">
+      <div class="mail-item-hd"><span class="mail-from">${m.from}</span><span class="mail-time">${m.time}</span></div>
+      <div class="mail-domain">${m.domain}</div>
+      <div class="mail-preview">${m.note||'(pas de précisions)'}</div>
+      ${!m.read?'<div class="mail-tag">Nouveau</div>':''}
+    </div>
+  `).join('');
+}
+function openMail(id){
+  const m=mailbox.find(x=>x.id===id);if(!m)return;
+  m.read=true;renderMails();
+  document.getElementById('mail-detail').innerHTML=`
     <div class="mail-detail-field"><label>Candidat</label><p>${m.from}</p></div>
-    <div class="mail-detail-field"><label>Domaine recherché</label><p>${m.domain}</p></div>
+    <div class="mail-detail-field"><label>Domaine</label><p>${m.domain}</p></div>
     <div class="mail-detail-field"><label>Heure</label><p>${m.time}</p></div>
-    <div class="mail-detail-field"><label>Précisions</label><p>${m.note || 'Aucune précision fournie.'}</p></div>
+    <div class="mail-detail-field"><label>Précisions</label><p>${m.note||'Aucune précision.'}</p></div>
   `;
   openModal('mail-modal');
 }
-function clearMails() {
-  if (!confirm('Effacer toutes les candidatures ?')) return;
-  mailbox = [];
-  renderMails();
-  showToast('🗑️ Boîte vidée');
-}
+function clearMails(){if(!confirm('Effacer tout ?'))return;mailbox=[];renderMails();showToast('🗑️ Boîte vidée');}
 
-// ===== RADAR =====
-function renderRadar() {
-  const hypeGrid = document.getElementById('radar-hype-grid');
-  const otherGrid = document.getElementById('radar-other-grid');
-  const hypeSpots = radarSpots.filter(s => s.status === 'hype');
-  const otherSpots = radarSpots.filter(s => s.status !== 'hype');
-  hypeGrid.innerHTML = hypeSpots.map(s => renderRadarCard(s)).join('');
-  otherGrid.innerHTML = otherSpots.map(s => renderRadarCard(s)).join('');
+// ========== RADAR ==========
+function renderRadar(){
+  const hype=radarSpots.filter(s=>s.status==='hype');
+  const other=radarSpots.filter(s=>s.status!=='hype');
+  document.getElementById('radar-hype-grid').innerHTML=hype.map(renderRadarCard).join('');
+  document.getElementById('radar-other-grid').innerHTML=other.map(renderRadarCard).join('');
 }
-function renderRadarCard(s) {
-  const badgeClass = { hype: 'radar-hype', chill: 'radar-chill', business: 'radar-business', danger: 'radar-danger' };
-  const badgeLabel = { hype: 'HYPE', chill: 'CHILL', business: 'BUSINESS', danger: 'DANGER' };
-  const bars = Array.from({length:5}, (_,i) => `<div class="crowd-bar${i < s.crowd ? (s.status==='hype'?' hype filled':' filled') : ''}"></div>`).join('');
+function renderRadarCard(s){
+  const bCls={hype:'radar-hype',chill:'radar-chill',business:'radar-business',danger:'radar-danger'};
+  const bLbl={hype:'HYPE',chill:'CHILL',business:'BUSINESS',danger:'DANGER'};
+  const bars=Array.from({length:5},(_,i)=>`<div class="crowd-bar${i<s.crowd?(s.status==='hype'?' hype filled':' filled'):''}"></div>`).join('');
   return `<div class="radar-card">
     <div class="radar-card-left">
-      <div class="radar-name">${s.name} <span class="radar-badge ${badgeClass[s.status]}">${badgeLabel[s.status]}</span></div>
+      <div class="radar-name">${s.name} <span class="radar-badge ${bCls[s.status]}">${bLbl[s.status]}</span></div>
       <div class="radar-location">📍 ${s.loc}</div>
       <div class="radar-desc" id="rdesc-${s.id}">${s.desc}</div>
-      ${isAdmin ? `<div class="radar-admin-controls">
+      ${isAdmin?`<div class="radar-admin-controls">
         <div style="font-size:11px;color:var(--text3)">Affluence</div>
-        <div class="radar-crowd-edit">
-          <input type="range" min="1" max="5" value="${s.crowd}" class="crowd-slider" style="flex:1" oninput="updateRadarCrowd(${s.id}, this.value)" id="rslider-${s.id}">
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="range" min="1" max="5" value="${s.crowd}" class="crowd-slider" style="flex:1" oninput="updateRadarCrowd(${s.id},this.value)" id="rslider-${s.id}">
           <span class="crowd-value" id="rcval-${s.id}">${s.crowd}</span>
         </div>
-        <input class="form-input" style="font-size:11px;padding:6px 10px" placeholder="Modifier description..." onchange="updateRadarDesc(${s.id}, this.value)">
+        <input class="form-input" style="font-size:11px;padding:6px 10px" placeholder="Modifier description..." onchange="updateRadarDesc(${s.id},this.value)">
         <div style="display:flex;gap:6px">
           <button class="action-btn" onclick="editRadar(${s.id})">✏️ Modifier</button>
           <button class="action-btn del" onclick="deleteRadar(${s.id})">🗑️ Supprimer</button>
         </div>
-      </div>` : ''}
+      </div>`:''}
     </div>
     <div class="radar-right">
       <div class="crowd-meter" id="rmeter-${s.id}">${bars}</div>
@@ -1355,118 +1093,104 @@ function renderRadarCard(s) {
     </div>
   </div>`;
 }
-function updateRadarCrowd(id, val) {
-  const s = radarSpots.find(x => x.id === id);
-  if (!s) return;
-  s.crowd = parseInt(val);
-  document.getElementById('rcval-' + id).textContent = val;
-  const meter = document.getElementById('rmeter-' + id);
-  if (meter) {
-    meter.querySelectorAll('.crowd-bar').forEach((b, i) => {
-      b.className = 'crowd-bar' + (i < s.crowd ? (s.status==='hype'?' hype filled':' filled') : '');
-    });
-  }
+function updateRadarCrowd(id,val){
+  const s=radarSpots.find(x=>x.id===id);if(!s)return;
+  s.crowd=parseInt(val);
+  document.getElementById('rcval-'+id).textContent=val;
+  const m=document.getElementById('rmeter-'+id);
+  if(m)m.querySelectorAll('.crowd-bar').forEach((b,i)=>{b.className='crowd-bar'+(i<s.crowd?(s.status==='hype'?' hype filled':' filled'):'');});
 }
-function updateRadarDesc(id, val) {
-  if (!val.trim()) return;
-  const s = radarSpots.find(x => x.id === id);
-  if (!s) return;
-  s.desc = val.trim();
-  const el = document.getElementById('rdesc-' + id);
-  if (el) el.textContent = val.trim();
+function updateRadarDesc(id,val){
+  if(!val.trim())return;
+  const s=radarSpots.find(x=>x.id===id);if(!s)return;
+  s.desc=val.trim();
+  const el=document.getElementById('rdesc-'+id);if(el)el.textContent=val.trim();
   showToast('✅ Description mise à jour !');
 }
-function openRadarModal(id = null) {
-  editingId = id;
-  const s = id ? radarSpots.find(x => x.id === id) : null;
-  document.getElementById('radar-modal-title').textContent = id ? 'Modifier le spot' : 'Ajouter un spot';
-  document.getElementById('rm-name').value = s ? s.name : '';
-  document.getElementById('rm-loc').value = s ? s.loc : '';
-  document.getElementById('rm-desc').value = s ? s.desc : '';
-  document.getElementById('rm-status').value = s ? s.status : 'hype';
-  document.getElementById('rm-crowd').value = s ? s.crowd : 3;
-  document.getElementById('rm-crowd-val').textContent = s ? s.crowd : 3;
+function openRadarModal(id=null){
+  editingId=id;const s=id?radarSpots.find(x=>x.id===id):null;
+  document.getElementById('rm-modal-title').textContent=id?'Modifier le spot':'Ajouter un spot';
+  document.getElementById('rm-name').value=s?s.name:'';
+  document.getElementById('rm-loc').value=s?s.loc:'';
+  document.getElementById('rm-desc').value=s?s.desc:'';
+  document.getElementById('rm-status').value=s?s.status:'hype';
+  document.getElementById('rm-crowd').value=s?s.crowd:3;
+  document.getElementById('rm-cv').textContent=s?s.crowd:3;
   openModal('radar-modal');
 }
-function saveRadar() {
-  const name = document.getElementById('rm-name').value.trim();
-  if (!name) { showToast('⚠️ Donne un nom !'); return; }
-  const data = { name, loc: document.getElementById('rm-loc').value, desc: document.getElementById('rm-desc').value, status: document.getElementById('rm-status').value, crowd: parseInt(document.getElementById('rm-crowd').value) };
-  if (editingId) {
-    const idx = radarSpots.findIndex(s => s.id === editingId);
-    radarSpots[idx] = { ...radarSpots[idx], ...data };
-  } else {
-    radarSpots.push({ id: radarIdSeq++, ...data });
-  }
-  closeModal('radar-modal');
-  renderRadar();
-  showToast(editingId ? '✅ Spot modifié !' : '✅ Spot ajouté !');
-  editingId = null;
+function saveRadar(){
+  const n=document.getElementById('rm-name').value.trim();if(!n){showToast('⚠️ Nom requis');return;}
+  const d={name:n,loc:document.getElementById('rm-loc').value,desc:document.getElementById('rm-desc').value,status:document.getElementById('rm-status').value,crowd:parseInt(document.getElementById('rm-crowd').value)};
+  if(editingId){const i=radarSpots.findIndex(s=>s.id===editingId);radarSpots[i]={...radarSpots[i],...d};}
+  else{radarSpots.push({id:radarSeq++,...d});}
+  closeModal('radar-modal');renderRadar();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
-function editRadar(id) { openRadarModal(id); }
-function deleteRadar(id) {
-  if (!confirm('Supprimer ce spot ?')) return;
-  radarSpots = radarSpots.filter(s => s.id !== id);
-  renderRadar();
-  showToast('🗑️ Spot supprimé');
+function editRadar(id){openRadarModal(id);}
+function deleteRadar(id){if(!confirm('Supprimer ?'))return;radarSpots=radarSpots.filter(s=>s.id!==id);renderRadar();showToast('🗑️ Supprimé');}
+
+// ========== ADD CATEGORY ==========
+function addCategory(ctx){pendingCatCtx=ctx;document.getElementById('addcat-name').value='';openModal('addcat-modal');}
+function confirmAddCat(){
+  const name=document.getElementById('addcat-name').value.trim();if(!name){showToast('⚠️ Nom requis');return;}
+  if(pendingCatCtx==='instant'){const id=name.toLowerCase().replace(/\s+/g,'-');instantCats.push({id,label:name.toUpperCase()});renderInstant();}
+  else if(pendingCatCtx==='stories'){storyCats.push(name.toUpperCase());renderStories();}
+  else if(pendingCatCtx==='emploi'){emploiCats.push(name.toLowerCase());renderEmploi();}
+  else if(pendingCatCtx==='concepts'){conceptCats.push(name.toUpperCase());renderConcepts();}
+  closeModal('addcat-modal');showToast(`✅ Catégorie "${name}" créée !`);
 }
 
-// ===== ADD CATEGORY =====
-let pendingCatContext = '';
-function addCategory(ctx) {
-  pendingCatContext = ctx;
-  document.getElementById('addcat-name').value = '';
-  openModal('addcat-modal');
+// ========== IMAGE PREVIEW ==========
+function previewImg(e,previewId){
+  const f=e.target.files[0];if(!f)return;
+  const url=URL.createObjectURL(f);e.target.dataset.url=url;
+  const p=document.getElementById(previewId);p.style.display='flex';
+  p.innerHTML=`<img src="${url}"><span>${f.name}</span>`;
 }
-function confirmAddCategory() {
-  const name = document.getElementById('addcat-name').value.trim();
-  if (!name) { showToast('⚠️ Donne un nom !'); return; }
-  if (pendingCatContext === 'instant') {
-    const id = name.toLowerCase().replace(/\s+/g,'-');
-    instantCats.push({ id, label: name.toUpperCase() });
+
+// ========== DRAG & DROP (video + story) ==========
+let dragSrcId=null;
+let dragType=null;
+function dragStart(e,type){
+  if(!isAdmin)return;
+  dragSrcId=parseInt(e.currentTarget.dataset.id);
+  dragType=type;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';
+}
+function dragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over');}
+function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function dragEnd(e){e.currentTarget.classList.remove('dragging');}
+function dropItem(e,type){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(!isAdmin||dragType!==type)return;
+  const targetId=parseInt(e.currentTarget.dataset.id);
+  if(dragSrcId===targetId)return;
+  if(type==='video'){
+    const arr=videos;
+    const si=arr.findIndex(x=>x.id===dragSrcId);
+    const ti=arr.findIndex(x=>x.id===targetId);
+    if(si<0||ti<0)return;
+    [arr[si],arr[ti]]=[arr[ti],arr[si]];
     renderInstant();
-  } else if (pendingCatContext === 'stories') {
-    storyCats.push(name.toUpperCase());
+  } else if(type==='story'){
+    const arr=stories;
+    const si=arr.findIndex(x=>x.id===dragSrcId);
+    const ti=arr.findIndex(x=>x.id===targetId);
+    if(si<0||ti<0)return;
+    [arr[si],arr[ti]]=[arr[ti],arr[si]];
     renderStories();
-  } else if (pendingCatContext === 'emploi') {
-    emploiCats.push(name.toLowerCase());
-    renderEmploi();
-  } else if (pendingCatContext === 'concepts') {
-    conceptCats.push(name.toUpperCase());
-    renderConcepts();
   }
-  closeModal('addcat-modal');
-  showToast(`✅ Catégorie "${name}" créée !`);
+  showToast('✅ Ordre mis à jour !');
 }
 
-// ===== IMAGE / FILE PREVIEW HELPERS =====
-function previewImage(e, previewId) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  e.target.dataset.url = url;
-  const prev = document.getElementById(previewId);
-  prev.style.display = 'flex';
-  prev.innerHTML = `<img src="${url}"><span>${file.name}</span>`;
+// ========== MISC ==========
+function submitDrop(){showToast('📨 Envoyé anonymement !');document.getElementById('drop-title').value='';document.getElementById('drop-body').value='';}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000);
 }
 
-// ===== TOAST =====
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.style.display = 'block';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.style.display = 'none', 3000);
-}
-
-// ===== DROP BOX =====
-function submitDrop() {
-  showToast('📨 Envoyé anonymement !');
-  document.getElementById('drop-title').value = '';
-  document.getElementById('drop-body').value = '';
-}
-
-// ===== INIT =====
+// ========== INIT ==========
 renderAll();
 </script>
 </body>
