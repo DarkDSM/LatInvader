@@ -30,6 +30,7 @@
   .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
   .logo-svg-wrap img{height:55px;width:auto;display:block;}
+  /* CORRECTION DES LOGOS - Un seul visible par thème */
   .logo-dark{display:block;}
   .logo-light{display:none;}
   :root[data-theme="light"] .logo-dark{display:none;}
@@ -323,7 +324,9 @@
 <nav>
   <div class="nav-inner">
     <div class="logo-svg-wrap">
+      <!-- LOGO MODE SOMBRE (visible uniquement en dark) -->
       <img src="latinvader.jpg" alt="LatInvader" class="logo-dark" style="height:55px; width:auto;">
+      <!-- LOGO MODE CLAIR (visible uniquement en light) -->
       <img src="latinvaderwhite.jpg" alt="LatInvader" class="logo-light" style="height:55px; width:auto;">
     </div>
     <div class="nav-links">
@@ -688,7 +691,7 @@ const STORAGE_KEYS = {
   DROPBOX: 'latinvader_dropbox',
   BADGE_COLORS: 'latinvader_badge_colors',
   RADAR_AMBIANCES: 'latinvader_radar_ambiances',
-  USER_LIKES: 'latinvader_user_likes'
+  LIKES_DATA: 'latinvader_likes_data'
 };
 
 let isAdmin = false;
@@ -699,7 +702,7 @@ let currentStars = 3;
 let badgeColors = {};
 let currentMediaType = 'video';
 
-// Générer un identifiant unique pour l'utilisateur
+// Identifiant unique pour l'utilisateur (pour savoir qui a liké)
 let userId = localStorage.getItem('latinvader_user_id');
 if(!userId) {
   userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -740,8 +743,8 @@ let conceptsFilter = 'tout';
 let radarSpots = [];
 let radarSeq = 1;
 
-// Stockage des likes par utilisateur
-let userLikes = {};
+// Structure globale des likes : { postId: { likes: number, users: { userId: true } } }
+let likesData = {};
 
 function loadData() {
   const savedVideos = localStorage.getItem(STORAGE_KEYS.VIDEOS);
@@ -750,20 +753,34 @@ function loadData() {
     vidSeq = Math.max(...videos.map(v=>v.id), 0) + 1;
   } else {
     videos = [
-      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142,likes:38},
-      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89,likes:21},
-      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211,likes:54},
-      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75,likes:19},
-      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304,likes:67},
+      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142},
+      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89},
+      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211},
+      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75},
+      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304},
     ];
     vidSeq = 6;
   }
   
-  // Charger les likes utilisateurs
-  const savedUserLikes = localStorage.getItem(STORAGE_KEYS.USER_LIKES);
-  if(savedUserLikes) {
-    userLikes = JSON.parse(savedUserLikes);
+  // Charger les données des likes
+  const savedLikes = localStorage.getItem(STORAGE_KEYS.LIKES_DATA);
+  if(savedLikes) {
+    likesData = JSON.parse(savedLikes);
+  } else {
+    // Initialiser les likes pour chaque vidéo existante
+    videos.forEach(v => {
+      if(!likesData[v.id]) {
+        likesData[v.id] = { likes: v.likes || 0, users: {} };
+      }
+    });
   }
+  
+  // S'assurer que toutes les vidéos ont une entrée dans likesData
+  videos.forEach(v => {
+    if(!likesData[v.id]) {
+      likesData[v.id] = { likes: 0, users: {} };
+    }
+  });
   
   const savedVideoCats = localStorage.getItem(STORAGE_KEYS.VIDEO_CATS);
   if(savedVideoCats) instantCats = JSON.parse(savedVideoCats);
@@ -864,7 +881,7 @@ function saveMailbox() { localStorage.setItem(STORAGE_KEYS.MAILBOX, JSON.stringi
 function saveDropbox() { localStorage.setItem(STORAGE_KEYS.DROPBOX, JSON.stringify(dropMessages)); }
 function saveBadgeColors() { localStorage.setItem(STORAGE_KEYS.BADGE_COLORS, JSON.stringify(badgeColors)); }
 function saveRadarAmbiances() { localStorage.setItem(STORAGE_KEYS.RADAR_AMBIANCES, JSON.stringify(radarAmbiances)); }
-function saveUserLikes() { localStorage.setItem(STORAGE_KEYS.USER_LIKES, JSON.stringify(userLikes)); }
+function saveLikesData() { localStorage.setItem(STORAGE_KEYS.LIKES_DATA, JSON.stringify(likesData)); }
 
 let currentSettingsPage = 'instant';
 
@@ -1060,7 +1077,8 @@ function renderInstant(){
     const mediaDisplay = v.mediaType === 'image' && v.src ? 
       `<img src="${v.src}" style="width:100%;height:100%;object-fit:cover;">` :
       (v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">${v.mediaType === 'image' ? '🖼️' : '▶'}</div><div style="font-size:12px">Aucun média</div></div>`);
-    const hasLiked = userLikes[userId] && userLikes[userId][v.id];
+    const hasLiked = likesData[v.id] && likesData[v.id].users && likesData[v.id].users[userId];
+    const likeCount = likesData[v.id] ? likesData[v.id].likes : 0;
     return `
     <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
          ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
@@ -1080,7 +1098,7 @@ function renderInstant(){
       <div class="video-stats">
         <div class="stat-item">
           <button class="like-btn${hasLiked?' liked':''}" onclick="toggleLike(${v.id})" title="J'aime">${hasLiked?'❤️':'🤍'}</button>
-          <span id="like-count-${v.id}">${v.likes}</span>
+          <span id="like-count-${v.id}">${likeCount}</span>
         </div>
         <div class="stat-item"><span class="view-icon">👁</span><span id="view-count-${v.id}">${formatNum(v.views)}</span></div>
       </div>
@@ -1094,24 +1112,28 @@ function formatNum(n){return n>=1000?(n/1000).toFixed(1)+'k':n;}
 function escapeHtml(str){if(!str)return '';return str.replace(/[&<>]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;});}
 
 function toggleLike(id){
-  const v=videos.find(x=>x.id===id);if(!v)return;
-  if(!userLikes[userId]) userLikes[userId] = {};
-  if(userLikes[userId][id]) {
-    delete userLikes[userId][id];
-    v.likes--;
-  } else {
-    userLikes[userId][id] = true;
-    v.likes++;
+  if(!likesData[id]) {
+    likesData[id] = { likes: 0, users: {} };
   }
-  saveVideos();
-  saveUserLikes();
+  
+  if(likesData[id].users[userId]) {
+    // Déjà liké, on enlève le like
+    delete likesData[id].users[userId];
+    likesData[id].likes--;
+  } else {
+    // Pas liké, on ajoute
+    likesData[id].users[userId] = true;
+    likesData[id].likes++;
+  }
+  saveLikesData();
+  
   // Mettre à jour l'affichage
   const likeSpan = document.getElementById(`like-count-${id}`);
-  if(likeSpan) likeSpan.textContent = v.likes;
-  // Mettre à jour le style du bouton
+  if(likeSpan) likeSpan.textContent = likesData[id].likes;
+  
   const likeBtn = document.querySelector(`.video-card[data-id="${id}"] .like-btn`);
   if(likeBtn) {
-    if(userLikes[userId][id]) {
+    if(likesData[id].users[userId]) {
       likeBtn.classList.add('liked');
       likeBtn.innerHTML = '❤️';
     } else {
@@ -1190,14 +1212,23 @@ function saveVideo(){
   const fi=document.getElementById('vm-file');
   const src=fi.dataset.url||(editingId?videos.find(v=>v.id===editingId)?.src:null);
   const d={title:t,desc:document.getElementById('vm-desc').value,cat:document.getElementById('vm-cat').value,src,mediaType:currentMediaType};
-  if(editingId){const i=videos.findIndex(v=>v.id===editingId);videos[i]={...videos[i],...d};}
-  else{videos.push({id:vidSeq++,...d,views:0,likes:0});}
+  if(editingId){
+    const i=videos.findIndex(v=>v.id===editingId);
+    videos[i]={...videos[i],...d};
+  } else {
+    const newId = vidSeq++;
+    videos.push({id:newId,...d,views:0});
+    if(!likesData[newId]) {
+      likesData[newId] = { likes: 0, users: {} };
+    }
+  }
   saveVideos();
+  saveLikesData();
   closeModal('video-modal');renderInstant();showToast(editingId?'✅ Post modifié !':'✅ Post ajouté !');editingId=null;
 }
 
 function editVideo(id){openVideoModal(id);}
-function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);saveVideos();renderInstant();showToast('🗑️ Supprimé');}
+function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);delete likesData[id];saveVideos();saveLikesData();renderInstant();showToast('🗑️ Supprimé');}
 
 function renderStories(){
   buildFilterBar('stories-filters',storyCats.map(c=>({id:c,label:c})),'filterStories',storiesFilter,'stories','stories');
