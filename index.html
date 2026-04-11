@@ -30,10 +30,7 @@
   .nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px;height:70px;}
   .logo-svg-wrap{display:flex;align-items:center;flex-shrink:0;cursor:default;}
   .logo-svg-wrap img{height:55px;width:auto;display:block;}
-  
-  /* LOGO UNIQUE - pas de distinction clair/sombre */
   .logo-img { display: block; }
-  
   .nav-links{display:flex;align-items:center;gap:4px;margin-left:auto;}
   .nav-btn{background:none;border:none;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;padding:6px 14px;border-radius:20px;display:flex;align-items:center;gap:6px;transition:all .2s;white-space:nowrap;}
   .nav-btn:hover{color:var(--text);background:var(--bg3);}
@@ -66,7 +63,8 @@
   .color-preview{width:24px;height:24px;border-radius:4px;margin-right:8px;border:1px solid var(--border);}
   .color-input{width:80px;border:1px solid var(--border);border-radius:4px;padding:4px;background:var(--bg);color:var(--text);font-size:12px;}
   .badge-example{padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-left:8px;}
-  .delete-cat-btn{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;margin-left:8px;}
+  .delete-cat-btn{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;margin-left:4px;}
+  .edit-cat-btn{background:var(--gold);color:var(--bg);border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;margin-left:4px;}
 
   .page{display:none;max-width:1400px;margin:0 auto;padding:32px 24px 80px;}
   .page.active{display:block;}
@@ -314,7 +312,7 @@
       </div>
     </div>
     <div class="settings-section" id="badges-section">
-      <div class="settings-label">Couleur des badges sur les posts</div>
+      <div class="settings-label">Catégories et couleurs</div>
       <div id="badges-list-container" class="badges-list"></div>
     </div>
   </div>
@@ -528,7 +526,6 @@
       <div class="upload-zone" onclick="document.getElementById('vm-file').click()">📹 Uploader un fichier<input type="file" id="vm-file" accept="video/*,image/*" onchange="handleMediaFile(event)"></div>
       <div id="vm-preview" class="upload-preview" style="display:none"></div>
     </div>
-    <!-- Nouveaux champs pour définir les vues et likes de départ -->
     <div class="form-group"><label class="form-label">Nombre de vues (départ)</label><input type="number" class="form-input" id="vm-views" value="0" min="0"></div>
     <div class="form-group"><label class="form-label">Nombre de likes (départ)</label><input type="number" class="form-input" id="vm-likes" value="0" min="0"></div>
     <div class="modal-btns"><button class="btn-submit" onclick="saveVideo()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('video-modal')">Annuler</button></div>
@@ -631,6 +628,15 @@
     <div class="modal-sub">Donne un nom à ta catégorie.</div>
     <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="addcat-name" placeholder="Ex: Interviews"></div>
     <div class="modal-btns"><button class="btn-submit" onclick="confirmAddCat()">✅ Créer</button><button class="btn-secondary" onclick="closeModal('addcat-modal')">Annuler</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editcat-modal">
+  <div class="modal">
+    <div class="modal-title">Modifier la catégorie</div>
+    <div class="modal-sub">Change le nom de la catégorie.</div>
+    <div class="form-group"><label class="form-label">Nouveau nom</label><input type="text" class="form-input" id="editcat-name" placeholder="Nouveau nom"></div>
+    <div class="modal-btns"><button class="btn-submit" onclick="confirmEditCat()">✅ Modifier</button><button class="btn-secondary" onclick="closeModal('editcat-modal')">Annuler</button></div>
   </div>
 </div>
 
@@ -740,6 +746,7 @@ let isAdmin = false;
 const ADMIN_PASS = "21032001";
 let editingId = null;
 let pendingCatCtx = '';
+let editingCatInfo = null;
 let currentStars = 3;
 let badgeColors = {};
 let currentMediaType = 'video';
@@ -974,13 +981,18 @@ function setMediaType(type) {
 
 function handleMediaFile(e){
   const f=e.target.files[0];if(!f)return;
-  const url=URL.createObjectURL(f);e.target.dataset.url=url;
-  const p=document.getElementById('vm-preview');p.style.display='flex';
-  if(currentMediaType === 'video') {
-    p.innerHTML=`<video src="${url}" style="width:100px;height:60px;border-radius:4px" muted></video><span>${f.name}</span>`;
-  } else {
-    p.innerHTML=`<img src="${url}" style="width:80px;height:60px;border-radius:4px;object-fit:cover;"><span>${f.name}</span>`;
-  }
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const url = event.target.result;
+    e.target.dataset.url = url;
+    const p=document.getElementById('vm-preview');p.style.display='flex';
+    if(currentMediaType === 'video') {
+      p.innerHTML=`<video src="${url}" style="width:100px;height:60px;border-radius:4px" muted></video><span>${f.name}</span>`;
+    } else {
+      p.innerHTML=`<img src="${url}" style="width:80px;height:60px;border-radius:4px;object-fit:cover;"><span>${f.name}</span>`;
+    }
+  };
+  reader.readAsDataURL(f);
 }
 
 function openVideoModal(id=null){
@@ -992,7 +1004,6 @@ function openVideoModal(id=null){
   document.getElementById('vm-cat').innerHTML=instantCats.map(c=>`<option value="${c.id}"${v&&v.cat===c.id?' selected':''}>${c.label}</option>`).join('');
   document.getElementById('vm-preview').style.display='none';
   document.getElementById('vm-file').value='';delete document.getElementById('vm-file').dataset.url;
-  // Remplir les champs vues et likes
   document.getElementById('vm-views').value=v?v.views:0;
   document.getElementById('vm-likes').value=v?v.likes:0;
   if(v && v.mediaType) {
@@ -1350,6 +1361,7 @@ function renderRadarCard(s){
     </div>
     <div class="radar-right">
       <div class="crowd-meter" id="rmeter-${s.id}">${bars}</div>
+      <div class="crowd-label">👥 Crowd</div>
     </div>
   </div>`;
 }
@@ -1486,6 +1498,7 @@ function renderBadgesList() {
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
           <span class="badge-name">${cat.label}</span>
           <div class="badge-example" style="background-color: ${currentColor || '#d4472a'}; color: white;">Exemple</div>
+          <button class="edit-cat-btn" onclick="openEditCatModal('${page}', '${cat.id}')">✏️</button>
           <button class="delete-cat-btn" onclick="deleteCategory('${page}', '${cat.id}')">🗑️</button>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
@@ -1496,6 +1509,63 @@ function renderBadgesList() {
     `;
   }).join('');
 }
+
+function openEditCatModal(page, catId) {
+  editingCatInfo = { page, catId };
+  const currentCat = getCatById(page, catId);
+  document.getElementById('editcat-name').value = currentCat.label;
+  openModal('editcat-modal');
+}
+
+function getCatById(page, catId) {
+  if(page === 'instant') return instantCats.find(c => c.id === catId);
+  if(page === 'stories') return { id: catId, label: catId };
+  if(page === 'emploi') return { id: catId, label: catId };
+  if(page === 'concepts') return { id: catId, label: catId };
+  return null;
+}
+
+function confirmEditCat() {
+  const newName = document.getElementById('editcat-name').value.trim();
+  if(!newName) { showToast('⚠️ Nom requis'); return; }
+  const { page, catId } = editingCatInfo;
+  
+  if(page === 'instant') {
+    const index = instantCats.findIndex(c => c.id === catId);
+    if(index !== -1) {
+      instantCats[index].label = newName.toUpperCase();
+      saveAll();
+      renderInstant();
+    }
+  } else if(page === 'stories') {
+    const index = storyCats.findIndex(c => c === catId);
+    if(index !== -1) {
+      storyCats[index] = newName.toUpperCase();
+      saveAll();
+      renderStories();
+    }
+  } else if(page === 'emploi') {
+    const index = emploiCats.findIndex(c => c === catId);
+    if(index !== -1) {
+      emploiCats[index] = newName.toLowerCase();
+      saveAll();
+      renderEmploi();
+    }
+  } else if(page === 'concepts') {
+    const index = conceptCats.findIndex(c => c === catId);
+    if(index !== -1) {
+      conceptCats[index] = newName.toUpperCase();
+      saveAll();
+      renderConcepts();
+    }
+  }
+  
+  closeModal('editcat-modal');
+  renderBadgesList();
+  showToast(`✅ Catégorie renommée en "${newName}" !`);
+  editingCatInfo = null;
+}
+
 function updateBadgeColor(page, catId, color) {
   if(!badgeColors[page]) badgeColors[page] = {};
   badgeColors[page][catId] = color;
@@ -1507,6 +1577,7 @@ function updateBadgeColor(page, catId, color) {
   renderBadgesList();
   showToast(`🎨 Couleur du badge modifiée !`);
 }
+
 function deleteCategory(page, catId) {
   if(!confirm(`Supprimer la catégorie "${catId}" ? Les posts avec cette catégorie ne seront plus visibles.`)) return;
   if(page === 'instant') {
@@ -1529,20 +1600,43 @@ function deleteCategory(page, catId) {
   renderBadgesList();
   showToast(`🗑️ Catégorie supprimée !`);
 }
+
 function addCategory(ctx){pendingCatCtx=ctx;document.getElementById('addcat-name').value='';openModal('addcat-modal');}
 function confirmAddCat(){
   const name=document.getElementById('addcat-name').value.trim();if(!name){showToast('⚠️ Nom requis');return;}
-  if(pendingCatCtx==='instant'){const id=name.toLowerCase().replace(/\s+/g,'-');instantCats.push({id,label:name.toUpperCase()});saveAll();renderInstant();}
-  else if(pendingCatCtx==='stories'){storyCats.push(name.toUpperCase());saveAll();renderStories();}
-  else if(pendingCatCtx==='emploi'){emploiCats.push(name.toLowerCase());saveAll();renderEmploi();}
-  else if(pendingCatCtx==='concepts'){conceptCats.push(name.toUpperCase());saveAll();renderConcepts();}
-  closeModal('addcat-modal');showToast(`✅ Catégorie "${name}" créée !`);
+  if(pendingCatCtx==='instant'){
+    const id=name.toLowerCase().replace(/\s+/g,'-');
+    instantCats.push({id,label:name.toUpperCase()});
+    saveAll();
+    renderInstant();
+  } else if(pendingCatCtx==='stories'){
+    storyCats.push(name.toUpperCase());
+    saveAll();
+    renderStories();
+  } else if(pendingCatCtx==='emploi'){
+    emploiCats.push(name.toLowerCase());
+    saveAll();
+    renderEmploi();
+  } else if(pendingCatCtx==='concepts'){
+    conceptCats.push(name.toUpperCase());
+    saveAll();
+    renderConcepts();
+  }
+  closeModal('addcat-modal');
+  renderBadgesList();
+  showToast(`✅ Catégorie "${name}" créée !`);
 }
+
 function previewImg(e,previewId){
   const f=e.target.files[0];if(!f)return;
-  const url=URL.createObjectURL(f);e.target.dataset.url=url;
-  const p=document.getElementById(previewId);p.style.display='flex';
-  p.innerHTML=`<img src="${url}"><span>${f.name}</span>`;
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const url = event.target.result;
+    e.target.dataset.url = url;
+    const p=document.getElementById(previewId);p.style.display='flex';
+    p.innerHTML=`<img src="${url}"><span>${f.name}</span>`;
+  };
+  reader.readAsDataURL(f);
 }
 
 // ========== DRAG & DROP ==========
