@@ -4,9 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LatInvader — On met l'accent sur l'actu</title>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<!-- Ton fichier de configuration Firebase -->
+<script src="firebase-config.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@700;800&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+  /* === TOUT TON CSS EXISTANT === */
+  /* Garde tout le CSS que tu as déjà, il reste identique */
   :root[data-theme="dark"] {
     --bg:#100e09;--bg2:#1a1610;--bg3:#221e15;--card:#1e1a12;--card2:#252015;
     --border:#2e2820;--text:#e8dfc8;--text2:#9a8f78;--text3:#5c5444;
@@ -63,8 +71,8 @@
   .color-preview{width:24px;height:24px;border-radius:4px;margin-right:8px;border:1px solid var(--border);}
   .color-input{width:80px;border:1px solid var(--border);border-radius:4px;padding:4px;background:var(--bg);color:var(--text);font-size:12px;}
   .badge-example{padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-left:8px;}
-  .delete-cat-btn{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;margin-left:4px;}
   .edit-cat-btn{background:var(--gold);color:var(--bg);border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;margin-left:4px;}
+  .delete-cat-btn{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer;margin-left:4px;}
 
   .page{display:none;max-width:1400px;margin:0 auto;padding:32px 24px 80px;}
   .page.active{display:block;}
@@ -117,180 +125,15 @@
   .sec-btn:hover{opacity:.85;}
   .sec-btn-hint{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;padding:8px 14px;border-radius:8px;display:flex;align-items:center;gap:6px;}
 
-  .story-featured{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;position:relative;transition:border-color .2s;cursor:pointer;}
-  .story-featured:hover{border-color:var(--gold);}
-  .story-featured-img{width:100%;height:280px;background:linear-gradient(135deg,#1a1a2e,#2d2d2d);display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;overflow:hidden;}
-  .story-featured-img img{width:100%;height:100%;object-fit:cover;}
-  .story-featured-body{padding:20px 24px;}
-  .story-cat{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:inline-block;padding:3px 8px;border-radius:4px;}
-  .story-featured-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px;}
-  .story-featured-sub{color:var(--text2);font-size:14px;margin-bottom:12px;}
-  .story-time{color:var(--text3);font-size:12px;display:flex;align-items:center;gap:6px;}
-  .stories-list{display:flex;flex-direction:column;gap:12px;}
-  .story-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;gap:16px;align-items:flex-start;position:relative;transition:border-color .2s;cursor:pointer;}
-  .story-item:hover{border-color:var(--gold);}
-  body.admin-mode .story-item::before{content:'⠿';position:absolute;top:10px;right:10px;color:var(--text3);font-size:14px;pointer-events:none;}
-  .story-item.dragging,.story-featured.dragging{opacity:.4;border:2px dashed var(--gold);}
-  .story-item.drag-over,.story-featured.drag-over{border:2px solid var(--gold2);background:rgba(201,168,76,.08);}
-  .story-item-img{width:80px;height:60px;border-radius:6px;background:var(--bg3);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:24px;}
-  .story-item-img img{width:100%;height:100%;object-fit:cover;}
-  .story-item-cat{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 6px;border-radius:4px;display:inline-block;margin-bottom:6px;}
-  .story-item-title{font-size:14px;font-weight:600;margin-bottom:4px;}
-  .story-item-time{color:var(--text3);font-size:12px;}
-
-  .rich-editor{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg2);}
-  .editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--bg3);border-bottom:1px solid var(--border);}
-  .tool-btn{background:var(--bg2);border:1px solid var(--border);color:var(--text);padding:6px 10px;border-radius:4px;cursor:pointer;font-size:13px;transition:all .2s;}
-  .tool-btn:hover{background:var(--gold);color:var(--bg);border-color:var(--gold);}
-  .tool-color{background:var(--bg2);border:1px solid var(--border);border-radius:4px;padding:4px;cursor:pointer;}
-  .editor-content{min-height:200px;padding:16px;background:var(--card);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;outline:none;overflow-y:auto;}
-  .editor-content img{max-width:100%;height:auto;border-radius:8px;margin:10px 0;}
-  .editor-content ul,.editor-content ol{padding-left:24px;margin:8px 0;}
-  .editor-content b{font-weight:700;}
-  .editor-content i{font-style:italic;}
-
-  .story-read-modal .modal{width:700px;max-width:90vw;}
-  .story-read-content{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.7;color:var(--text);}
-  .story-read-content img{max-width:100%;height:auto;border-radius:8px;margin:16px 0;}
-  .story-read-content ul,.story-read-content ol{padding-left:24px;margin:12px 0;}
-  .story-read-content h2{font-family:'Syne',sans-serif;font-size:20px;margin:16px 0 8px;}
-  .story-read-meta{display:flex;gap:16px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);color:var(--text2);font-size:12px;}
-
-  .emploi-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
-  .tab-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);cursor:pointer;padding:8px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;}
-  .tab-btn:hover{color:var(--text);}
-  .tab-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);}
-  .emploi-section{display:none;}
-  .emploi-section.active{display:block;}
-  .emploi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;}
-  .emploi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;gap:14px;align-items:flex-start;transition:border-color .2s;position:relative;}
-  .emploi-card:hover{border-color:var(--gold);}
-  .emploi-card.inactive{opacity:.45;filter:grayscale(.8);}
-  .emploi-icon{width:44px;height:44px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden;}
-  .emploi-icon img{width:100%;height:100%;object-fit:cover;border-radius:8px;}
-  .emploi-title{font-size:15px;font-weight:700;margin-bottom:4px;}
-  .emploi-company{font-size:12px;color:var(--text2);margin-bottom:6px;}
-  .emploi-desc{font-size:12px;color:var(--text3);}
-  .emploi-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-bottom:6px;letter-spacing:.5px;}
-  .badge-legal{background:rgba(76,175,125,.2);color:var(--green);border:1px solid rgba(76,175,125,.3);}
-  .badge-service{background:rgba(61,139,205,.2);color:var(--blue);border:1px solid rgba(61,139,205,.3);}
-  .badge-passion{background:rgba(155,89,182,.2);color:var(--purple);border:1px solid rgba(155,89,182,.3);}
-  .badge-illegal{background:rgba(212,71,42,.2);color:var(--accent);border:1px solid rgba(212,71,42,.3);}
-  .badge-closed{background:rgba(100,100,100,.2);color:#888;border:1px solid rgba(100,100,100,.3);}
-  .form-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px;max-width:560px;}
-  .form-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;margin-bottom:6px;}
-  .form-sub{color:var(--text2);font-size:13px;margin-bottom:24px;}
-  .form-group{margin-bottom:16px;}
-  .form-label{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:.5px;}
-  .form-input,.form-select,.form-textarea{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;transition:border-color .2s;outline:none;}
-  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold);}
-  .form-select{appearance:none;cursor:pointer;}
-  .form-textarea{resize:vertical;min-height:90px;}
-  .btn-submit{background:var(--gold);color:var(--bg);border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 24px;border-radius:8px;cursor:pointer;width:100%;letter-spacing:.5px;transition:opacity .2s;}
-  .btn-submit:hover{opacity:.85;}
-  .btn-secondary{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 20px;border-radius:8px;cursor:pointer;}
-  .concepts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
-  .concept-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:transform .2s,border-color .2s;position:relative;}
-  .concept-card:hover{transform:translateY(-3px);border-color:var(--gold);}
-  .concept-img{width:100%;height:180px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative;overflow:hidden;}
-  .concept-img img{width:100%;height:100%;object-fit:cover;}
-  .concept-badge{position:absolute;top:10px;left:10px;}
-  .concept-body{padding:14px;}
-  .concept-title{font-size:15px;font-weight:700;margin-bottom:4px;}
-  .concept-meta{font-size:12px;color:var(--text2);margin-bottom:8px;}
-  .stars{color:var(--gold);font-size:13px;margin-bottom:6px;}
-  .concept-desc{font-size:12px;color:var(--text3);}
-  .dropbox-grid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start;}
-  @media(max-width:900px){.dropbox-grid{grid-template-columns:1fr;}}
-  .dropbox-sidebar{display:flex;flex-direction:column;gap:16px;}
-  .info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
-  .info-card-title{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-  .info-list{list-style:disc;padding-left:20px;}
-  .info-list li{font-size:13px;color:var(--text2);margin-bottom:6px;}
-  .radar-section{margin-bottom:32px;}
-  .radar-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-  .radar-live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 1.5s infinite;}
-  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.3);}}
-  .radar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
-  .radar-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative;}
-  .radar-card-left{flex:1;}
-  .radar-name{font-size:15px;font-weight:700;margin-bottom:4px;}
-  .radar-location{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;margin-bottom:8px;}
-  .radar-desc{font-size:12px;color:var(--text3);}
-  .radar-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
-  .crowd-meter{display:flex;gap:3px;}
-  .crowd-bar{width:6px;height:20px;border-radius:3px;background:var(--bg3);transition:background .3s;}
-  .crowd-bar.filled{background:var(--gold);}
-  .crowd-bar.hype{background:var(--accent);}
-  .crowd-label{font-size:11px;color:var(--text2);display:flex;align-items:center;gap:4px;}
-  .radar-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;}
-  .radar-hype{background:rgba(212,71,42,.15);color:var(--accent);border:1px solid rgba(212,71,42,.3);}
-  .radar-chill{background:rgba(61,139,205,.15);color:var(--blue);border:1px solid rgba(61,139,205,.3);}
-  .radar-business{background:rgba(76,175,125,.15);color:var(--green);border:1px solid rgba(76,175,125,.3);}
-  .radar-danger{background:rgba(212,71,42,.2);color:var(--accent2);border:1px solid rgba(212,71,42,.4);}
-  .radar-admin-controls{margin-top:10px;display:none;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--border);}
-  body.admin-mode .radar-admin-controls{display:flex;}
-  .crowd-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--bg3);border-radius:2px;outline:none;}
-  .crowd-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer;}
-  .crowd-value{font-size:11px;color:var(--gold);font-weight:700;min-width:14px;text-align:center;}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;}
-  .modal-overlay.open{display:flex;}
-  .modal{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:32px;width:440px;max-width:96vw;max-height:90vh;overflow-y:auto;animation:slideUp .25s ease;}
-  @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-  .modal-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;text-align:center;}
-  .modal-sub{color:var(--text2);font-size:13px;text-align:center;margin-bottom:24px;}
-  .modal-avatar{font-size:48px;text-align:center;margin-bottom:16px;}
-  .modal-error{color:var(--accent);font-size:12px;text-align:center;margin-top:8px;display:none;}
-  .modal-btns{display:flex;gap:8px;margin-top:4px;}
-  .modal-btns button{flex:1;}
-  .vplayer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:none;align-items:center;justify-content:center;}
-  .vplayer-overlay.open{display:flex;}
-  .vplayer-box{width:90vw;max-width:900px;background:var(--bg2);border-radius:12px;overflow:hidden;position:relative;}
-  .vplayer-box video{width:100%;max-height:70vh;display:block;background:#000;}
-  .vplayer-box img{width:100%;max-height:70vh;display:block;object-fit:contain;background:#000;}
-  .vplayer-header{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
-  .vplayer-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
-  .vplayer-close{background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
-  .upload-zone{border:2px dashed var(--border);border-radius:8px;padding:20px;text-align:center;color:var(--text3);cursor:pointer;transition:all .2s;font-size:13px;}
-  .upload-zone:hover{border-color:var(--gold);color:var(--gold);}
-  .upload-zone input{display:none;}
-  .upload-preview{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text2);margin-top:8px;}
-  .upload-preview img{width:56px;height:40px;object-fit:cover;border-radius:4px;}
-  .upload-preview video{width:90px;height:54px;object-fit:cover;border-radius:4px;}
-  .media-type-selector{display:flex;gap:8px;margin-bottom:12px;}
-  .media-type-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px;}
-  .media-type-btn.active{background:var(--gold);color:var(--bg);border-color:var(--gold);}
-  .star-input{display:flex;gap:4px;}
-  .star-input span{font-size:24px;cursor:pointer;color:var(--bg3);transition:color .1s;}
-  .star-input span.lit{color:var(--gold);}
-  .mail-list,.drop-messages-list{display:flex;flex-direction:column;gap:10px;}
-  .mail-item,.drop-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .2s;}
-  .mail-item:hover,.drop-item:hover{border-color:var(--gold);}
-  .mail-item.unread,.drop-item.unread{border-left:3px solid var(--gold);}
-  .mail-item-hd,.drop-item-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-  .mail-from,.drop-from{font-size:14px;font-weight:700;}
-  .mail-time,.drop-time{font-size:11px;color:var(--text3);}
-  .mail-domain,.drop-category{font-size:12px;color:var(--text2);margin-bottom:4px;}
-  .mail-preview,.drop-preview{font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .mail-tag,.drop-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(201,168,76,.2);color:var(--gold);border:1px solid rgba(201,168,76,.3);margin-top:4px;}
-  .empty-state{text-align:center;padding:60px 20px;color:var(--text3);}
-  .empty-icon{font-size:48px;margin-bottom:12px;}
-  .mail-detail-field,.drop-detail-field{margin-bottom:12px;}
-  .mail-detail-field label,.drop-detail-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);display:block;margin-bottom:4px;}
-  .mail-detail-field p,.drop-detail-field p{font-size:13px;color:var(--text);background:var(--bg3);padding:10px 14px;border-radius:8px;line-height:1.6;white-space:pre-wrap;}
-  .toast{position:fixed;bottom:24px;right:24px;background:var(--card);border:1px solid var(--green);color:var(--text);border-radius:8px;padding:12px 20px;font-size:13px;z-index:600;display:none;animation:fadeInUp .3s ease;}
-  @keyframes fadeInUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-
-  footer{background:var(--bg2);border-top:1px solid var(--border);padding:24px 32px;margin-top:auto;}
-  .footer-inner{max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
-  .footer-left{display:flex;align-items:center;gap:12px;}
-  .footer-logo{width:32px;height:32px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:18px;font-weight:700;color:var(--bg);}
-  .footer-text{font-size:13px;color:var(--text2);}
-  .footer-right .footer-text{color:var(--text3);font-size:12px;}
-  @media(max-width:768px){.footer-inner{flex-direction:column;text-align:center;}.nav-links{display:none;}.video-grid{grid-template-columns:1fr 1fr;}}
+  /* === Le reste du CSS (storytelling, emploi, concepts, dropbox, radar) === */
+  /* Garde tout ton CSS existant ici, je le mets en commentaire pour la lisibilité mais tu dois tout garder */
 </style>
 </head>
 <body>
+
+<!-- === TOUT TON HTML EXISTANT === -->
+<!-- Garde toute ta structure HTML (nav, pages, modals, etc.) -->
+<!-- Je réécris juste la partie JavaScript pour Firebase -->
 
 <div class="admin-bar">
   <span>🛡️ <strong>Mode Admin actif</strong> — Modifie en temps réel · Glisse les blocs pour les réordonner</span>
@@ -340,148 +183,8 @@
 </nav>
 
 <main class="main-content">
-<div class="page active" id="page-instant">
-  <div class="page-header">
-    <div class="page-title">🔴 L'Instant</div>
-    <div class="page-sub">Un instant de vie capturé pour l'éternité.</div>
-  </div>
-  <div class="sec-admin">
-    <button class="sec-btn" onclick="openVideoModal()">➕ Ajouter un post</button>
-    <div class="sec-btn-hint" id="drag-hint-instant" style="display:none">🤚 Glisse les cartes pour les réordonner</div>
-  </div>
-  <div class="filter-bar" id="instant-filters"></div>
-  <div class="video-grid" id="instant-grid"></div>
-</div>
-
-<div class="page" id="page-stories">
-  <div class="page-header">
-    <div class="page-title">✍️ Storytelling</div>
-    <div class="page-sub">On dit tout haut ce que vous pensez tout bas.</div>
-  </div>
-  <div class="sec-admin">
-    <button class="sec-btn" onclick="openStoryModal()">➕ Ajouter un article</button>
-    <div class="sec-btn-hint" id="drag-hint-stories" style="display:none">🤚 Glisse les articles pour les réordonner</div>
-  </div>
-  <div class="filter-bar" id="stories-filters"></div>
-  <div id="stories-container"></div>
-</div>
-
-<div class="page" id="page-emploi">
-  <div class="page-header">
-    <div class="page-title">💼 Hub Emploi</div>
-    <div class="page-sub">Le cabinet de recrutement n°1 de Los Santos.</div>
-  </div>
-  <div class="emploi-tabs">
-    <button class="tab-btn active" onclick="switchEmploi('recrute',this)">On Recrute</button>
-    <button class="tab-btn" onclick="switchEmploi('cherche',this)">Je Cherche</button>
-    <button class="tab-btn" id="tab-mails" style="display:none" onclick="switchEmploi('mails',this)">📨 Mails reçus</button>
-  </div>
-  <div class="emploi-section active" id="emploi-recrute">
-    <div class="sec-admin"><button class="sec-btn" onclick="openEmploiModal()">➕ Ajouter une offre</button></div>
-    <div class="filter-bar" id="emploi-filters"></div>
-    <div class="emploi-grid" id="emploi-grid"></div>
-  </div>
-  <div class="emploi-section" id="emploi-cherche">
-    <div class="form-card">
-      <div class="form-title">📩 Dépose ta candidature</div>
-      <div class="form-sub">On te recontacte quand une entreprise cherche dans ton domaine.</div>
-      <div class="form-group"><label class="form-label">Prénom RP</label><input type="text" class="form-input" id="cand-name" placeholder="Ex: Marcus Reyes"></div>
-      <div class="form-group"><label class="form-label">Numéro RP</label><input type="text" class="form-input" id="cand-num" placeholder="(555)222-2222"></div>
-      <div class="form-group"><label class="form-label">Domaine</label>
-        <select class="form-select" id="cand-domain">
-          <option value="">Sélectionner...</option>
-          <option>Service public (LSMC, LSPD, LSFD...)</option>
-          <option>Boîte de nuit</option>
-          <option>Mécanique / Customs</option>
-          <option>Restauration</option>
-          <option>Média / Journalisme</option>
-          <option>Immobilier</option>
-          <option>Autre</option>
-        </select>
-      </div>
-      <div class="form-group"><label class="form-label">Précisions</label><textarea class="form-textarea" id="cand-note" placeholder="Expérience, disponibilités..."></textarea></div>
-      <button class="btn-submit" onclick="submitCandidature()">📨 Envoyer</button>
-    </div>
-  </div>
-  <div class="emploi-section" id="emploi-mails">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-size:14px;color:var(--text2)" id="mail-count">0 candidature(s)</div>
-      <button class="sec-btn" onclick="clearMails()">🗑️ Tout effacer</button>
-    </div>
-    <div class="mail-list" id="mail-list"></div>
-  </div>
-</div>
-
-<div class="page" id="page-concepts">
-  <div class="page-header">
-    <div class="page-title">💡 Concepts Originaux</div>
-    <div class="page-sub">Fast & Food, Outfits, Le Switch — nos formats uniques.</div>
-  </div>
-  <div class="sec-admin"><button class="sec-btn" onclick="openConceptModal()">➕ Ajouter un concept</button></div>
-  <div class="filter-bar" id="concepts-filters"></div>
-  <div class="concepts-grid" id="concepts-grid"></div>
-</div>
-
-<div class="page" id="page-dropbox">
-  <div class="page-header">
-    <div class="page-title">📬 Drop Box</div>
-    <div class="page-sub">Balance tout ici, c'est 100% anonyme.</div>
-  </div>
-  <div class="emploi-tabs">
-    <button class="tab-btn active" onclick="switchDropbox('publier',this)">📝 Publier un signalement</button>
-    <button class="tab-btn" id="tab-drop-messages" style="display:none" onclick="switchDropbox('messages',this)">📨 Signalements reçus</button>
-  </div>
-  <div class="emploi-section active" id="dropbox-publier">
-    <div class="dropbox-grid">
-      <div class="form-card" style="max-width:100%">
-        <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="drop-title" placeholder="Titre..."></div>
-        <div class="form-group"><label class="form-label">Ton info</label><textarea class="form-textarea" style="min-height:140px" id="drop-body" placeholder="Décris ce que tu as vu..."></textarea></div>
-        <div class="form-group"><label class="form-label">Catégorie</label>
-          <select class="form-select" id="drop-cat">
-            <option>Bavure policière / Abus de pouvoir</option>
-            <option>Activité illégale</option>
-            <option>Scoop / Info exclusive</option>
-            <option>Course-poursuite / Événement</option>
-            <option>Autre</option>
-          </select>
-        </div>
-        <button class="btn-submit" onclick="submitDrop()">📨 Envoyer anonymement</button>
-      </div>
-      <div class="dropbox-sidebar">
-        <div class="info-card"><div class="info-card-title">🛡️ 100% Anonyme</div><p style="font-size:13px;color:var(--text2)">Seule la rédaction de LatInvader a accès aux envois.</p></div>
-        <div class="info-card"><div class="info-card-title">🎯 Ce qu'on recherche</div>
-          <ul class="info-list"><li>Bavures policières</li><li>Activités illégales</li><li>Scoops exclusifs</li><li>Vidéos d'événements</li><li>Potins sur des personnalités</li></ul>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="emploi-section" id="dropbox-messages">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-size:14px;color:var(--text2)" id="drop-count">0 signalement(s)</div>
-      <button class="sec-btn" onclick="clearDropMessages()">🗑️ Tout effacer</button>
-    </div>
-    <div class="drop-messages-list" id="drop-messages-list"></div>
-  </div>
-</div>
-
-<div class="page" id="page-radar">
-  <div class="page-header">
-    <div class="page-title">📡 Le Radar</div>
-    <div class="page-sub">Où ça bouge ce soir à Los Santos ?</div>
-  </div>
-  <div class="sec-admin">
-    <button class="sec-btn" onclick="openRadarModal()">➕ Ajouter un spot</button>
-    <button class="sec-btn" onclick="openAddAmbianceModal()">🏷️ Ajouter une ambiance</button>
-  </div>
-  <div class="radar-section">
-    <div class="radar-section-title"><div class="radar-live-dot"></div> SPOTS HYPE — MAINTENANT</div>
-    <div class="radar-grid" id="radar-hype-grid"></div>
-  </div>
-  <div class="radar-section">
-    <div class="radar-section-title">AUTRES SPOTS</div>
-    <div class="radar-grid" id="radar-other-grid"></div>
-  </div>
-</div>
+  <!-- Tes 6 pages (instant, stories, emploi, concepts, dropbox, radar) -->
+  <!-- Garde tout ton HTML existant ici -->
 </main>
 
 <footer>
@@ -496,252 +199,38 @@
   </div>
 </footer>
 
-<!-- MODALS -->
-<div class="modal-overlay" id="admin-modal">
-  <div class="modal">
-    <div class="modal-avatar">🧍</div>
-    <div class="modal-title">Connexion Admin</div>
-    <div class="modal-sub">Entre ton mot de passe pour accéder au mode édition.</div>
-    <div class="form-group"><label class="form-label">Mot de passe</label><input type="password" class="form-input" id="admin-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()"></div>
-    <button class="btn-submit" onclick="loginAdmin()">Se connecter</button>
-    <div class="modal-error" id="admin-error">Mot de passe incorrect.</div>
-    <div style="margin-top:12px;text-align:center"><button style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer" onclick="closeModal('admin-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="video-modal">
-  <div class="modal" style="width:480px">
-    <div class="modal-title" id="vm-modal-title">Ajouter un post</div>
-    <div style="height:16px"></div>
-    <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="vm-title" placeholder="Titre..."></div>
-    <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="vm-desc" placeholder="Description..."></div>
-    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="vm-cat"></select></div>
-    <div class="form-group"><label class="form-label">Type de média</label>
-      <div class="media-type-selector">
-        <button type="button" class="media-type-btn active" data-type="video" onclick="setMediaType('video')">🎬 Vidéo</button>
-        <button type="button" class="media-type-btn" data-type="image" onclick="setMediaType('image')">🖼️ Image</button>
-      </div>
-    </div>
-    <div class="form-group" id="video-upload-group"><label class="form-label">Fichier média</label>
-      <div class="upload-zone" onclick="document.getElementById('vm-file').click()">📹 Uploader un fichier<input type="file" id="vm-file" accept="video/*,image/*" onchange="handleMediaFile(event)"></div>
-      <div id="vm-preview" class="upload-preview" style="display:none"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Nombre de vues (départ)</label><input type="number" class="form-input" id="vm-views" value="0" min="0"></div>
-    <div class="form-group"><label class="form-label">Nombre de likes (départ)</label><input type="number" class="form-input" id="vm-likes" value="0" min="0"></div>
-    <div class="modal-btns"><button class="btn-submit" onclick="saveVideo()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('video-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="story-modal">
-  <div class="modal" style="width:700px;max-width:95vw;">
-    <div class="modal-title" id="sm-modal-title">Ajouter un article</div>
-    <div style="height:16px"></div>
-    <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="sm-title"></div>
-    <div class="form-group"><label class="form-label">Sous-titre</label><input type="text" class="form-input" id="sm-sub"></div>
-    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="sm-cat"></select></div>
-    <div class="form-group"><label class="form-label">Heure</label><input type="text" class="form-input" id="sm-time" placeholder="Ex: Il y a 2 heures"></div>
-    <div class="form-group"><label class="form-label">Image de couverture</label>
-      <div class="upload-zone" onclick="document.getElementById('sm-file').click()">🖼️ Uploader une image<input type="file" id="sm-file" accept="image/*" onchange="previewImg(event,'sm-preview')"></div>
-      <div id="sm-preview" class="upload-preview" style="display:none"></div>
-    </div>
-    <div class="form-group"><label class="form-label">Contenu de l'article (éditeur enrichi)</label>
-      <div class="rich-editor">
-        <div class="editor-toolbar">
-          <button class="tool-btn" onclick="execCmd('bold')"><b>B</b></button>
-          <button class="tool-btn" onclick="execCmd('italic')"><i>I</i></button>
-          <button class="tool-btn" onclick="execCmd('insertUnorderedList')">• Liste</button>
-          <button class="tool-btn" onclick="execCmd('insertOrderedList')">1. Liste</button>
-          <input type="color" class="tool-color" id="textColorPicker" onchange="execCmd('foreColor', this.value)">
-          <button class="tool-btn" onclick="addImageToEditor()">🖼️ Image</button>
-        </div>
-        <div id="story-editor" class="editor-content" contenteditable="true"></div>
-      </div>
-    </div>
-    <div class="modal-btns"><button class="btn-submit" onclick="saveStory()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('story-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay story-read-modal" id="story-read-modal">
-  <div class="modal" style="width:700px;max-width:90vw;">
-    <div class="modal-title" id="read-title"></div>
-    <div id="read-meta" class="story-read-meta"></div>
-    <div id="read-content" class="story-read-content"></div>
-    <div style="margin-top:20px"><button class="btn-secondary" style="width:100%" onclick="closeModal('story-read-modal')">Fermer</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="concept-modal">
-  <div class="modal" style="width:480px">
-    <div class="modal-title" id="cm-modal-title">Ajouter un concept</div>
-    <div style="height:16px"></div>
-    <div class="form-group"><label class="form-label">Titre</label><input type="text" class="form-input" id="cm-title"></div>
-    <div class="form-group"><label class="form-label">Lieu / Sous-titre</label><input type="text" class="form-input" id="cm-meta"></div>
-    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="cm-desc"></textarea></div>
-    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="cm-cat"></select></div>
-    <div class="form-group"><label class="form-label">Note</label><div class="star-input" id="cm-stars"><span onclick="setStars(1)">★</span><span onclick="setStars(2)">★</span><span onclick="setStars(3)">★</span><span onclick="setStars(4)">★</span><span onclick="setStars(5)">★</span></div></div>
-    <div class="form-group"><label class="form-label">Image (PNG/JPG)</label>
-      <div class="upload-zone" onclick="document.getElementById('cm-file').click()">🖼️ Uploader une image<input type="file" id="cm-file" accept="image/*" onchange="previewImg(event,'cm-preview')"></div>
-      <div id="cm-preview" class="upload-preview" style="display:none"></div>
-    </div>
-    <div class="modal-btns"><button class="btn-submit" onclick="saveConcept()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('concept-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="emploi-modal">
-  <div class="modal" style="width:480px">
-    <div class="modal-title" id="em-modal-title">Ajouter une offre</div>
-    <div style="height:16px"></div>
-    <div class="form-group"><label class="form-label">Titre du poste</label><input type="text" class="form-input" id="em-title"></div>
-    <div class="form-group"><label class="form-label">Entreprise</label><input type="text" class="form-input" id="em-company"></div>
-    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="em-desc"></textarea></div>
-    <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="em-cat"></select></div>
-    <div class="form-group"><label class="form-label">Statut</label>
-      <select class="form-select" id="em-status">
-        <option value="legal">Légal</option><option value="service">Service</option><option value="passion">Passion</option><option value="illegal">Illégal</option><option value="closed">Ne recrute plus</option>
-      </select>
-    </div>
-    <div class="form-group"><label class="form-label">Logo (PNG)</label>
-      <div class="upload-zone" onclick="document.getElementById('em-file').click()">🏢 Uploader un logo<input type="file" id="em-file" accept="image/*" onchange="previewImg(event,'em-preview')"></div>
-      <div id="em-preview" class="upload-preview" style="display:none"></div>
-    </div>
-    <div class="modal-btns"><button class="btn-submit" onclick="saveEmploi()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('emploi-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="radar-modal">
-  <div class="modal" style="width:480px">
-    <div class="modal-title" id="rm-modal-title">Ajouter un spot</div>
-    <div style="height:16px"></div>
-    <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="rm-name"></div>
-    <div class="form-group"><label class="form-label">Quartier</label><input type="text" class="form-input" id="rm-loc"></div>
-    <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="rm-desc"></textarea></div>
-    <div class="form-group"><label class="form-label">Ambiance</label>
-      <select class="form-select" id="rm-status"></select>
-    </div>
-    <div class="modal-btns"><button class="btn-submit" onclick="saveRadar()">✅ Enregistrer</button><button class="btn-secondary" onclick="closeModal('radar-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="addcat-modal">
-  <div class="modal">
-    <div class="modal-title">Nouvelle catégorie</div>
-    <div class="modal-sub">Donne un nom à ta catégorie.</div>
-    <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="addcat-name" placeholder="Ex: Interviews"></div>
-    <div class="modal-btns"><button class="btn-submit" onclick="confirmAddCat()">✅ Créer</button><button class="btn-secondary" onclick="closeModal('addcat-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="editcat-modal">
-  <div class="modal">
-    <div class="modal-title">Modifier la catégorie</div>
-    <div class="modal-sub">Change le nom de la catégorie.</div>
-    <div class="form-group"><label class="form-label">Nouveau nom</label><input type="text" class="form-input" id="editcat-name" placeholder="Nouveau nom"></div>
-    <div class="modal-btns"><button class="btn-submit" onclick="confirmEditCat()">✅ Modifier</button><button class="btn-secondary" onclick="closeModal('editcat-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="add-ambiance-modal">
-  <div class="modal">
-    <div class="modal-title">Nouvelle ambiance</div>
-    <div class="modal-sub">Donne un nom à la nouvelle ambiance.</div>
-    <div class="form-group"><label class="form-label">Nom</label><input type="text" class="form-input" id="add-ambiance-name" placeholder="Ex: PARTY"></div>
-    <div class="form-group"><label class="form-label">Couleur</label><input type="color" class="form-input" id="add-ambiance-color" value="#d4472a"></div>
-    <div class="modal-btns"><button class="btn-submit" onclick="confirmAddAmbiance()">✅ Créer</button><button class="btn-secondary" onclick="closeModal('add-ambiance-modal')">Annuler</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="mail-modal">
-  <div class="modal" style="width:500px">
-    <div class="modal-title">📨 Candidature</div>
-    <div style="height:12px"></div>
-    <div id="mail-detail"></div>
-    <div style="margin-top:16px"><button class="btn-secondary" style="width:100%" onclick="closeModal('mail-modal')">Fermer</button></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="drop-modal">
-  <div class="modal" style="width:500px">
-    <div class="modal-title">📬 Signalement</div>
-    <div style="height:12px"></div>
-    <div id="drop-detail"></div>
-    <div style="margin-top:16px"><button class="btn-secondary" style="width:100%" onclick="closeModal('drop-modal')">Fermer</button></div>
-  </div>
-</div>
-
-<div class="vplayer-overlay" id="vplayer-overlay" onclick="closeVPlayer(event)">
-  <div class="vplayer-box">
-    <div class="vplayer-header">
-      <span class="vplayer-title" id="vplayer-title">Média</span>
-      <button class="vplayer-close" onclick="closeVPlayer()">✕</button>
-    </div>
-    <div id="vplayer-container"></div>
-  </div>
-</div>
+<!-- === TOUS TES MODALS === -->
+<!-- Garde tous tes modals existants ici -->
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ========== DONNÉES PAR DÉFAUT ==========
-let videos = [
-  {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142,likes:38},
-  {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89,likes:21},
-  {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211,likes:54},
-  {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75,likes:19},
-  {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304,likes:67},
-];
-let vidSeq = 6;
-let instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS'}];
-let instantFilter = 'tout';
+// ==================== CONFIGURATION FIREBASE ====================
+// Ces valeurs sont dans firebase-config.js
+// Le script va attendre que Firebase soit chargé
 
-let stories = [
-  {id:1,title:"BREAKING : Fusillade au Unicorn, 3 blessés",sub:"Les secours sont sur place",cat:"BREAKING",time:"Il y a 16 heures",img:null,content:"<p>Une fusillade a éclaté cette nuit au Vanilla Unicorn. Les secours sont rapidement intervenus.</p>"},
-  {id:2,title:"Qui est la mystérieuse femme du maire ?",sub:"",cat:"POTINS",time:"Il y a 16 heures",img:null,content:"<p>Des rumeurs circulent sur l'identité de la compagne du maire...</p>"},
-  {id:3,title:"Un dealer arrêté en plein deal à Strawberry",sub:"",cat:"FAITS DIVERS",time:"Il y a 2 heures",img:null,content:"<p>La police a interpellé un individu en possession de stupéfiants.</p>"},
-  {id:4,title:"Le Diamond Casino racheté ? Les rumeurs s'intensifient",sub:"",cat:"POTINS",time:"Il y a 1 jour",img:null,content:"<p>Un mystérieux investisseur serait sur le point de racheter le casino.</p>"},
-];
-let storySeq = 5;
-let storyCats = ['BREAKING','POTINS','FAITS DIVERS'];
-let storiesFilter = 'tout';
+let db, auth;
+let isFirebaseReady = false;
+let pendingActions = [];
 
-let emplois = [
-  {id:1,title:"Ambulancier",company:"Los Santos Medical Center",desc:"Ambulanciers motivés pour les urgences de nuit.",cat:"service public",status:"legal",img:null},
-  {id:2,title:"Barman / DJ",company:"Bahama Mamas",desc:"Le club le plus hype de LS recrute.",cat:"boîte de nuit",status:"passion",img:null},
-  {id:3,title:"Mécanicien",company:"LS Customs",desc:"Tu sais tourner une clé ? On a besoin de toi.",cat:"mécano",status:"service",img:null},
-  {id:4,title:"Caméraman",company:"Weazel News",desc:"Oui, même la concurrence recrute.",cat:"media",status:"legal",img:null},
-  {id:5,title:"Serveur",company:"Burger Shot — Vespucci",desc:"Le rush du midi, ça te connaît ?",cat:"restaurant",status:"service",img:null},
-];
-let emploiSeq = 6;
-let emploiCats = ['service public','boîte de nuit','mécano','restaurant','media'];
-let emploiFilter = 'tout';
-let mailbox = [];
+function initFirebaseApp() {
+  if(typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+    db = firebase.firestore();
+    auth = firebase.auth();
+    isFirebaseReady = true;
+    // Exécuter les actions en attente
+    pendingActions.forEach(action => action());
+    pendingActions = [];
+    console.log("✅ Firebase prêt !");
+  } else {
+    setTimeout(initFirebaseApp, 100);
+  }
+}
 
-let concepts = [
-  {id:1,title:"Le Mega Burger du Burger Shot",meta:"Burger Shot — Vespucci",desc:"C'est gras, c'est cheap, mais ça cale.",cat:"FAST & FOOD",stars:2,img:null},
-  {id:2,title:"L'outfit à 50k$ de Marcus",meta:"Ponsonbys — Rockford Hills",desc:"Marcus nous a montré sa tenue. Le drip est réel.",cat:"OUTFITS",stars:5,img:null},
-  {id:3,title:"24h dans la peau d'un dépanneur",meta:"LS Roads — Davis",desc:"On a suivi un dépanneur 24h. C'est un métier de fou.",cat:"LE SWITCH",stars:3,img:null},
-];
-let conceptSeq = 4;
-let conceptCats = ['FAST & FOOD','OUTFITS','LE SWITCH'];
-let conceptsFilter = 'tout';
+// Attendre que firebase-config.js soit chargé
+setTimeout(initFirebaseApp, 500);
 
-let radarSpots = [
-  {id:1,name:"Vanilla Unicorn",loc:"Strawberry",desc:"La soirée bat son plein, DJ set live.",status:"hype",crowd:5},
-  {id:2,name:"Bahama Mamas",loc:"Downtown LS",desc:"Soirée open bar + contest DJ.",status:"hype",crowd:4},
-  {id:3,name:"Del Perro Pier",loc:"Del Perro Beach",desc:"Chill au bord de l'eau.",status:"chill",crowd:3},
-  {id:4,name:"Diamond Casino & Resort",loc:"Vinewood",desc:"Les gros joueurs sont là ce soir.",status:"business",crowd:4},
-  {id:5,name:"Grove Street",loc:"Davis",desc:"Tensions ce soir, restez prudents.",status:"danger",crowd:2},
-];
-let radarSeq = 6;
-let radarAmbiances = [
-  {id:'hype', label:'HYPE', color:'#d4472a'},
-  {id:'chill', label:'CHILL', color:'#3d8bcd'},
-  {id:'business', label:'BUSINESS', color:'#4caf7d'},
-  {id:'danger', label:'DANGER', color:'#e05a3a'}
-];
-
-let dropMessages = [];
-
-// ========== VARIABLES ==========
+// ==================== VARIABLES GLOBALES ====================
 let isAdmin = false;
 const ADMIN_PASS = "21032001";
 let editingId = null;
@@ -750,48 +239,260 @@ let editingCatInfo = null;
 let currentStars = 3;
 let badgeColors = {};
 let currentMediaType = 'video';
-let currentUserId = localStorage.getItem('latinvader_user_id');
-if(!currentUserId) {
-  currentUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  localStorage.setItem('latinvader_user_id', currentUserId);
+let currentUserId = null;
+
+// Données
+let videos = [];
+let instantCats = [];
+let instantFilter = 'tout';
+let stories = [];
+let storyCats = [];
+let storiesFilter = 'tout';
+let emplois = [];
+let emploiCats = [];
+let emploiFilter = 'tout';
+let mailbox = [];
+let concepts = [];
+let conceptCats = [];
+let conceptsFilter = 'tout';
+let radarSpots = [];
+let radarAmbiances = [
+  {id:'hype', label:'HYPE', color:'#d4472a'},
+  {id:'chill', label:'CHILL', color:'#3d8bcd'},
+  {id:'business', label:'BUSINESS', color:'#4caf7d'},
+  {id:'danger', label:'DANGER', color:'#e05a3a'}
+];
+let dropMessages = [];
+
+// ==================== AUTHENTIFICATION FIREBASE ====================
+function waitForFirebase(callback) {
+  if(isFirebaseReady) {
+    callback();
+  } else {
+    pendingActions.push(callback);
+  }
 }
 
-// ========== CHARGEMENT/SAUVEGARDE ==========
-function loadData() {
-  const savedVideos = localStorage.getItem('latinvader_videos');
-  if(savedVideos) {
-    const parsed = JSON.parse(savedVideos);
-    if(parsed.length) videos = parsed;
-    vidSeq = Math.max(...videos.map(v=>v.id), 0) + 1;
+auth.onAuthStateChanged(async (user) => {
+  waitForFirebase(async () => {
+    if (user) {
+      currentUserId = user.uid;
+      console.log("✅ Utilisateur connecté:", currentUserId);
+      await loadAllData();
+    } else {
+      try {
+        const result = await auth.signInAnonymously();
+        currentUserId = result.user.uid;
+        console.log("✅ Nouvel utilisateur anonyme:", currentUserId);
+        await loadAllData();
+      } catch (error) {
+        console.error("❌ Erreur connexion:", error);
+        loadLocalData();
+        renderAll();
+      }
+    }
+  });
+});
+
+// ==================== CHARGEMENT DES DONNÉES FIREBASE ====================
+async function loadAllData() {
+  await Promise.all([
+    loadVideos(),
+    loadStories(),
+    loadEmplois(),
+    loadConcepts(),
+    loadRadar(),
+    loadMailbox(),
+    loadDropMessages(),
+    loadBadgeColors(),
+    loadCategories()
+  ]);
+  renderAll();
+}
+
+async function loadVideos() {
+  const snapshot = await db.collection('videos').get();
+  if (!snapshot.empty) {
+    videos = [];
+    snapshot.forEach(doc => {
+      videos.push({ id: parseInt(doc.id), ...doc.data() });
+    });
+    videos.sort((a,b) => a.id - b.id);
+  } else {
+    // Données par défaut
+    videos = [
+      {id:1,title:"Un monde de chien pour l'ouverture de la boutique",desc:"Notre reporter sur place",cat:"60s",src:null,mediaType:'video',views:142,likes:38},
+      {id:2,title:"Braquage au Fleeca Bank : 60 secondes chrono",desc:"Résumé ultra-rapide",cat:"60s",src:null,mediaType:'video',views:89,likes:21},
+      {id:3,title:"C'est quoi ton salaire à LS ?",desc:"On a posé la question qui fâche...",cat:"micro",src:null,mediaType:'video',views:211,likes:54},
+      {id:4,title:"Lil Smokey — Interview Colors",desc:"Le rappeur de Strawberry se confie...",cat:"colors",src:null,mediaType:'video',views:75,likes:19},
+      {id:5,title:"Course-poursuite sur l'autoroute",desc:"La LSPD en action ce matin à 6h",cat:"60s",src:null,mediaType:'video',views:304,likes:67},
+    ];
+    for (const v of videos) {
+      await db.collection('videos').doc(v.id.toString()).set(v);
+    }
   }
+}
+
+async function loadStories() {
+  const snapshot = await db.collection('stories').get();
+  if (!snapshot.empty) {
+    stories = [];
+    snapshot.forEach(doc => {
+      stories.push({ id: parseInt(doc.id), ...doc.data() });
+    });
+    stories.sort((a,b) => a.id - b.id);
+  } else {
+    stories = [
+      {id:1,title:"BREAKING : Fusillade au Unicorn, 3 blessés",sub:"Les secours sont sur place",cat:"BREAKING",time:"Il y a 16 heures",img:null,content:"<p>Une fusillade a éclaté cette nuit au Vanilla Unicorn. Les secours sont rapidement intervenus.</p>"},
+      {id:2,title:"Qui est la mystérieuse femme du maire ?",sub:"",cat:"POTINS",time:"Il y a 16 heures",img:null,content:"<p>Des rumeurs circulent sur l'identité de la compagne du maire...</p>"},
+      {id:3,title:"Un dealer arrêté en plein deal à Strawberry",sub:"",cat:"FAITS DIVERS",time:"Il y a 2 heures",img:null,content:"<p>La police a interpellé un individu en possession de stupéfiants.</p>"},
+      {id:4,title:"Le Diamond Casino racheté ? Les rumeurs s'intensifient",sub:"",cat:"POTINS",time:"Il y a 1 jour",img:null,content:"<p>Un mystérieux investisseur serait sur le point de racheter le casino.</p>"},
+    ];
+    for (const s of stories) {
+      await db.collection('stories').doc(s.id.toString()).set(s);
+    }
+  }
+}
+
+async function loadEmplois() {
+  const snapshot = await db.collection('emplois').get();
+  if (!snapshot.empty) {
+    emplois = [];
+    snapshot.forEach(doc => {
+      emplois.push({ id: parseInt(doc.id), ...doc.data() });
+    });
+    emplois.sort((a,b) => a.id - b.id);
+  } else {
+    emplois = [
+      {id:1,title:"Ambulancier",company:"Los Santos Medical Center",desc:"Ambulanciers motivés pour les urgences de nuit.",cat:"service public",status:"legal",img:null},
+      {id:2,title:"Barman / DJ",company:"Bahama Mamas",desc:"Le club le plus hype de LS recrute.",cat:"boîte de nuit",status:"passion",img:null},
+      {id:3,title:"Mécanicien",company:"LS Customs",desc:"Tu sais tourner une clé ? On a besoin de toi.",cat:"mécano",status:"service",img:null},
+      {id:4,title:"Caméraman",company:"Weazel News",desc:"Oui, même la concurrence recrute.",cat:"media",status:"legal",img:null},
+      {id:5,title:"Serveur",company:"Burger Shot — Vespucci",desc:"Le rush du midi, ça te connaît ?",cat:"restaurant",status:"service",img:null},
+    ];
+    for (const e of emplois) {
+      await db.collection('emplois').doc(e.id.toString()).set(e);
+    }
+  }
+}
+
+async function loadConcepts() {
+  const snapshot = await db.collection('concepts').get();
+  if (!snapshot.empty) {
+    concepts = [];
+    snapshot.forEach(doc => {
+      concepts.push({ id: parseInt(doc.id), ...doc.data() });
+    });
+    concepts.sort((a,b) => a.id - b.id);
+  } else {
+    concepts = [
+      {id:1,title:"Le Mega Burger du Burger Shot",meta:"Burger Shot — Vespucci",desc:"C'est gras, c'est cheap, mais ça cale.",cat:"FAST & FOOD",stars:2,img:null},
+      {id:2,title:"L'outfit à 50k$ de Marcus",meta:"Ponsonbys — Rockford Hills",desc:"Marcus nous a montré sa tenue. Le drip est réel.",cat:"OUTFITS",stars:5,img:null},
+      {id:3,title:"24h dans la peau d'un dépanneur",meta:"LS Roads — Davis",desc:"On a suivi un dépanneur 24h. C'est un métier de fou.",cat:"LE SWITCH",stars:3,img:null},
+    ];
+    for (const c of concepts) {
+      await db.collection('concepts').doc(c.id.toString()).set(c);
+    }
+  }
+}
+
+async function loadRadar() {
+  const snapshot = await db.collection('radar_spots').get();
+  if (!snapshot.empty) {
+    radarSpots = [];
+    snapshot.forEach(doc => {
+      radarSpots.push({ id: parseInt(doc.id), ...doc.data() });
+    });
+    radarSpots.sort((a,b) => a.id - b.id);
+  } else {
+    radarSpots = [
+      {id:1,name:"Vanilla Unicorn",loc:"Strawberry",desc:"La soirée bat son plein, DJ set live.",status:"hype",crowd:5},
+      {id:2,name:"Bahama Mamas",loc:"Downtown LS",desc:"Soirée open bar + contest DJ.",status:"hype",crowd:4},
+      {id:3,name:"Del Perro Pier",loc:"Del Perro Beach",desc:"Chill au bord de l'eau.",status:"chill",crowd:3},
+      {id:4,name:"Diamond Casino & Resort",loc:"Vinewood",desc:"Les gros joueurs sont là ce soir.",status:"business",crowd:4},
+      {id:5,name:"Grove Street",loc:"Davis",desc:"Tensions ce soir, restez prudents.",status:"danger",crowd:2},
+    ];
+    for (const r of radarSpots) {
+      await db.collection('radar_spots').doc(r.id.toString()).set(r);
+    }
+  }
+  const ambianceSnapshot = await db.collection('radar_ambiances').get();
+  if (!ambianceSnapshot.empty) {
+    radarAmbiances = [];
+    ambianceSnapshot.forEach(doc => {
+      radarAmbiances.push(doc.data());
+    });
+  } else {
+    for (const a of radarAmbiances) {
+      await db.collection('radar_ambiances').doc(a.id).set(a);
+    }
+  }
+}
+
+async function loadMailbox() {
+  const snapshot = await db.collection('mailbox').get();
+  if (!snapshot.empty) {
+    mailbox = [];
+    snapshot.forEach(doc => {
+      mailbox.push({ id: parseInt(doc.id), ...doc.data() });
+    });
+    mailbox.sort((a,b) => b.id - a.id);
+  }
+}
+
+async function loadDropMessages() {
+  const snapshot = await db.collection('drop_messages').get();
+  if (!snapshot.empty) {
+    dropMessages = [];
+    snapshot.forEach(doc => {
+      dropMessages.push({ id: parseInt(doc.id), ...doc.data() });
+    });
+    dropMessages.sort((a,b) => b.id - a.id);
+  }
+}
+
+async function loadBadgeColors() {
+  const doc = await db.collection('settings').doc('badgeColors').get();
+  if (doc.exists) {
+    badgeColors = doc.data();
+  }
+}
+
+async function loadCategories() {
+  const catsDoc = await db.collection('settings').doc('categories').get();
+  if (catsDoc.exists) {
+    const data = catsDoc.data();
+    if (data.instantCats) instantCats = data.instantCats;
+    if (data.storyCats) storyCats = data.storyCats;
+    if (data.emploiCats) emploiCats = data.emploiCats;
+    if (data.conceptCats) conceptCats = data.conceptCats;
+  } else {
+    instantCats = [{id:'60s',label:"60 SECONDES D'ACTU"},{id:'micro',label:'MICRO-TROTTOIR'},{id:'colors',label:'COLORS'}];
+    storyCats = ['BREAKING','POTINS','FAITS DIVERS'];
+    emploiCats = ['service public','boîte de nuit','mécano','restaurant','media'];
+    conceptCats = ['FAST & FOOD','OUTFITS','LE SWITCH'];
+  }
+}
+
+function loadLocalData() {
+  const savedVideos = localStorage.getItem('latinvader_videos');
+  if(savedVideos) videos = JSON.parse(savedVideos);
   const savedVideoCats = localStorage.getItem('latinvader_video_cats');
   if(savedVideoCats) instantCats = JSON.parse(savedVideoCats);
   const savedStories = localStorage.getItem('latinvader_stories');
-  if(savedStories) {
-    stories = JSON.parse(savedStories);
-    storySeq = Math.max(...stories.map(s=>s.id), 0) + 1;
-  }
+  if(savedStories) stories = JSON.parse(savedStories);
   const savedStoryCats = localStorage.getItem('latinvader_story_cats');
   if(savedStoryCats) storyCats = JSON.parse(savedStoryCats);
   const savedEmplois = localStorage.getItem('latinvader_emplois');
-  if(savedEmplois) {
-    emplois = JSON.parse(savedEmplois);
-    emploiSeq = Math.max(...emplois.map(e=>e.id), 0) + 1;
-  }
+  if(savedEmplois) emplois = JSON.parse(savedEmplois);
   const savedEmploiCats = localStorage.getItem('latinvader_emploi_cats');
   if(savedEmploiCats) emploiCats = JSON.parse(savedEmploiCats);
   const savedConcepts = localStorage.getItem('latinvader_concepts');
-  if(savedConcepts) {
-    concepts = JSON.parse(savedConcepts);
-    conceptSeq = Math.max(...concepts.map(c=>c.id), 0) + 1;
-  }
+  if(savedConcepts) concepts = JSON.parse(savedConcepts);
   const savedConceptCats = localStorage.getItem('latinvader_concept_cats');
   if(savedConceptCats) conceptCats = JSON.parse(savedConceptCats);
   const savedRadar = localStorage.getItem('latinvader_radar');
-  if(savedRadar) {
-    radarSpots = JSON.parse(savedRadar);
-    radarSeq = Math.max(...radarSpots.map(r=>r.id), 0) + 1;
-  }
+  if(savedRadar) radarSpots = JSON.parse(savedRadar);
   const savedAmbiances = localStorage.getItem('latinvader_radar_ambiances');
   if(savedAmbiances) radarAmbiances = JSON.parse(savedAmbiances);
   const savedMailbox = localStorage.getItem('latinvader_mailbox');
@@ -802,23 +503,112 @@ function loadData() {
   if(savedBadgeColors) badgeColors = JSON.parse(savedBadgeColors);
 }
 
-function saveAll() {
-  localStorage.setItem('latinvader_videos', JSON.stringify(videos));
-  localStorage.setItem('latinvader_video_cats', JSON.stringify(instantCats));
-  localStorage.setItem('latinvader_stories', JSON.stringify(stories));
-  localStorage.setItem('latinvader_story_cats', JSON.stringify(storyCats));
-  localStorage.setItem('latinvader_emplois', JSON.stringify(emplois));
-  localStorage.setItem('latinvader_emploi_cats', JSON.stringify(emploiCats));
-  localStorage.setItem('latinvader_concepts', JSON.stringify(concepts));
-  localStorage.setItem('latinvader_concept_cats', JSON.stringify(conceptCats));
-  localStorage.setItem('latinvader_radar', JSON.stringify(radarSpots));
-  localStorage.setItem('latinvader_radar_ambiances', JSON.stringify(radarAmbiances));
-  localStorage.setItem('latinvader_mailbox', JSON.stringify(mailbox));
-  localStorage.setItem('latinvader_dropbox', JSON.stringify(dropMessages));
-  localStorage.setItem('latinvader_badge_colors', JSON.stringify(badgeColors));
+// ==================== FONCTIONS DE SAUVEGARDE FIREBASE ====================
+async function saveVideoToFirebase(video) {
+  await db.collection('videos').doc(video.id.toString()).set(video);
 }
 
-// ========== FONCTIONS D'AFFICHAGE ==========
+async function deleteVideoFromFirebase(videoId) {
+  await db.collection('videos').doc(videoId.toString()).delete();
+}
+
+async function saveStoryToFirebase(story) {
+  await db.collection('stories').doc(story.id.toString()).set(story);
+}
+
+async function deleteStoryFromFirebase(storyId) {
+  await db.collection('stories').doc(storyId.toString()).delete();
+}
+
+async function saveEmploiToFirebase(emploi) {
+  await db.collection('emplois').doc(emploi.id.toString()).set(emploi);
+}
+
+async function deleteEmploiFromFirebase(emploiId) {
+  await db.collection('emplois').doc(emploiId.toString()).delete();
+}
+
+async function saveConceptToFirebase(concept) {
+  await db.collection('concepts').doc(concept.id.toString()).set(concept);
+}
+
+async function deleteConceptFromFirebase(conceptId) {
+  await db.collection('concepts').doc(conceptId.toString()).delete();
+}
+
+async function saveRadarSpotToFirebase(spot) {
+  await db.collection('radar_spots').doc(spot.id.toString()).set(spot);
+}
+
+async function deleteRadarSpotFromFirebase(spotId) {
+  await db.collection('radar_spots').doc(spotId.toString()).delete();
+}
+
+async function saveRadarAmbianceToFirebase(ambiance) {
+  await db.collection('radar_ambiances').doc(ambiance.id).set(ambiance);
+}
+
+async function saveMailboxToFirebase(mail) {
+  await db.collection('mailbox').doc(mail.id.toString()).set(mail);
+}
+
+async function deleteMailboxFromFirebase(mailId) {
+  await db.collection('mailbox').doc(mailId.toString()).delete();
+}
+
+async function saveDropMessageToFirebase(drop) {
+  await db.collection('drop_messages').doc(drop.id.toString()).set(drop);
+}
+
+async function deleteDropMessageFromFirebase(dropId) {
+  await db.collection('drop_messages').doc(dropId.toString()).delete();
+}
+
+async function saveCategoriesToFirebase() {
+  await db.collection('settings').doc('categories').set({
+    instantCats, storyCats, emploiCats, conceptCats
+  });
+}
+
+async function saveBadgeColorsToFirebase() {
+  await db.collection('settings').doc('badgeColors').set(badgeColors);
+}
+
+// ==================== FONCTIONS DE LIKE (GLOBAUX) ====================
+async function toggleLike(id) {
+  const video = videos.find(v=>v.id===id);
+  if(!video) return;
+  const likeRef = db.collection('likes').doc(`${id}_${currentUserId}`);
+  const likeDoc = await likeRef.get();
+  if(likeDoc.exists) {
+    await likeRef.delete();
+    video.likes--;
+  } else {
+    await likeRef.set({ postId: id, userId: currentUserId, timestamp: Date.now() });
+    video.likes++;
+  }
+  await db.collection('videos').doc(id.toString()).update({ likes: video.likes });
+  const likeSpan = document.getElementById(`like-count-${id}`);
+  if(likeSpan) likeSpan.textContent = video.likes;
+  const likeBtn = document.querySelector(`.video-card[data-id="${id}"] .like-btn`);
+  if(likeBtn) {
+    if(!likeDoc.exists) {
+      likeBtn.classList.add('liked');
+      likeBtn.innerHTML = '❤️';
+    } else {
+      likeBtn.classList.remove('liked');
+      likeBtn.innerHTML = '🤍';
+    }
+  }
+}
+
+async function checkUserLike(id) {
+  const likeRef = db.collection('likes').doc(`${id}_${currentUserId}`);
+  const likeDoc = await likeRef.get();
+  return likeDoc.exists;
+}
+
+// ==================== FONCTIONS D'AFFICHAGE (modifiées pour Firebase) ====================
 function showPage(p) {
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -859,7 +649,6 @@ function getBadgeStyle(page, catId) {
   return '';
 }
 
-// ========== L'INSTANT ==========
 function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, pageId) {
   const bar = document.getElementById(containerId);
   if(!bar) return;
@@ -872,19 +661,19 @@ function buildFilterBar(containerId, cats, filterFn, currentFilter, catCtx, page
   bar.innerHTML+=`<button class="add-cat-btn" onclick="addCategory('${catCtx}')">+ Catégorie</button>`;
 }
 
-function renderInstant(){
+// ==================== L'INSTANT AVEC FIREBASE ====================
+async function renderInstant(){
   buildFilterBar('instant-filters',instantCats,'filterInstant',instantFilter,'instant','instant');
   const filtered = instantFilter==='tout' ? [...videos] : videos.filter(v=>v.cat===instantFilter);
   const grid = document.getElementById('instant-grid');
-  grid.innerHTML = filtered.map(v=>{
+  let html = '';
+  for (const v of filtered) {
     const badgeStyle = getBadgeStyle('instant', v.cat);
     const mediaDisplay = v.mediaType === 'image' && v.src ? 
       `<img src="${v.src}" style="width:100%;height:100%;object-fit:cover;">` :
       (v.src ? `<video src="${v.src}" preload="metadata"></video>` : `<div class="video-thumb-placeholder"><div style="font-size:40px;opacity:.4">${v.mediaType === 'image' ? '🖼️' : '▶'}</div><div style="font-size:12px">Aucun média</div></div>`);
-    const likedKey = `liked_${v.id}_${currentUserId}`;
-    const hasLiked = localStorage.getItem(likedKey) === 'true';
-    const likeCount = v.likes || 0;
-    return `
+    const hasLiked = await checkUserLike(v.id);
+    html += `
     <div class="video-card" draggable="${isAdmin}" data-id="${v.id}" 
          ondragstart="dragStart(event,'video')" ondragover="dragOver(event)" ondrop="dropItem(event,'video')" ondragleave="dragLeave(event)" ondragend="dragEnd(event)">
       <div class="video-thumb" onclick="playMedia(${v.id})">
@@ -903,47 +692,21 @@ function renderInstant(){
       <div class="video-stats">
         <div class="stat-item">
           <button class="like-btn${hasLiked?' liked':''}" onclick="toggleLike(${v.id})" title="J'aime">${hasLiked?'❤️':'🤍'}</button>
-          <span id="like-count-${v.id}">${likeCount}</span>
+          <span id="like-count-${v.id}">${v.likes}</span>
         </div>
         <div class="stat-item"><span class="view-icon">👁</span><span id="view-count-${v.id}">${formatNum(v.views)}</span></div>
       </div>
-    </div>
-  `}).join('');
+    </div>`;
+  }
+  grid.innerHTML = html;
 }
 
 function filterInstant(cat,btn){instantFilter=cat;renderInstant();}
 
-function toggleLike(id){
-  const v = videos.find(x=>x.id===id);
-  if(!v) return;
-  const likedKey = `liked_${id}_${currentUserId}`;
-  const hasLiked = localStorage.getItem(likedKey) === 'true';
-  if(hasLiked) {
-    localStorage.removeItem(likedKey);
-    v.likes--;
-  } else {
-    localStorage.setItem(likedKey, 'true');
-    v.likes++;
-  }
-  saveAll();
-  const likeSpan = document.getElementById(`like-count-${id}`);
-  if(likeSpan) likeSpan.textContent = v.likes;
-  const likeBtn = document.querySelector(`.video-card[data-id="${id}"] .like-btn`);
-  if(likeBtn) {
-    if(!hasLiked) {
-      likeBtn.classList.add('liked');
-      likeBtn.innerHTML = '❤️';
-    } else {
-      likeBtn.classList.remove('liked');
-      likeBtn.innerHTML = '🤍';
-    }
-  }
-}
-
-function playMedia(id){
+async function playMedia(id){
   const v=videos.find(x=>x.id===id);if(!v)return;
   v.views++;
-  saveAll();
+  await db.collection('videos').doc(id.toString()).update({ views: v.views });
   const viewSpan = document.getElementById(`view-count-${id}`);
   if(viewSpan) viewSpan.textContent = formatNum(v.views);
   if(!v.src){showToast('ℹ️ Aucun média uploadé pour ce post.');return;}
@@ -1029,7 +792,7 @@ function openVideoModal(id=null){
   openModal('video-modal');
 }
 
-function saveVideo(){
+async function saveVideo(){
   const t=document.getElementById('vm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
   const fi=document.getElementById('vm-file');
   const src=fi.dataset.url||(editingId?videos.find(v=>v.id===editingId)?.src:null);
@@ -1039,17 +802,27 @@ function saveVideo(){
   if(editingId){
     const i=videos.findIndex(v=>v.id===editingId);
     videos[i]={...videos[i],...d};
+    await saveVideoToFirebase(videos[i]);
   } else {
-    videos.push({id:vidSeq++,...d});
+    const newId = videos.length > 0 ? Math.max(...videos.map(v=>v.id)) + 1 : 1;
+    const newVideo = {id:newId,...d};
+    videos.push(newVideo);
+    await saveVideoToFirebase(newVideo);
   }
-  saveAll();
   closeModal('video-modal');renderInstant();showToast(editingId?'✅ Post modifié !':'✅ Post ajouté !');editingId=null;
 }
 function editVideo(id){openVideoModal(id);}
-function deleteVideo(id){if(!confirm('Supprimer ?'))return;videos=videos.filter(v=>v.id!==id);saveAll();renderInstant();showToast('🗑️ Supprimé');}
+async function deleteVideo(id){
+  if(!confirm('Supprimer ?'))return;
+  videos=videos.filter(v=>v.id!==id);
+  await deleteVideoFromFirebase(id);
+  const likesSnapshot = await db.collection('likes').where('postId', '==', id).get();
+  likesSnapshot.forEach(doc => doc.ref.delete());
+  renderInstant();showToast('🗑️ Supprimé');
+}
 
-// ========== STORYTELLING ==========
-function renderStories(){
+// ==================== STORYTELLING ====================
+async function renderStories(){
   buildFilterBar('stories-filters',storyCats.map(c=>({id:c,label:c})),'filterStories',storiesFilter,'stories','stories');
   const filtered=storiesFilter==='tout'?[...stories]:stories.filter(s=>s.cat===storiesFilter);
   const c=document.getElementById('stories-container');
@@ -1132,22 +905,34 @@ function addImageToEditor() {
   };
   input.click();
 }
-function saveStory(){
+async function saveStory(){
   const t=document.getElementById('sm-title').value.trim();if(!t){showToast('⚠️ Donne un titre !');return;}
   const fi=document.getElementById('sm-file');
   const img=fi.dataset.url||(editingId?stories.find(s=>s.id===editingId)?.img:null);
   const content = document.getElementById('story-editor').innerHTML;
   const d={title:t,sub:document.getElementById('sm-sub').value,cat:document.getElementById('sm-cat').value,time:document.getElementById('sm-time').value||'Il y a quelques instants',img,content};
-  if(editingId){const i=stories.findIndex(s=>s.id===editingId);stories[i]={...stories[i],...d};}
-  else{stories.push({id:storySeq++,...d});}
-  saveAll();
+  if(editingId){
+    const i=stories.findIndex(s=>s.id===editingId);
+    stories[i]={...stories[i],...d};
+    await saveStoryToFirebase(stories[i]);
+  } else {
+    const newId = stories.length > 0 ? Math.max(...stories.map(s=>s.id)) + 1 : 1;
+    const newStory = {id:newId,...d};
+    stories.push(newStory);
+    await saveStoryToFirebase(newStory);
+  }
   closeModal('story-modal');renderStories();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editStory(id){openStoryModal(id);}
-function deleteStory(id){if(!confirm('Supprimer ?'))return;stories=stories.filter(s=>s.id!==id);saveAll();renderStories();showToast('🗑️ Supprimé');}
+async function deleteStory(id){
+  if(!confirm('Supprimer ?'))return;
+  stories=stories.filter(s=>s.id!==id);
+  await deleteStoryFromFirebase(id);
+  renderStories();showToast('🗑️ Supprimé');
+}
 
-// ========== CONCEPTS ==========
-function renderConcepts(){
+// ==================== CONCEPTS ====================
+async function renderConcepts(){
   buildFilterBar('concepts-filters',conceptCats.map(c=>({id:c,label:c})),'filterConcepts',conceptsFilter,'concepts','concepts');
   const filtered=conceptsFilter==='tout'?concepts:concepts.filter(c=>c.cat===conceptsFilter);
   document.getElementById('concepts-grid').innerHTML=filtered.map(c=>`
@@ -1184,21 +969,33 @@ function openConceptModal(id=null){
   openModal('concept-modal');
 }
 function setStars(n){currentStars=n;document.querySelectorAll('#cm-stars span').forEach((el,i)=>el.classList.toggle('lit',i<currentStars));}
-function saveConcept(){
+async function saveConcept(){
   const t=document.getElementById('cm-title').value.trim();if(!t){showToast('⚠️ Titre requis');return;}
   const fi=document.getElementById('cm-file');
   const img=fi.dataset.url||(editingId?concepts.find(c=>c.id===editingId)?.img:null);
   const d={title:t,meta:document.getElementById('cm-meta').value,desc:document.getElementById('cm-desc').value,cat:document.getElementById('cm-cat').value,stars:currentStars,img};
-  if(editingId){const i=concepts.findIndex(c=>c.id===editingId);concepts[i]={...concepts[i],...d};}
-  else{concepts.push({id:conceptSeq++,...d});}
-  saveAll();
+  if(editingId){
+    const i=concepts.findIndex(c=>c.id===editingId);
+    concepts[i]={...concepts[i],...d};
+    await saveConceptToFirebase(concepts[i]);
+  } else {
+    const newId = concepts.length > 0 ? Math.max(...concepts.map(c=>c.id)) + 1 : 1;
+    const newConcept = {id:newId,...d};
+    concepts.push(newConcept);
+    await saveConceptToFirebase(newConcept);
+  }
   closeModal('concept-modal');renderConcepts();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editConcept(id){openConceptModal(id);}
-function deleteConcept(id){if(!confirm('Supprimer ?'))return;concepts=concepts.filter(c=>c.id!==id);saveAll();renderConcepts();showToast('🗑️ Supprimé');}
+async function deleteConcept(id){
+  if(!confirm('Supprimer ?'))return;
+  concepts=concepts.filter(c=>c.id!==id);
+  await deleteConceptFromFirebase(id);
+  renderConcepts();showToast('🗑️ Supprimé');
+}
 
-// ========== EMPLOI ==========
-function renderEmploi(){
+// ==================== EMPLOI ====================
+async function renderEmploi(){
   buildFilterBar('emploi-filters',emploiCats.map(c=>({id:c,label:c.toUpperCase()})),'filterEmploy',emploiFilter,'emploi','emploi');
   const filtered=emploiFilter==='tout'?emplois:emplois.filter(e=>e.cat===emploiFilter);
   const badgeCls={legal:'badge-legal',service:'badge-service',passion:'badge-passion',illegal:'badge-illegal',closed:'badge-closed'};
@@ -1231,24 +1028,37 @@ function openEmploiModal(id=null){
   document.getElementById('em-file').value='';delete document.getElementById('em-file').dataset.url;
   openModal('emploi-modal');
 }
-function saveEmploi(){
+async function saveEmploi(){
   const t=document.getElementById('em-title').value.trim();if(!t){showToast('⚠️ Titre requis');return;}
   const fi=document.getElementById('em-file');
   const img=fi.dataset.url||(editingId?emplois.find(e=>e.id===editingId)?.img:null);
   const d={title:t,company:document.getElementById('em-company').value,desc:document.getElementById('em-desc').value,cat:document.getElementById('em-cat').value,status:document.getElementById('em-status').value,img};
-  if(editingId){const i=emplois.findIndex(e=>e.id===editingId);emplois[i]={...emplois[i],...d};}
-  else{emplois.push({id:emploiSeq++,...d});}
-  saveAll();
+  if(editingId){
+    const i=emplois.findIndex(e=>e.id===editingId);
+    emplois[i]={...emplois[i],...d};
+    await saveEmploiToFirebase(emplois[i]);
+  } else {
+    const newId = emplois.length > 0 ? Math.max(...emplois.map(e=>e.id)) + 1 : 1;
+    const newEmploi = {id:newId,...d};
+    emplois.push(newEmploi);
+    await saveEmploiToFirebase(newEmploi);
+  }
   closeModal('emploi-modal');renderEmploi();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editEmploi(id){openEmploiModal(id);}
-function deleteEmploi(id){if(!confirm('Supprimer ?'))return;emplois=emplois.filter(e=>e.id!==id);saveAll();renderEmploi();showToast('🗑️ Supprimée');}
-function submitCandidature(){
+async function deleteEmploi(id){
+  if(!confirm('Supprimer ?'))return;
+  emplois=emplois.filter(e=>e.id!==id);
+  await deleteEmploiFromFirebase(id);
+  renderEmploi();showToast('🗑️ Supprimée');
+}
+async function submitCandidature(){
   const name=document.getElementById('cand-name').value.trim();
   const domain=document.getElementById('cand-domain').value;
   if(!name||!domain){showToast('⚠️ Remplis les champs requis.');return;}
-  mailbox.unshift({id:Date.now(),from:`${name} (${document.getElementById('cand-num').value.trim()})`,domain,note:document.getElementById('cand-note').value.trim(),time:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),read:false});
-  saveAll();
+  const newMail = {id:Date.now(),from:`${name} (${document.getElementById('cand-num').value.trim()})`,domain,note:document.getElementById('cand-note').value.trim(),time:new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),read:false};
+  mailbox.unshift(newMail);
+  await saveMailboxToFirebase(newMail);
   document.getElementById('cand-name').value='';
   document.getElementById('cand-num').value='';
   document.getElementById('cand-note').value='';
@@ -1275,9 +1085,11 @@ function renderMails(){
     </div>
   `).join('');
 }
-function openMail(id){
+async function openMail(id){
   const m=mailbox.find(x=>x.id===id);if(!m)return;
-  m.read=true;saveAll();renderMails();
+  m.read=true;
+  await db.collection('mailbox').doc(id.toString()).update({ read: true });
+  renderMails();
   document.getElementById('mail-detail').innerHTML=`
     <div class="mail-detail-field"><label>Candidat</label><p>${escapeHtml(m.from)}</p></div>
     <div class="mail-detail-field"><label>Domaine</label><p>${escapeHtml(m.domain)}</p></div>
@@ -1286,9 +1098,15 @@ function openMail(id){
   `;
   openModal('mail-modal');
 }
-function clearMails(){if(!confirm('Effacer tout ?'))return;mailbox=[];saveAll();renderMails();showToast('🗑️ Boîte vidée');}
+async function clearMails(){
+  if(!confirm('Effacer tout ?'))return;
+  mailbox=[];
+  const snapshot = await db.collection('mailbox').get();
+  snapshot.forEach(doc => doc.ref.delete());
+  renderMails();showToast('🗑️ Boîte vidée');
+}
 
-// ========== DROPBOX ==========
+// ==================== DROPBOX ====================
 function switchDropbox(tab,btn){
   document.querySelectorAll('#page-dropbox .tab-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('#page-dropbox .emploi-section').forEach(s=>s.classList.remove('active'));
@@ -1296,12 +1114,13 @@ function switchDropbox(tab,btn){
   document.getElementById('dropbox-'+tab).classList.add('active');
   if(tab==='messages')renderDropMessages();
 }
-function submitDrop(){
+async function submitDrop(){
   const title=document.getElementById('drop-title').value.trim();
   const body=document.getElementById('drop-body').value.trim();
   if(!title||!body){showToast('⚠️ Remplis le titre et le message.');return;}
-  dropMessages.unshift({id:Date.now(),title,body,category:document.getElementById('drop-cat').value,time:new Date().toLocaleString('fr-FR'),read:false});
-  saveAll();
+  const newDrop = {id:Date.now(),title,body,category:document.getElementById('drop-cat').value,time:new Date().toLocaleString('fr-FR'),read:false};
+  dropMessages.unshift(newDrop);
+  await saveDropMessageToFirebase(newDrop);
   document.getElementById('drop-title').value='';
   document.getElementById('drop-body').value='';
   showToast('📨 Signalement envoyé anonymement !');
@@ -1319,9 +1138,11 @@ function renderDropMessages(){
     </div>
   `).join('');
 }
-function openDropMessage(id){
+async function openDropMessage(id){
   const m=dropMessages.find(x=>x.id===id);if(!m)return;
-  m.read=true;saveAll();renderDropMessages();
+  m.read=true;
+  await db.collection('drop_messages').doc(id.toString()).update({ read: true });
+  renderDropMessages();
   document.getElementById('drop-detail').innerHTML=`
     <div class="drop-detail-field"><label>Titre</label><p>${escapeHtml(m.title)}</p></div>
     <div class="drop-detail-field"><label>Catégorie</label><p>${escapeHtml(m.category)}</p></div>
@@ -1330,9 +1151,15 @@ function openDropMessage(id){
   `;
   openModal('drop-modal');
 }
-function clearDropMessages(){if(!confirm('Effacer tous les signalements ?'))return;dropMessages=[];saveAll();renderDropMessages();showToast('🗑️ Signalements vidés');}
+async function clearDropMessages(){
+  if(!confirm('Effacer tous les signalements ?'))return;
+  dropMessages=[];
+  const snapshot = await db.collection('drop_messages').get();
+  snapshot.forEach(doc => doc.ref.delete());
+  renderDropMessages();showToast('🗑️ Signalements vidés');
+}
 
-// ========== RADAR ==========
+// ==================== RADAR ====================
 function renderRadar(){
   const hype=radarSpots.filter(s=>s.status==='hype');
   const other=radarSpots.filter(s=>s.status!=='hype');
@@ -1365,10 +1192,10 @@ function renderRadarCard(s){
     </div>
   </div>`;
 }
-function updateRadarCrowd(id,val){
+async function updateRadarCrowd(id,val){
   const s=radarSpots.find(x=>x.id===id);if(!s)return;
   s.crowd=parseInt(val);
-  saveAll();
+  await saveRadarSpotToFirebase(s);
   document.getElementById('rcval-'+id).textContent=val;
   const m=document.getElementById('rmeter-'+id);
   if(m){
@@ -1393,7 +1220,7 @@ function openRadarModal(id=null){
   statusSelect.innerHTML = radarAmbiances.map(a=>`<option value="${a.id}"${s&&s.status===a.id?' selected':''}>${a.label}</option>`).join('');
   openModal('radar-modal');
 }
-function saveRadar(){
+async function saveRadar(){
   const n=document.getElementById('rm-name').value.trim();if(!n){showToast('⚠️ Nom requis');return;}
   let crowdValue = 3;
   if(editingId) {
@@ -1401,29 +1228,42 @@ function saveRadar(){
     crowdValue = existingSpot ? existingSpot.crowd : 3;
   }
   const d={name:n,loc:document.getElementById('rm-loc').value,desc:document.getElementById('rm-desc').value,status:document.getElementById('rm-status').value,crowd:crowdValue};
-  if(editingId){const i=radarSpots.findIndex(s=>s.id===editingId);radarSpots[i]={...radarSpots[i],...d};}
-  else{radarSpots.push({id:radarSeq++,...d});}
-  saveAll();
+  if(editingId){
+    const i=radarSpots.findIndex(s=>s.id===editingId);
+    radarSpots[i]={...radarSpots[i],...d};
+    await saveRadarSpotToFirebase(radarSpots[i]);
+  } else {
+    const newId = radarSpots.length > 0 ? Math.max(...radarSpots.map(r=>r.id)) + 1 : 1;
+    const newSpot = {id:newId,...d};
+    radarSpots.push(newSpot);
+    await saveRadarSpotToFirebase(newSpot);
+  }
   closeModal('radar-modal');renderRadar();showToast(editingId?'✅ Modifié !':'✅ Ajouté !');editingId=null;
 }
 function editRadar(id){openRadarModal(id);}
-function deleteRadar(id){if(!confirm('Supprimer ?'))return;radarSpots=radarSpots.filter(s=>s.id!==id);saveAll();renderRadar();showToast('🗑️ Supprimé');}
+async function deleteRadar(id){
+  if(!confirm('Supprimer ?'))return;
+  radarSpots=radarSpots.filter(s=>s.id!==id);
+  await deleteRadarSpotFromFirebase(id);
+  renderRadar();showToast('🗑️ Supprimé');
+}
 function openAddAmbianceModal(){openModal('add-ambiance-modal');}
-function confirmAddAmbiance(){
+async function confirmAddAmbiance(){
   const name=document.getElementById('add-ambiance-name').value.trim().toUpperCase();
   const color=document.getElementById('add-ambiance-color').value;
   if(!name){showToast('⚠️ Donne un nom à l\'ambiance');return;}
   const id = name.toLowerCase().replace(/\s+/g,'-');
   if(radarAmbiances.find(a=>a.id===id)){showToast('⚠️ Cette ambiance existe déjà');return;}
-  radarAmbiances.push({id,label:name,color});
-  saveAll();
+  const newAmbiance = {id,label:name,color};
+  radarAmbiances.push(newAmbiance);
+  await saveRadarAmbianceToFirebase(newAmbiance);
   closeModal('add-ambiance-modal');
   document.getElementById('add-ambiance-name').value='';
   renderRadar();
   showToast(`✅ Ambiance "${name}" créée !`);
 }
 
-// ========== ADMIN ==========
+// ==================== ADMIN ====================
 function openAdminModal(){
   if(isAdmin){logoutAdmin();return;}
   document.getElementById('admin-password').value='';
@@ -1462,7 +1302,7 @@ function logoutAdmin(){
   showToast('👎 Déconnecté');
 }
 
-// ========== PARAMÈTRES ==========
+// ==================== PARAMÈTRES ====================
 function openSettingsPanel() {
   if(!isAdmin) return;
   document.getElementById('settings-panel').classList.add('open');
@@ -1525,7 +1365,7 @@ function getCatById(page, catId) {
   return null;
 }
 
-function confirmEditCat() {
+async function confirmEditCat() {
   const newName = document.getElementById('editcat-name').value.trim();
   if(!newName) { showToast('⚠️ Nom requis'); return; }
   const { page, catId } = editingCatInfo;
@@ -1534,28 +1374,28 @@ function confirmEditCat() {
     const index = instantCats.findIndex(c => c.id === catId);
     if(index !== -1) {
       instantCats[index].label = newName.toUpperCase();
-      saveAll();
+      await saveCategoriesToFirebase();
       renderInstant();
     }
   } else if(page === 'stories') {
     const index = storyCats.findIndex(c => c === catId);
     if(index !== -1) {
       storyCats[index] = newName.toUpperCase();
-      saveAll();
+      await saveCategoriesToFirebase();
       renderStories();
     }
   } else if(page === 'emploi') {
     const index = emploiCats.findIndex(c => c === catId);
     if(index !== -1) {
       emploiCats[index] = newName.toLowerCase();
-      saveAll();
+      await saveCategoriesToFirebase();
       renderEmploi();
     }
   } else if(page === 'concepts') {
     const index = conceptCats.findIndex(c => c === catId);
     if(index !== -1) {
       conceptCats[index] = newName.toUpperCase();
-      saveAll();
+      await saveCategoriesToFirebase();
       renderConcepts();
     }
   }
@@ -1566,10 +1406,10 @@ function confirmEditCat() {
   editingCatInfo = null;
 }
 
-function updateBadgeColor(page, catId, color) {
+async function updateBadgeColor(page, catId, color) {
   if(!badgeColors[page]) badgeColors[page] = {};
   badgeColors[page][catId] = color;
-  saveAll();
+  await saveBadgeColorsToFirebase();
   if(page === 'instant') renderInstant();
   else if(page === 'stories') renderStories();
   else if(page === 'emploi') renderEmploi();
@@ -1578,23 +1418,23 @@ function updateBadgeColor(page, catId, color) {
   showToast(`🎨 Couleur du badge modifiée !`);
 }
 
-function deleteCategory(page, catId) {
+async function deleteCategory(page, catId) {
   if(!confirm(`Supprimer la catégorie "${catId}" ? Les posts avec cette catégorie ne seront plus visibles.`)) return;
   if(page === 'instant') {
     instantCats = instantCats.filter(c => c.id !== catId);
-    saveAll();
+    await saveCategoriesToFirebase();
     renderInstant();
   } else if(page === 'stories') {
     storyCats = storyCats.filter(c => c !== catId);
-    saveAll();
+    await saveCategoriesToFirebase();
     renderStories();
   } else if(page === 'emploi') {
     emploiCats = emploiCats.filter(c => c !== catId);
-    saveAll();
+    await saveCategoriesToFirebase();
     renderEmploi();
   } else if(page === 'concepts') {
     conceptCats = conceptCats.filter(c => c !== catId);
-    saveAll();
+    await saveCategoriesToFirebase();
     renderConcepts();
   }
   renderBadgesList();
@@ -1602,24 +1442,24 @@ function deleteCategory(page, catId) {
 }
 
 function addCategory(ctx){pendingCatCtx=ctx;document.getElementById('addcat-name').value='';openModal('addcat-modal');}
-function confirmAddCat(){
+async function confirmAddCat(){
   const name=document.getElementById('addcat-name').value.trim();if(!name){showToast('⚠️ Nom requis');return;}
   if(pendingCatCtx==='instant'){
     const id=name.toLowerCase().replace(/\s+/g,'-');
     instantCats.push({id,label:name.toUpperCase()});
-    saveAll();
+    await saveCategoriesToFirebase();
     renderInstant();
   } else if(pendingCatCtx==='stories'){
     storyCats.push(name.toUpperCase());
-    saveAll();
+    await saveCategoriesToFirebase();
     renderStories();
   } else if(pendingCatCtx==='emploi'){
     emploiCats.push(name.toLowerCase());
-    saveAll();
+    await saveCategoriesToFirebase();
     renderEmploi();
   } else if(pendingCatCtx==='concepts'){
     conceptCats.push(name.toUpperCase());
-    saveAll();
+    await saveCategoriesToFirebase();
     renderConcepts();
   }
   closeModal('addcat-modal');
@@ -1639,7 +1479,7 @@ function previewImg(e,previewId){
   reader.readAsDataURL(f);
 }
 
-// ========== DRAG & DROP ==========
+// ==================== DRAG & DROP ====================
 let dragSrcId=null;
 let dragType=null;
 function dragStart(e,type){
@@ -1663,20 +1503,24 @@ function dropItem(e,type){
     const ti=arr.findIndex(x=>x.id===targetId);
     if(si<0||ti<0)return;
     [arr[si],arr[ti]]=[arr[ti],arr[si]];
-    saveAll();
+    for (const v of arr) {
+      await saveVideoToFirebase(v);
+    }
     renderInstant();
   }
   showToast('✅ Ordre mis à jour !');
 }
 
-// ========== INIT ==========
-loadData();
-renderInstant();
-renderStories();
-renderConcepts();
-renderEmploi();
-renderRadar();
-renderDropMessages();
+// ==================== RENDER ALL ====================
+function renderAll(){
+  renderInstant();
+  renderStories();
+  renderConcepts();
+  renderEmploi();
+  renderRadar();
+  renderDropMessages();
+  renderMails();
+}
 </script>
 </body>
 </html>
